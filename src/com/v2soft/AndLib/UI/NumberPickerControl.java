@@ -3,16 +3,39 @@ package com.v2soft.AndLib.UI;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 public class NumberPickerControl extends LinearLayout {
+    //-------------------------------------------------------------------------------
+    // Constants
+    //-------------------------------------------------------------------------------
+    protected static final long UPDATE_DELAY_FIRST_MS = 750;
+    protected static final long UPDATE_DELAY_MS = 350;
+    protected static final long UPDATE_MINIMAL_DELAY_MS = 30;
+    protected static final String LOG_TAG = NumberPickerControl.class.getSimpleName();
+    //-------------------------------------------------------------------------------
+    // Listener interface
+    //-------------------------------------------------------------------------------
+    public interface OnNumberPickerChangeListener {
+        void onNumberPickerChanged(NumberPickerControl view, int value);
+    }
+    //-------------------------------------------------------------------------------
+    // Class fields
+    //-------------------------------------------------------------------------------
+    private OnNumberPickerChangeListener mListener;
 	private EditText mEdit;
 	private int mMinValue;
 	private int mMaxValue;
 	private int mStep;
 	private int mCurrentValue;
+	private View mPressedButton;	
+	private long mCurrentDelay;
 	
 	public NumberPickerControl(Context context) {
 		this(context,null);
@@ -23,8 +46,8 @@ public class NumberPickerControl extends LinearLayout {
 		// inflate XML
 		inflate(getContext(), R.layout.v2andlib_number_picker, this);
 		mEdit = (EditText) findViewById(R.id.v2andlib_edit);
-		findViewById(R.id.v2andlib_btn_decrement).setOnClickListener(mListener);
-		findViewById(R.id.v2andlib_btn_increment).setOnClickListener(mListener);
+		findViewById(R.id.v2andlib_btn_decrement).setOnTouchListener(mTouchListener);
+		findViewById(R.id.v2andlib_btn_increment).setOnTouchListener(mTouchListener);
 		// parse attributes
 		final TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.NumberPickerControl,
 				0, 0);
@@ -74,15 +97,56 @@ public class NumberPickerControl extends LinearLayout {
 		this.mCurrentValue = value;
 	}
 	
-	private OnClickListener mListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			int id = v.getId();
-			if ( id == R.id.v2andlib_btn_decrement ) {
-				setProgress(mCurrentValue-mStep);
-			} else if ( id == R.id.v2andlib_btn_increment) {
-				setProgress(mCurrentValue+mStep);
-			}
-		}
-	};
+	public OnNumberPickerChangeListener getListener() {
+        return mListener;
+    }
+
+    public void setListener(OnNumberPickerChangeListener mListener) {
+        this.mListener = mListener;
+    }
+
+    private OnTouchListener mTouchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int action = event.getAction();
+            switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mPressedButton = v;
+                Log.d(LOG_TAG, "Down "+v.toString());
+                mCurrentDelay = UPDATE_DELAY_MS;
+                v.postDelayed(mRunnable, UPDATE_DELAY_FIRST_MS);
+                return true;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_OUTSIDE:
+                Log.d(LOG_TAG, "Up "+v.toString());
+                v.removeCallbacks(mRunnable);
+                mPressedButton = null;
+                if ( mListener != null ) {
+                    mListener.onNumberPickerChanged(NumberPickerControl.this, mCurrentValue);
+                }
+                return true;
+            }
+            return false;
+        }
+    };
+    
+	private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if ( mPressedButton == null ) return;
+            int id = mPressedButton.getId();
+            if ( R.id.v2andlib_btn_decrement == id ) {
+                setProgress(mCurrentValue-mStep);
+            } else if ( R.id.v2andlib_btn_increment == id) {
+                setProgress(mCurrentValue+mStep);
+            }
+            updateDelay();
+            mPressedButton.postDelayed(mRunnable, mCurrentDelay);
+        }
+
+        private void updateDelay() {
+            if ( mCurrentDelay < UPDATE_MINIMAL_DELAY_MS ) return;
+            mCurrentDelay = mCurrentDelay*90/100;
+        }
+    };
 }
