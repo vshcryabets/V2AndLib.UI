@@ -20,8 +20,10 @@
 // ***** END LICENSE BLOCK *****
 package com.v2soft.AndLib.UI.Adapters;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.v2soft.AndLib.UI.Views.LoadingView;
 
 import android.content.Context;
 import android.os.Handler;
@@ -43,32 +45,39 @@ implements Callback {
     // Constants
     //---------------------------------------------------------------------------
     protected static final int MSG_DATASET_CHANGED = 1;
+    protected static final int MSG_NEW_DATA_PART = 2;
+    
     public static final int ALL_DATA = -1;
     public static final int UNLIMITED_COUNT = -2;
     public static final int NOT_INITIALIZED = -3;
+    private static final int DEFAULT_PAGE_SIZE = 15;
+    protected static final String LOG_TAG = BackLoadingAdapter.class.getSimpleName();
     //---------------------------------------------------------------------------
     // Class fields
     //---------------------------------------------------------------------------
-    protected List<T> mItems = Collections.emptyList();
+    protected List<T> mItems;
     protected Context mContext;
     protected Handler mHandler;
     private int mTotalCount;
     private int mLoadedCount;
     private int mPartSize;
     private LoadingView mLoadingView;
+    private Boolean isLoading; 
 
     public BackLoadingAdapter(Context context) {
-        this(context, UNLIMITED_COUNT);
+        this(context, DEFAULT_PAGE_SIZE);
     }
 
     public BackLoadingAdapter(Context context, int partSize) {
         super();
-        //        mLoadingView = new LoadingView(context);
+        mItems = new ArrayList<T>();
+        mLoadingView = new LoadingView(context);
         mHandler = new Handler(this);
         mPartSize = partSize;
         mTotalCount = NOT_INITIALIZED;
         mLoadedCount = NOT_INITIALIZED;
-    }	
+        isLoading = false;
+    }   
 
     @Override
     public int getCount() {
@@ -99,9 +108,11 @@ implements Callback {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (( mLoadedCount < mTotalCount ) && ( position == mLoadedCount )) {
+        if ( ((mTotalCount == UNLIMITED_COUNT) || ( mLoadedCount < mTotalCount )) 
+                && ( position == mLoadedCount )) {
             // start load part
-            loadNextPart();
+            if ( !isLoading )
+                loadNextPart();
             return mLoadingView;
         } else {
             return getInternalView(position, convertView);
@@ -115,13 +126,12 @@ implements Callback {
                 if ( mTotalCount == NOT_INITIALIZED ) {
                     mTotalCount = getTotalDataCount();
                 }
-                if ( mTotalCount == UNLIMITED_COUNT ) {
-                    mItems = getData(0, ALL_DATA);
+                if ( mPartSize == ALL_DATA ) {
+                    mItems = getData(0, mTotalCount);
                     mTotalCount = mItems.size();
                     mLoadedCount = mTotalCount;
                 } else {
                     mLoadedCount = 0;
-                    // show Loading message
                 }
                 mHandler.sendEmptyMessage(MSG_DATASET_CHANGED);
             }
@@ -130,44 +140,64 @@ implements Callback {
     }
 
     private void loadNextPart() {
+        isLoading = true;
         Thread back = new Thread(new Runnable() {
             @Override
             public void run() {
-                if ( mTotalCount == 0 )
-                    mTotalCount = getTotalDataCount();
+//                Log.d(LOG_TAG, "Loading next part");
+                int count = mPartSize;
+                
                 if ( mTotalCount > 0 ) {
-                    int count = mTotalCount-mLoadedCount;
-                    if ( count > mPartSize ) 
-                        count = mPartSize;
-                    List<T> part = getData(mLoadedCount,count);
-                    mEntries.addAll(part);
-                    mLoadedCount = mEntries.size();
-                } else {
-                    noData = true;
+                    int rest = mTotalCount-mLoadedCount;
+                    if ( rest < count ) 
+                        count = rest;
                 }
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyDataSetChanged();
-                    }
-                });
+                List<T> part = getData(mLoadedCount,count);
+//                Log.d(LOG_TAG, "Loaded next part");
+                final Message msg = new Message();
+                msg.what = MSG_NEW_DATA_PART;
+                msg.obj = part;
+                mHandler.sendMessage(msg);
+                isLoading = false;
             }
         }, "LoadAdapterBack");
         back.start();
     }    
 
+    /**
+     * 
+     * @return total items count, or BackLoadingAdapter.UNLIMITED_COUNT if total count is unknown
+     */
     protected abstract int getTotalDataCount();
     protected abstract List<T> getData(int start, int count);
     protected abstract View getInternalView(int position, View convertView);    
 
     @Override
     public boolean handleMessage(Message msg) {
-        if ( msg.what == MSG_DATASET_CHANGED ) {
+        switch (msg.what) {
+        case MSG_DATASET_CHANGED:
             notifyDataSetChanged();
+            break;
+        case MSG_NEW_DATA_PART:
+            List<T> part = (List<T>) msg.obj;
+            if ( part.size() == 0 ) {
+                // No more data
+                mTotalCount = mLoadedCount;
+            } else {
+                mItems.addAll(part);
+                mLoadedCount += part.size();
+            }
+            notifyDataSetChanged();
+            break;
+        default:
+            break;
         }
         return true;
     }
 
+    /**
+     * Remove all items from inner list
+     */
     public void clear() {
         mItems.clear();
         mHandler.sendEmptyMessage(MSG_DATASET_CHANGED);
