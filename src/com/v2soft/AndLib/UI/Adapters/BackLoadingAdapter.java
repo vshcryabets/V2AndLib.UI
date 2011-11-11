@@ -77,7 +77,7 @@ implements Callback {
         mTotalCount = NOT_INITIALIZED;
         mLoadedCount = NOT_INITIALIZED;
         isLoading = false;
-    }   
+    }	
 
     @Override
     public int getCount() {
@@ -107,7 +107,7 @@ implements Callback {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public final View getView(int position, View convertView, ViewGroup parent) {
         if ( ((mTotalCount == UNLIMITED_COUNT) || ( mLoadedCount < mTotalCount )) 
                 && ( position == mLoadedCount )) {
             // start load part
@@ -115,7 +115,10 @@ implements Callback {
                 loadNextPart();
             return mLoadingView;
         } else {
-            return getInternalView(position, convertView);
+            if ( convertView.getClass().equals(LoadingView.class))
+                return getInternalView(position, null);
+            else
+                return getInternalView(position, convertView);
         }
     }    
     
