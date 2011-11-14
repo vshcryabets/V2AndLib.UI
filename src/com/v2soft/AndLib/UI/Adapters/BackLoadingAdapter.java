@@ -70,6 +70,7 @@ implements Callback {
 
     public BackLoadingAdapter(Context context, int partSize) {
         super();
+        mContext = context;
         mItems = new ArrayList<T>();
         mLoadingView = new LoadingView(context);
         mHandler = new Handler(this);
@@ -115,7 +116,7 @@ implements Callback {
                 loadNextPart();
             return mLoadingView;
         } else {
-            if ( convertView.getClass().equals(LoadingView.class))
+            if ( ( convertView == null ) || (convertView.getClass().equals(LoadingView.class)))
                 return getInternalView(position, null);
             else
                 return getInternalView(position, convertView);
