@@ -29,6 +29,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -58,7 +59,7 @@ implements Callback {
     protected List<T> mItems;
     protected Context mContext;
     protected Handler mHandler;
-    private int mTotalCount;
+    private int mTotalCount2;
     private int mLoadedCount;
     private int mPartSize;
     private LoadingView mLoadingView;
@@ -80,27 +81,42 @@ implements Callback {
         mLoadingView = new LoadingView(context);
         mHandler = new Handler(this);
         mPartSize = partSize;
-        mTotalCount = NOT_INITIALIZED;
+        setTotalCount(NOT_INITIALIZED);
         mLoadedCount = NOT_INITIALIZED;
         isLoading = false;
     }	
 
     @Override
     public int getCount() {
-        if ( mTotalCount == NOT_INITIALIZED ) {
-            return 0;
-        } else {
-            if ( mLoadedCount == mTotalCount )
-            	// everything was already loaded
-                return mTotalCount;
-            else
-                return mLoadedCount+1;
+        int res = 0;
+//        Log.d(LOG_TAG, "D "+mLoadedCount+" "+getTotalCount());
+        if ( getTotalCount() != NOT_INITIALIZED ) {
+            if ( mLoadedCount < 0 ) {
+                res = 1;
+//                Log.d(LOG_TAG, "C "+mLoadedCount+" "+getTotalCount());
+            } else {
+                if ( mLoadedCount == getTotalCount() ) {
+                	// everything was already loaded
+                    res = mLoadedCount;
+//                    Log.d(LOG_TAG, "A "+mLoadedCount+" "+getTotalCount());
+                }
+                else {
+                    // plus Loading item
+                    res = mLoadedCount+1;
+//                    Log.d(LOG_TAG, "B "+mLoadedCount);
+                }
+            }
         }
+//        Log.d(LOG_TAG, "getCount="+res);
+        return res;
     }
 
     @Override
     public Object getItem(int position) {
-        return mItems.get(position);
+        if ( position >= mLoadedCount )
+            return null;
+        else
+            return mItems.get(position);
     }
 
     @Override
@@ -115,7 +131,7 @@ implements Callback {
 
     @Override
     public final View getView(int position, View convertView, ViewGroup parent) {
-        if ( ((mTotalCount == UNLIMITED_COUNT) || ( mLoadedCount < mTotalCount )) 
+        if ( ((getTotalCount() == UNLIMITED_COUNT) || ( mLoadedCount < getTotalCount() )) 
                 && ( position == mLoadedCount )) {
             // start load part
             if ( !isLoading )
@@ -130,19 +146,27 @@ implements Callback {
     }    
     
     public void startUpdate() {
+        isLoading = true;
         Thread searchBg = new Thread(new Runnable() {
             @Override
             public void run() {
-                if ( mTotalCount == NOT_INITIALIZED ) {
-                    mTotalCount = getTotalDataCount();
+                mLoadedCount = 0;
+                if ( getTotalCount() == NOT_INITIALIZED ) {
+                    setTotalCount( getTotalDataCount() );
                 }
+//                Log.d(LOG_TAG, "E "+mLoadedCount+" "+getTotalCount());
+                /*try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }*/
                 if ( mPartSize == ALL_DATA ) {
-                    mItems = getData(0, mTotalCount);
-                    mTotalCount = mItems.size();
-                    mLoadedCount = mTotalCount;
-                } else {
-                    mLoadedCount = 0;
+                    mItems = getData(0, getTotalCount());
+                    setTotalCount(mItems.size());
+                    mLoadedCount = getTotalCount();
                 }
+                isLoading = false;
+//                Log.d(LOG_TAG, "F "+mLoadedCount+" "+getTotalCount());
                 mHandler.sendEmptyMessage(MSG_DATASET_CHANGED);
             }
         });
@@ -157,8 +181,8 @@ implements Callback {
 //                Log.d(LOG_TAG, "Loading next part");
                 int count = mPartSize;
                 
-                if ( mTotalCount > 0 ) {
-                    int rest = mTotalCount-mLoadedCount;
+                if ( getTotalCount() > 0 ) {
+                    int rest = getTotalCount()-mLoadedCount;
                     if ( rest < count ) 
                         count = rest;
                 }
@@ -192,7 +216,8 @@ implements Callback {
             List<T> part = (List<T>) msg.obj;
             if ( part.size() == 0 ) {
                 // No more data
-                mTotalCount = mLoadedCount;
+                Log.d(LOG_TAG, "G "+mLoadedCount+" "+getTotalCount());
+                setTotalCount(mLoadedCount);
             } else {
                 mItems.addAll(part);
                 mLoadedCount += part.size();
@@ -205,6 +230,7 @@ implements Callback {
         return true;
     }
 
+
     /**
      * Remove all items from inner list
      */
@@ -213,4 +239,14 @@ implements Callback {
         mHandler.sendEmptyMessage(MSG_DATASET_CHANGED);
     }
 
+    private int getTotalCount() {return mTotalCount2;}
+    private void setTotalCount(int count) {mTotalCount2 = count;
+//        Log.d(LOG_TAG, "Set "+count);
+//        StackTraceElement[] cause = Thread.currentThread().getStackTrace();
+//        for (int i = 0; i < cause.length; i++) {
+//            Log.d(LOG_TAG, "Set "+cause[i].toString());
+//        }
+    }
+    
+    
 }
