@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.2vsoft</groupId>
+    <artifactId>V2AndLib.UI</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <name>2VSoftware Android Library for UI</name>
+    <packaging>apk</packaging>
+  
+
+    <dependencies>
+        <dependency>
+          <groupId>com.google.android</groupId>
+          <artifactId>android</artifactId>
+          <version>1.6_r2</version>
+          <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <sourceDirectory>src</sourceDirectory>
+        <plugins>
+          <plugin>
+            <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+            <artifactId>maven-android-plugin</artifactId>
+            <version>2.9.0-beta-5</version>
+            <configuration>
+              <sdk>
+                <platform>4</platform>
+              </sdk>
+              <undeployBeforeDeploy>true</undeployBeforeDeploy>
+            </configuration>
+            <extensions>true</extensions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+              <version>1.6</version>
+            </configuration>
+          </plugin>
+        </plugins>
+    </build>
+</project>
