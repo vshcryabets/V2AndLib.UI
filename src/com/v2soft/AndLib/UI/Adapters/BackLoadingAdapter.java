@@ -68,8 +68,14 @@ implements Callback {
         this(context, DEFAULT_PAGE_SIZE);
     }
 
+    /**
+     * 
+     * @param context The Context the listview is running in, through which it can access the current theme, resources, etc. 
+     * @param partSize
+     */
     public BackLoadingAdapter(Context context, int partSize) {
         super();
+        mContext = context;
         mItems = new ArrayList<T>();
         mLoadingView = new LoadingView(context);
         mHandler = new Handler(this);
@@ -85,6 +91,7 @@ implements Callback {
             return 0;
         } else {
             if ( mLoadedCount == mTotalCount )
+            	// everything was already loaded
                 return mTotalCount;
             else
                 return mLoadedCount+1;
@@ -115,7 +122,7 @@ implements Callback {
                 loadNextPart();
             return mLoadingView;
         } else {
-            if ( convertView.getClass().equals(LoadingView.class))
+            if ( (convertView != null) && (convertView.getClass().equals(LoadingView.class)))
                 return getInternalView(position, null);
             else
                 return getInternalView(position, convertView);
