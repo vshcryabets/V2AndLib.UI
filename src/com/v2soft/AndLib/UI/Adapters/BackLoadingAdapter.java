@@ -122,7 +122,7 @@ implements Callback {
                 loadNextPart();
             return mLoadingView;
         } else {
-            if ( (convertView != null) && (convertView.getClass().equals(LoadingView.class)))
+            if ( ( convertView == null ) || (convertView.getClass().equals(LoadingView.class)))
                 return getInternalView(position, null);
             else
                 return getInternalView(position, convertView);
