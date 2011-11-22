@@ -89,25 +89,20 @@ implements Callback {
     @Override
     public int getCount() {
         int res = 0;
-//        Log.d(LOG_TAG, "D "+mLoadedCount+" "+getTotalCount());
         if ( getTotalCount() != NOT_INITIALIZED ) {
             if ( mLoadedCount < 0 ) {
                 res = 1;
-//                Log.d(LOG_TAG, "C "+mLoadedCount+" "+getTotalCount());
             } else {
                 if ( mLoadedCount == getTotalCount() ) {
                 	// everything was already loaded
                     res = mLoadedCount;
-//                    Log.d(LOG_TAG, "A "+mLoadedCount+" "+getTotalCount());
                 }
                 else {
                     // plus Loading item
                     res = mLoadedCount+1;
-//                    Log.d(LOG_TAG, "B "+mLoadedCount);
                 }
             }
         }
-//        Log.d(LOG_TAG, "getCount="+res);
         return res;
     }
 
@@ -163,7 +158,6 @@ implements Callback {
                 if ( mPartSize == ALL_DATA ) {
                     mItems = getData(0, getTotalCount());
                     setTotalCount(mItems.size());
-                    mLoadedCount = getTotalCount();
                 }
                 isLoading = false;
 //                Log.d(LOG_TAG, "F "+mLoadedCount+" "+getTotalCount());
@@ -220,7 +214,6 @@ implements Callback {
                 setTotalCount(mLoadedCount);
             } else {
                 mItems.addAll(part);
-                mLoadedCount += part.size();
             }
             notifyDataSetChanged();
             break;
@@ -248,5 +241,10 @@ implements Callback {
 //        }
     }
     
+    @Override
+    public void notifyDataSetChanged() {
+        mLoadedCount = mItems.size();
+        super.notifyDataSetChanged();
+    }
     
 }
