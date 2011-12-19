@@ -8,14 +8,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 
+/**
+ * 
+ * @author V.Shcriyabets (vshcryabets@gmail.com)
+ *
+ */
 public class NumberPickerControl extends LinearLayout {
     //-------------------------------------------------------------------------------
     // Constants
     //-------------------------------------------------------------------------------
-    protected static final long UPDATE_DELAY_FIRST_MS = 750;
+    protected static final long UPDATE_DELAY_FIRST_MS = 1000;
     protected static final long UPDATE_DELAY_MS = 350;
     protected static final long UPDATE_MINIMAL_DELAY_MS = 30;
     protected static final String LOG_TAG = NumberPickerControl.class.getSimpleName();
@@ -115,16 +118,19 @@ public class NumberPickerControl extends LinearLayout {
                 Log.d(LOG_TAG, "Down "+v.toString());
                 mCurrentDelay = UPDATE_DELAY_MS;
                 v.postDelayed(mRunnable, UPDATE_DELAY_FIRST_MS);
-                return true;
+                return false;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_OUTSIDE:
                 Log.d(LOG_TAG, "Up "+v.toString());
-                v.removeCallbacks(mRunnable);
+                boolean val = v.removeCallbacks(mRunnable);
+                if ( val ) {
+                    mRunnable.run();
+                }
                 mPressedButton = null;
                 if ( mListener != null ) {
                     mListener.onNumberPickerChanged(NumberPickerControl.this, mCurrentValue);
                 }
-                return true;
+                return false;
             }
             return false;
         }
