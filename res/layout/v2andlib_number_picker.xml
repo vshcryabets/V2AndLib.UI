@@ -9,7 +9,9 @@
 		android:src="@drawable/v2andlib_ic_minus"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent" 
-		android:baselineAlignBottom="false" />
+		android:baselineAlignBottom="false"
+		android:padding="2dp" 
+		/>
 	<EditText
 		android:id="@+id/v2andlib_edit"
 		android:layout_width="fill_parent"
@@ -24,5 +26,7 @@
 		android:src="@drawable/v2andlib_ic_plus"
 		android:layout_width="wrap_content"
 		android:layout_height="fill_parent"
-		android:baselineAlignBottom="false" />
+		android:baselineAlignBottom="false"
+		android:padding="2dp" 
+		/>
 </LinearLayout>
