@@ -2,6 +2,8 @@ package com.v2soft.AndLib.UI;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,7 +16,9 @@ import android.widget.LinearLayout;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class NumberPickerControl extends LinearLayout {
+public class NumberPickerControl 
+extends LinearLayout 
+implements TextWatcher {
     //-------------------------------------------------------------------------------
     // Constants
     //-------------------------------------------------------------------------------
@@ -46,11 +50,15 @@ public class NumberPickerControl extends LinearLayout {
 
 	public NumberPickerControl(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
 		// inflate XML
 		inflate(getContext(), R.layout.v2andlib_number_picker, this);
 		mEdit = (EditText) findViewById(R.id.v2andlib_edit);
+		mEdit.addTextChangedListener(this);
+		
 		findViewById(R.id.v2andlib_btn_decrement).setOnTouchListener(mTouchListener);
 		findViewById(R.id.v2andlib_btn_increment).setOnTouchListener(mTouchListener);
+		
 		// parse attributes
 		final TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.NumberPickerControl,
 				0, 0);
@@ -96,7 +104,7 @@ public class NumberPickerControl extends LinearLayout {
 	public void setProgress(int value) {
 		if ( value > mMaxValue ) value = mMaxValue;
 		if ( value < mMinValue ) value = mMinValue;
-		mEdit.setText(value+"");
+		mEdit.setText(String.valueOf(value));
 		this.mCurrentValue = value;
 	}
 	
@@ -155,4 +163,29 @@ public class NumberPickerControl extends LinearLayout {
             mCurrentDelay = mCurrentDelay*90/100;
         }
     };
+    //-------------------------------------------------------------------------------
+    // Text watcher
+    //-------------------------------------------------------------------------------
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count,
+            int after) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        String value = s.toString();
+        if ( !value.equals("")) {
+            try {
+                mCurrentValue = Integer.parseInt(value);
+            } catch (Exception e) {
+                Log.e(LOG_TAG, e.toString(), e);
+            }
+        }
+    }
 }
