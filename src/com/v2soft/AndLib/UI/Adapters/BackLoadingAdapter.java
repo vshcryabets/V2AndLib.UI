@@ -20,19 +20,16 @@
 // ***** END LICENSE BLOCK *****
 package com.v2soft.AndLib.UI.Adapters;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.v2soft.AndLib.UI.Views.LoadingView;
-
 import android.content.Context;
-import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+
+import java.util.List;
+
+import com.v2soft.AndLib.UI.Views.LoadingView;
 
 /**
  * 
@@ -57,7 +54,6 @@ implements Callback {
     // Class fields
     //---------------------------------------------------------------------------
     protected Context mContext;
-    protected Handler mHandler;
     private int mTotalCount2;
     private int mLoadedCount;
     private int mPartSize;
@@ -74,10 +70,9 @@ implements Callback {
      * @param partSize
      */
     public BackLoadingAdapter(Context context, int partSize) {
-        super();
+        super(context);
         mContext = context;
         mLoadingView = new LoadingView(context);
-        mHandler = new Handler(this);
         mPartSize = partSize;
         setTotalCount(NOT_INITIALIZED);
         mLoadedCount = NOT_INITIALIZED;
@@ -196,9 +191,6 @@ implements Callback {
     @Override
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
-        case MSG_DATASET_CHANGED:
-            notifyDataSetChanged();
-            break;
         case MSG_NEW_DATA_PART:
             List<T> part = (List<T>) msg.obj;
             if ( part.size() == 0 ) {
@@ -211,7 +203,7 @@ implements Callback {
             notifyDataSetChanged();
             break;
         default:
-            break;
+            return super.handleMessage(msg);
         }
         return true;
     }
