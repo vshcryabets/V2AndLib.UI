@@ -40,7 +40,7 @@ import android.widget.BaseAdapter;
  *
  */
 public abstract class BackLoadingAdapter<T> 
-extends BaseAdapter 
+extends CustomViewAdapter<T> 
 implements Callback {
     //---------------------------------------------------------------------------
     // Constants
@@ -56,7 +56,6 @@ implements Callback {
     //---------------------------------------------------------------------------
     // Class fields
     //---------------------------------------------------------------------------
-    protected List<T> mItems;
     protected Context mContext;
     protected Handler mHandler;
     private int mTotalCount2;
@@ -77,7 +76,6 @@ implements Callback {
     public BackLoadingAdapter(Context context, int partSize) {
         super();
         mContext = context;
-        mItems = new ArrayList<T>();
         mLoadingView = new LoadingView(context);
         mHandler = new Handler(this);
         mPartSize = partSize;
@@ -112,11 +110,6 @@ implements Callback {
             return null;
         else
             return mItems.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 
     @Override
