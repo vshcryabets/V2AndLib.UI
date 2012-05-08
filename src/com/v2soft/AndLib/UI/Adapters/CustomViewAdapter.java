@@ -72,6 +72,15 @@ public class CustomViewAdapter<T>
         mFactory = factory;
     }
     
+    /**
+     * Set adapter data
+     * @param data
+     */
+    public void setData(List<T> data) {
+        if ( data == null ) throw new NullPointerException("Data is null");
+        mItems = data;
+        mHandler.sendEmptyMessage(MSG_DATASET_CHANGED);
+    }
     
     @Override
     public int getCount() {
