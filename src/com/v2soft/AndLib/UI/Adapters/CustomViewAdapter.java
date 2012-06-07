@@ -51,6 +51,9 @@ public class CustomViewAdapter<T>
     // Constants
     //---------------------------------------------------------------------------
     protected static final int MSG_DATASET_CHANGED = 1;
+    protected static final int MSG_DATASET_CLEAR = 2;
+    protected static final int MSG_DATASET_ADD = 3;
+    protected static final int MSG_DATASET_REMOVE = 4;
     //---------------------------------------------------------------------------
     // Class fields
     //---------------------------------------------------------------------------
@@ -58,7 +61,9 @@ public class CustomViewAdapter<T>
     protected Handler mHandler;
     private CustomViewAdapterFactory<T, IDataView<T>> mFactory;
     protected Context mContext;
-
+    //---------------------------------------------------------------------------
+    // Public methods
+    //---------------------------------------------------------------------------
     public CustomViewAdapter(Context context) {
         super();
         if ( context == null ) throw new NullPointerException("Context is null");
@@ -107,14 +112,61 @@ public class CustomViewAdapter<T>
         return (View) view;
     }
     
+    /**
+     * Add item to the list
+     * @param item
+     */
+    public void addItem(final T item) {
+        Message msg = new Message();
+        msg.what = MSG_DATASET_ADD;
+        msg.obj = item;
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * Remove specified item from the list
+     * @param item
+     */
+    public void removeItem(final T item) {
+        Message msg = new Message();
+        msg.what = MSG_DATASET_REMOVE;
+        msg.obj = item;
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * Remove all items from list
+     */
+    public void clear() {
+        mHandler.sendEmptyMessage(MSG_DATASET_CLEAR);
+    }    
     //---------------------------------------------------------------------------
     // Handler callback
     //---------------------------------------------------------------------------
     @Override
     public boolean handleMessage(Message msg) {
-        if ( msg.what == MSG_DATASET_CHANGED ) {
+        switch (msg.what) {
+        case MSG_DATASET_CHANGED:
             notifyDataSetChanged();
+            break;
+        case MSG_DATASET_CLEAR:
+            mItems.clear();
+            notifyDataSetChanged();
+            break;
+        case MSG_DATASET_ADD:
+            mItems.add((T) msg.obj);
+            notifyDataSetChanged();
+            break;
+        case MSG_DATASET_REMOVE:
+            mItems.remove(msg.obj);
+            notifyDataSetChanged();
+            break;
+
+        default:
+            break;
         }
         return true;
     }
+
+
 }
