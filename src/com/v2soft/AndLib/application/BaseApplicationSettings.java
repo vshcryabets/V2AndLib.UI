@@ -28,4 +28,8 @@ public abstract class BaseApplicationSettings {
      * Load settings from store
      */
     protected abstract void loadSettings();
+    /**
+     * Save settings to the store
+     */
+    public abstract void saveSettings();
 }
