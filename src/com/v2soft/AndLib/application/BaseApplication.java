@@ -22,7 +22,7 @@ import android.app.Application;
  * @author vshcryabets@gmail.com
  *
  */
-public class BaseApplication<S extends BaseApplicationSettings> extends Application {
+public abstract class BaseApplication<S extends BaseApplicationSettings> extends Application {
     //-----------------------------------------------------------------------
     // Constants
     //-----------------------------------------------------------------------
@@ -35,7 +35,7 @@ public class BaseApplication<S extends BaseApplicationSettings> extends Applicat
     @Override
     public void onCreate() {
         super.onCreate();
-        onCreateSettings(null);
+        onCreateSettings(createApplication());
     }
     
     protected void onCreateSettings(S settings) {
@@ -46,4 +46,6 @@ public class BaseApplication<S extends BaseApplicationSettings> extends Applicat
     }
 
     public S getSettings(){return mSettings;}
+    
+    protected abstract S createApplication();
 }
