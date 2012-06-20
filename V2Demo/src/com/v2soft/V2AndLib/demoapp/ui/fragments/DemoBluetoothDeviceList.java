@@ -1,6 +1,6 @@
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.v2soft.AndLib.ui.fragments.BluetoothDeviceList;

@@ -3,11 +3,11 @@ package com.v2soft.AndLib.ui.fragments;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.LoaderManager;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.bluetooth.BluetoothDevice;
-import android.content.Loader;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +56,9 @@ implements LoaderCallbacks<List<BluetoothDevice>>{
     @Override
     public void onLoadFinished(Loader<List<BluetoothDevice>> arg0, List<BluetoothDevice> arg1) {
         mAdapter.clear();
-        mAdapter.addAll(arg1);
+        for (BluetoothDevice bluetoothDevice : arg1) {
+            mAdapter.add(bluetoothDevice);
+        }
     }
 
     @Override
