@@ -21,5 +21,4 @@ public class DemoAppSettings extends BaseApplicationSettings {
         // TODO Auto-generated method stub
 
     }
-
 }
