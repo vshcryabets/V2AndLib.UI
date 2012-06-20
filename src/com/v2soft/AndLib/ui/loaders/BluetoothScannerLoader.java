@@ -1,4 +1,19 @@
-package com.v2soft.V2AndLib.demoapp.ui.loaders;
+/*
+ * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.v2soft.AndLib.ui.loaders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +22,6 @@ import java.util.TimerTask;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.AsyncTaskLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,11 +35,12 @@ import android.content.Loader;
  */
 public class BluetoothScannerLoader 
 extends Loader<List<BluetoothDevice>> {
-    protected static final long START_DELAY_MS = 5000; // reload every 5 seconds
+    protected static final int START_DELAY_MS = 5000; // reload every 5 seconds
     protected Context mContext;
     protected BluetoothAdapter mAdapter;
     protected List<BluetoothDevice> mDeviceList;
     private Timer mTimer;  
+    private int mRestartDiscoverDelay = START_DELAY_MS;
 
     public BluetoothScannerLoader(Context context) {
         super(context);
@@ -84,8 +99,16 @@ extends Loader<List<BluetoothDevice>> {
                 mTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {restartDiscovery();}
-                }, START_DELAY_MS);                
+                }, mRestartDiscoverDelay);                
             }
         }
     };
+    
+    /**
+     * Change delay between discovery restart
+     * @param timeout
+     */
+    public void setDiscoveryDelay(int timeout) {
+        mRestartDiscoverDelay = timeout;
+    }
 }

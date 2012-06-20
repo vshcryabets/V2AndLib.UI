@@ -1,7 +1,7 @@
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
 import com.v2soft.AndLib.UI.R;
-import com.v2soft.V2AndLib.demoapp.ui.fragments.BluetoothDeviceList;
+import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoBluetoothDeviceList;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -20,7 +20,7 @@ public class BluetoothList extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
-            Fragment fragment = BluetoothDeviceList.newInstance();
+            Fragment fragment = DemoBluetoothDeviceList.newInstance();
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
