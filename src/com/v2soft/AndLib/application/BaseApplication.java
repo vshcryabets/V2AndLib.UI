@@ -35,7 +35,7 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
     @Override
     public void onCreate() {
         super.onCreate();
-        onCreateSettings(createApplication());
+        onCreateSettings(createApplicationSettings());
     }
     
     protected void onCreateSettings(S settings) {
@@ -47,5 +47,5 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
 
     public S getSettings(){return mSettings;}
     
-    protected abstract S createApplication();
+    protected abstract S createApplicationSettings();
 }
