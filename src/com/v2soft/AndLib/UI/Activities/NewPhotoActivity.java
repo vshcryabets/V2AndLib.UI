@@ -20,7 +20,7 @@
 // ***** END LICENSE BLOCK *****
 package com.v2soft.AndLib.UI.Activities;
 
-import com.v2soft.AndLib.UI.CameraView;
+import com.v2soft.AndLib.UI.views.CameraView;
 
 import android.R;
 import android.app.Activity;

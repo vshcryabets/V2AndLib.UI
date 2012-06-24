@@ -31,7 +31,7 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.v2soft.AndLib.UI.Views.IDataView;
+import com.v2soft.AndLib.UI.views.IDataView;
 
 /**
  * 

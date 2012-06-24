@@ -18,7 +18,7 @@
 // 
 // 
 // ***** END LICENSE BLOCK *****
-package com.v2soft.AndLib.UI;
+package com.v2soft.AndLib.UI.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -29,6 +29,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+
+import com.v2soft.AndLib.UI.R;
 
 /**
  * View that show some image after start and hide it in few moments
