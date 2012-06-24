@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import com.v2soft.AndLib.UI.Views.LoadingView;
+import com.v2soft.AndLib.UI.views.LoadingView;
 
 /**
  * 

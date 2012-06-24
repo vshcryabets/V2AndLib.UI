@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.v2soft.AndLib.UI;
+package com.v2soft.AndLib.UI.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -25,6 +25,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.v2soft.AndLib.UI.R;
 
 /**
  * 

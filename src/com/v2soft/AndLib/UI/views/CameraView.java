@@ -18,7 +18,7 @@
 // 
 // 
 // ***** END LICENSE BLOCK *****
-package com.v2soft.AndLib.UI;
+package com.v2soft.AndLib.UI.views;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
