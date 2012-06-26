@@ -19,9 +19,11 @@ import android.widget.ArrayAdapter;
 public class V2DemoActivity 
 extends ListActivity 
 implements OnItemClickListener {
-    private final static String [] sItems = new String[]{"Bluetooth device list"};
+    private final static String [] sItems = new String[]{"Bluetooth device list",
+        "UDP discovery"};
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
     private static final int ITEM_BLUETOOTH_DEVICE = 0;
+    private static final int ITEM_UDP_DISCOVERY = 1;
     
     private ArrayAdapter<String> mAdapter;
     
@@ -39,6 +41,9 @@ implements OnItemClickListener {
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         switch ((int)arg3) {
         case ITEM_BLUETOOTH_DEVICE:
+            startActivity(new Intent(this, BluetoothList.class));
+            break;
+        case ITEM_UDP_DISCOVERY:
             startActivity(new Intent(this, BluetoothList.class));
             break;
 
