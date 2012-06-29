@@ -6,6 +6,7 @@
 
     <uses-sdk android:minSdkVersion="15" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
@@ -23,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.BluetoothList" />
+        <activity android:name=".ui.activities.UDPDiscoveryList" />
     </application>
 
 </manifest>

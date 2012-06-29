@@ -6,10 +6,10 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.v2soft.AndLib.UI.R;
-import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoBluetoothDeviceList;
+import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoUDPDiscoveryList;
 
 /**
- * Activity with list of discovered UDP 
+ * Activity with list of discovered UDP clients
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
@@ -20,7 +20,7 @@ extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
-            Fragment fragment = DemoBluetoothDeviceList.newInstance();
+            Fragment fragment = DemoUDPDiscoveryList.newInstance();
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();

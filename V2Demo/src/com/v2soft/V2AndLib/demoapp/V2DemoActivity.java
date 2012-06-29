@@ -1,6 +1,7 @@
 package com.v2soft.V2AndLib.demoapp;
 
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
+import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -44,7 +45,7 @@ implements OnItemClickListener {
             startActivity(new Intent(this, BluetoothList.class));
             break;
         case ITEM_UDP_DISCOVERY:
-            startActivity(new Intent(this, BluetoothList.class));
+            startActivity(new Intent(this, UDPDiscoveryList.class));
             break;
 
         default:
