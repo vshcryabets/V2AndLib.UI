@@ -1,8 +1,23 @@
-package com.v2soft.V2AndLib.demoapp.networking;
-
+package com.v2soft.AndLib.networking;
+/*
+ * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 /**
  * 
@@ -20,7 +35,8 @@ public abstract class UDPBroadcastDiscovery {
     private int mDelay;
     private Thread mSenderThread = null;
     private DatagramSocket mSocket;
-    private InetAddress mGroup;
+    private InetAddress mTargetAddress;
+    protected int mTargetPort;
 
     /**
      * 
@@ -34,12 +50,19 @@ public abstract class UDPBroadcastDiscovery {
 
     /**
      * Start searching of other hosts
+     * @param targetPort
+     * @param localAddress
+     * @param targetAddress
+     * @throws SocketException 
      */
-    public void startDiscovery() {
+    public void startDiscovery(int targetPort, InetAddress localAddress, InetAddress targetAddress) throws SocketException {
         if ( mSenderThread != null ) {
             throw new IllegalStateException("Broadcast discovery process already started");
         }
-        mSenderThread = new Thread(mBackgroundSender, "UDPBroadcastSender");    
+        mTargetAddress = targetAddress;
+        mTargetPort = targetPort;
+        mSocket = new DatagramSocket();
+        mSenderThread = new Thread(mBackgroundSender, UDPBroadcastDiscovery.class.getSimpleName());    
         mSenderThread.start();
         if ( mListener != null ) {
             mListener.onDiscoveryStarted();
@@ -54,7 +77,7 @@ public abstract class UDPBroadcastDiscovery {
         mSenderThread = null;
     }    
 
-    protected abstract void sendRequest(DatagramSocket socket);
+    protected abstract void sendRequest(InetAddress target, DatagramSocket socket);
     protected abstract void handleIncomePacket(DatagramSocket socket, DatagramPacket income);
 
     public UDPBroadcastListener getListener() {
@@ -71,7 +94,7 @@ public abstract class UDPBroadcastDiscovery {
             int count = mRetryCount;
             while ( count -- > 0 ) {
                 // send packet
-                sendRequest(mSocket);
+                sendRequest(mTargetAddress, mSocket);
                 // delay
                 try {
                     Thread.sleep(mDelay);
@@ -79,6 +102,7 @@ public abstract class UDPBroadcastDiscovery {
                     break;
                 }
             }
+            mSocket.close();
             mSenderThread = null;
             if ( mListener != null ) {
                 mListener.onDiscoveryFinished();
