@@ -17,15 +17,10 @@ package com.v2soft.AndLib.UI.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.v2soft.AndLib.UI.R;
 
