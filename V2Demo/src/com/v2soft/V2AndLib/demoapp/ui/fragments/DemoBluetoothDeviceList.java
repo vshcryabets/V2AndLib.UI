@@ -17,7 +17,7 @@ extends BluetoothDeviceList<DemoApplication, DemoAppSettings>  {
     public static Fragment newInstance() {
         return new DemoBluetoothDeviceList();
     }
-
+    
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub

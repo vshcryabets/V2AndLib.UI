@@ -36,7 +36,7 @@ public abstract class CustomizableRecorder {
     protected AudioRecord mRecorder;
     protected int mBufferSizeInBytes;
     public int mSampleRate = CustomizableRecorder.sFrequencies[0];
-    protected int mChannels = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+    protected int mChannels = AudioFormat.CHANNEL_IN_MONO;
     protected int mChannelsCount = 1;
     private ByteBuffer[] mBuffers;
     private int mCurrentBuffer = 0;
@@ -101,7 +101,7 @@ public abstract class CustomizableRecorder {
      */
     public void setAudioChannels(int channels) {
         mChannels = channels;
-        if ( channels == AudioFormat.CHANNEL_CONFIGURATION_MONO ) {
+        if ( channels == AudioFormat.CHANNEL_IN_MONO ) {
             mChannelsCount = 1;
         } else {
             mChannelsCount = 2;

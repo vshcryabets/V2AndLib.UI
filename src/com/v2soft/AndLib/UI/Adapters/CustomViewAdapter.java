@@ -39,8 +39,8 @@ import com.v2soft.AndLib.UI.views.IDataView;
  *
  */
 public class CustomViewAdapter<T> 
-    extends BaseAdapter 
-    implements Callback {
+extends BaseAdapter 
+implements Callback {
     //---------------------------------------------------------------------------
     // Interfaces
     //---------------------------------------------------------------------------
@@ -76,7 +76,7 @@ public class CustomViewAdapter<T>
         this(context);
         mFactory = factory;
     }
-    
+
     /**
      * Set adapter data
      * @param data
@@ -86,7 +86,7 @@ public class CustomViewAdapter<T>
         mItems = data;
         mHandler.sendEmptyMessage(MSG_DATASET_CHANGED);
     }
-    
+
     @Override
     public int getCount() {
         return mItems.size();
@@ -101,7 +101,7 @@ public class CustomViewAdapter<T>
     public long getItemId(int position) {
         return position;
     }
-    
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         IDataView<T> view = (IDataView<T>) convertView;
@@ -111,7 +111,7 @@ public class CustomViewAdapter<T>
         view.setData(mItems.get(position));
         return (View) view;
     }
-    
+
     /**
      * Add item to the list
      * @param item
