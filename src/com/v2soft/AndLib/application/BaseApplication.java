@@ -35,9 +35,22 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
     @Override
     public void onCreate() {
         super.onCreate();
+//        if (DEV)
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//        .detectDiskReads()
+//        .detectDiskWrites()
+//        .detectNetwork()   // or .detectAll() for all detectable problems
+//        .penaltyLog()
+//        .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//        .detectLeakedSqlLiteObjects()
+//        .detectLeakedClosableObjects()
+//        .penaltyLog()
+//        .penaltyDeath()
+//        .build());        
         onCreateSettings(createApplicationSettings());
     }
-    
+
     protected void onCreateSettings(S settings) {
         if ( settings == null ) {
             throw new NullPointerException("Settings is null");
@@ -46,6 +59,6 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
     }
 
     public S getSettings(){return mSettings;}
-    
+
     protected abstract S createApplicationSettings();
 }
