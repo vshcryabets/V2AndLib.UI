@@ -33,11 +33,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import com.v2soft.AndLib.UI.R;
-import com.v2soft.AndLib.UI.Adapters.CustomViewAdapter;
-import com.v2soft.AndLib.UI.views.IDataView;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
+import com.v2soft.AndLib.ui.Adapters.CustomViewAdapter;
 import com.v2soft.AndLib.ui.loaders.BluetoothScannerLoader;
+import com.v2soft.AndLib.ui.views.IDataView;
 
 /**
  * Fragment that shows list of discovered bluetooth devices
