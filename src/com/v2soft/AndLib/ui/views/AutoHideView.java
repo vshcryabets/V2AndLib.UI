@@ -29,7 +29,7 @@ import android.view.animation.AnimationUtils;
 
 import com.v2soft.AndLib.Timers.SpecialTimer;
 import com.v2soft.AndLib.Timers.SpecialTimerListener;
-import com.v2soft.AndLib.UI.R;
+import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.ui.Animation.DeleteAnimationListener;
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 
-import com.v2soft.AndLib.UI.R;
+import com.v2soft.AndLib.ui.R;
 
 /**
  * Button view that hires onPress event periodically during it is pressed
