@@ -1,6 +1,6 @@
 package V2AndLib;
 
-import com.v2soft.AndLib.UI.R;
+import com.v2soft.AndLib.ui.R;
 import android.app.Activity;
 import android.os.Bundle;
 

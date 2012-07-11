@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import com.v2soft.AndLib.UI.R;
+import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.ui.Adapters.CustomViewAdapter;
@@ -53,7 +53,7 @@ implements LoaderCallbacks<List<BluetoothDevice>>,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(com.v2soft.AndLib.UI.R.layout.v2andlib_fragment_list, null);
+        View view = inflater.inflate(com.v2soft.AndLib.ui.R.layout.v2andlib_fragment_list, null);
         ListView list = (ListView) view.findViewById(android.R.id.list);
         mAdapter = new BluetoothDeviceAdapter(getActivity());
         list.setOnItemClickListener(this);
