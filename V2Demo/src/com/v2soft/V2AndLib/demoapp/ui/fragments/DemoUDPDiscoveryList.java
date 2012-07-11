@@ -15,6 +15,13 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -23,13 +30,6 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;

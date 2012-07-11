@@ -17,6 +17,7 @@ package com.v2soft.AndLib.ui.loaders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,9 +37,11 @@ import android.support.v4.content.Loader;
 public class BluetoothScannerLoader 
 extends Loader<List<BluetoothDevice>> {
     protected static final int START_DELAY_MS = 5000; // reload every 5 seconds
+    protected static final int MAX_TTL = 5;
     protected Context mContext;
     protected BluetoothAdapter mAdapter;
     protected List<BluetoothDevice> mDeviceList;
+    protected List<Integer> mDeviceTTL;
     private Timer mTimer;  
     private int mRestartDiscoverDelay = START_DELAY_MS;
 
@@ -47,11 +50,12 @@ extends Loader<List<BluetoothDevice>> {
         mContext = context;
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mDeviceList = new ArrayList<BluetoothDevice>();
+        mDeviceTTL = new ArrayList<Integer>();
     }
 
     @Override
     protected void onStartLoading() {
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        final IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         mContext.registerReceiver(mReceiver, filter);
         restartDiscovery();
@@ -59,13 +63,18 @@ extends Loader<List<BluetoothDevice>> {
     }
 
     private void restartDiscovery() {
-        mDeviceList.clear();
+        // get bonded devices
+        final Set<BluetoothDevice> devices = mAdapter.getBondedDevices();
+        for (BluetoothDevice device : devices) {
+            addOrUpdateDevice(device);
+        }
         // If we're already discovering, stop it
         if (mAdapter.isDiscovering()) {
             mAdapter.cancelDiscovery();
         }
         // Request discover from BluetoothAdapter
         mAdapter.startDiscovery();
+        deliverResult(new ArrayList<BluetoothDevice>(mDeviceList));
     }
 
     @Override
@@ -82,17 +91,30 @@ extends Loader<List<BluetoothDevice>> {
     private BroadcastReceiver mReceiver = new BroadcastReceiver(){
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
+            final String action = intent.getAction();
             if ( BluetoothDevice.ACTION_FOUND.equals(action)) {               
                 // found new device
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-                    mDeviceList.add(device);
+                    addOrUpdateDevice(device);
                 }
                 deliverResult(new ArrayList<BluetoothDevice>(mDeviceList));
             } else if ( BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action) ) {
+                // recalcualte TTLs
+                int i = 0;
+                while ( i < mDeviceTTL.size() ) {
+                    int value = mDeviceTTL.get(i);
+                    if ( value > 0 ) {
+                        value--;
+                        mDeviceTTL.set(i, value);
+                        i++;
+                    } else {
+                        mDeviceList.remove(i);
+                        mDeviceTTL.remove(i);
+                    }
+                }
                 deliverResult(new ArrayList<BluetoothDevice>(mDeviceList));
                 // discovery finished
                 mTimer = new Timer("SessionLoader", true);
@@ -103,12 +125,22 @@ extends Loader<List<BluetoothDevice>> {
             }
         }
     };
-    
+
     /**
      * Change delay between discovery restart
      * @param timeout
      */
     public void setDiscoveryDelay(int timeout) {
         mRestartDiscoverDelay = timeout;
+    }
+    
+    private void addOrUpdateDevice(BluetoothDevice device) {
+        int pos = mDeviceList.indexOf(device);
+        if ( pos < 0 ) {
+            mDeviceList.add(device);
+            mDeviceTTL.add(MAX_TTL);
+        } else {
+            mDeviceTTL.set(pos, MAX_TTL);
+        }
     }
 }

@@ -1,9 +1,9 @@
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 
 import com.v2soft.AndLib.UI.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoUDPDiscoveryList;
@@ -14,14 +14,14 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoUDPDiscoveryList;
  *
  */
 public class UDPDiscoveryList 
-extends Activity {
+extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
             Fragment fragment = DemoUDPDiscoveryList.newInstance();
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
         }

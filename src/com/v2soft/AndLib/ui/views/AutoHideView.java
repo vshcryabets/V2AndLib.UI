@@ -18,7 +18,7 @@
 // 
 // 
 // ***** END LICENSE BLOCK *****
-package com.v2soft.AndLib.UI.views;
+package com.v2soft.AndLib.ui.views;
 
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,7 +30,7 @@ import android.view.animation.AnimationUtils;
 import com.v2soft.AndLib.Timers.SpecialTimer;
 import com.v2soft.AndLib.Timers.SpecialTimerListener;
 import com.v2soft.AndLib.UI.R;
-import com.v2soft.AndLib.UI.Animation.DeleteAnimationListener;
+import com.v2soft.AndLib.ui.Animation.DeleteAnimationListener;
 
 /**
  * View extender that hides it content after specified time

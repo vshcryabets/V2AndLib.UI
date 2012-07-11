@@ -18,7 +18,7 @@
 // 
 // 
 // ***** END LICENSE BLOCK *****
-package com.v2soft.AndLib.UI.Adapters;
+package com.v2soft.AndLib.ui.Adapters;
 
 import android.content.Context;
 import android.os.Handler.Callback;
@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import com.v2soft.AndLib.UI.views.LoadingView;
+import com.v2soft.AndLib.ui.views.LoadingView;
 
 /**
  * 

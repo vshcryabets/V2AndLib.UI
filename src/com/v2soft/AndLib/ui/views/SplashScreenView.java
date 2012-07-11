@@ -18,7 +18,7 @@
 // 
 // 
 // ***** END LICENSE BLOCK *****
-package com.v2soft.AndLib.UI.views;
+package com.v2soft.AndLib.ui.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
