@@ -48,8 +48,6 @@ public class DemoBroadcastReceiver extends UDPBroadcastReceiver {
             } catch (IOException e) {
                 e.printStackTrace();
             }        
-        } else {
-            System.out.println("Quote of the Moment: " + received);
         }
     }
 }

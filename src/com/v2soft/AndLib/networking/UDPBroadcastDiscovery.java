@@ -1,4 +1,3 @@
-package com.v2soft.AndLib.networking;
 /*
  * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
  *
@@ -14,6 +13,9 @@ package com.v2soft.AndLib.networking;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.v2soft.AndLib.networking;
+
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -28,24 +30,34 @@ public abstract class UDPBroadcastDiscovery {
     public interface UDPBroadcastListener {
         void onDiscoveryStarted();
         void onDiscoveryFinished();
+        void onNewServer(Object item);
     }
 
-    private UDPBroadcastListener mListener;
+    protected UDPBroadcastListener mListener;
     private int mRetryCount;
     private int mDelay;
     private Thread mSenderThread = null;
+    private Thread mReceiverThread = null;
     private DatagramSocket mSocket;
-    private InetAddress mTargetAddress;
+
     protected int mTargetPort;
+    private InetAddress mTargetAddress;
+    private InetAddress mSourceAddress;
 
     /**
      * 
      * @param retryCount how many times we should send UDP broadcast packet
      * @param delay delay between sending a packet
      */
-    public UDPBroadcastDiscovery(int retryCount, int delay) {
+    public UDPBroadcastDiscovery(int retryCount, int delay, 
+            int targetPort, 
+            InetAddress localAddress, 
+            InetAddress targetAddress) {
         mRetryCount = retryCount;
         mDelay = delay;
+        mTargetAddress = targetAddress;
+        mTargetPort = targetPort;
+        mSourceAddress = localAddress;
     }
 
     /**
@@ -55,14 +67,19 @@ public abstract class UDPBroadcastDiscovery {
      * @param targetAddress
      * @throws SocketException 
      */
-    public void startDiscovery(int targetPort, InetAddress localAddress, InetAddress targetAddress) throws SocketException {
+    public void startDiscovery() throws SocketException {
         if ( mSenderThread != null ) {
             throw new IllegalStateException("Broadcast discovery process already started");
         }
-        mTargetAddress = targetAddress;
-        mTargetPort = targetPort;
         mSocket = new DatagramSocket();
-        mSenderThread = new Thread(mBackgroundSender, UDPBroadcastDiscovery.class.getSimpleName());    
+        // start receiver thread
+        mReceiverThread = new Thread(mBackgroundReceiver,
+                UDPBroadcastDiscovery.class.getSimpleName()+"R");
+        mReceiverThread.start();
+
+        // start 
+        mSenderThread = new Thread(mBackgroundSender,
+                UDPBroadcastDiscovery.class.getSimpleName());
         mSenderThread.start();
         if ( mListener != null ) {
             mListener.onDiscoveryStarted();
@@ -73,9 +90,19 @@ public abstract class UDPBroadcastDiscovery {
      * Start searching of other hosts
      */
     public void stopDiscovery() {
-        mSenderThread.interrupt();
-        mSenderThread = null;
-    }    
+        if ( mSenderThread != null ) {
+            mSenderThread.interrupt();
+            mSenderThread = null;
+        }
+        if ( mReceiverThread != null ) {
+            mReceiverThread.interrupt();
+            mReceiverThread = null;
+        }
+    }
+
+    public boolean isDiscovering() {
+        return (mSenderThread != null);
+    }
 
     protected abstract void sendRequest(InetAddress target, DatagramSocket socket);
     protected abstract void handleIncomePacket(DatagramSocket socket, DatagramPacket income);
@@ -104,9 +131,34 @@ public abstract class UDPBroadcastDiscovery {
             }
             mSocket.close();
             mSenderThread = null;
+            stopDiscovery();
             if ( mListener != null ) {
                 mListener.onDiscoveryFinished();
             }
+        }
+    };
+
+    private Runnable mBackgroundReceiver = new Runnable() {
+        @Override
+        public void run() {
+            final byte[] buf = new byte[256];
+
+            while ( true ) {
+                try {
+                    final DatagramPacket packet = new DatagramPacket(buf, buf.length);
+                    mSocket.receive(packet);
+                    handleIncomePacket(mSocket, packet);
+                    Thread.sleep(100);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    if ( mSocket.isClosed() ) {
+                        break;
+                    }
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+            mReceiverThread = null;
         }
     };
 }
