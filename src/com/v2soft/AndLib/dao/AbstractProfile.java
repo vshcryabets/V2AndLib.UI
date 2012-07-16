@@ -29,7 +29,7 @@ public abstract class AbstractProfile extends JSONSerializable {
     //----------------------------------------------------------------
     // Constants
     //----------------------------------------------------------------
-    protected static final String KEY_NAME = "name";
+    public static final String KEY_NAME = "name";
     //----------------------------------------------------------------
     // Private fields
     //----------------------------------------------------------------
@@ -37,6 +37,9 @@ public abstract class AbstractProfile extends JSONSerializable {
     //----------------------------------------------------------------
     // Constructors
     //----------------------------------------------------------------
+    public AbstractProfile() {
+        this("");
+    }
     public AbstractProfile(String name) {
         super();
         mName = name;
