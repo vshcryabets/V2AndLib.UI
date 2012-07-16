@@ -15,11 +15,8 @@
  */
 package com.v2soft.V2AndLib.demoapp.networking;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import com.v2soft.AndLib.networking.UDPBroadcastDiscovery;
 
@@ -37,7 +34,7 @@ extends UDPBroadcastDiscovery {
     }
 
     @Override
-    protected void handleIncomePacket(DatagramSocket socket, DatagramPacket packet) {
+    protected void handleIncomePacket(DatagramPacket packet) {
         byte [] data = packet.getData();
         String received = new String(data, 0, packet.getLength());
         if ( mListener != null ) {
@@ -47,16 +44,8 @@ extends UDPBroadcastDiscovery {
     }
 
     @Override
-    protected void sendRequest(InetAddress target, DatagramSocket socket) {
-        byte[] buf;
-        buf = REQUEST_UUID.getBytes();        
-        try {
-            DatagramPacket packet = new DatagramPacket(buf, buf.length, target, mTargetPort);
-            socket.send(packet);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected DatagramPacket prepareRequest() {
+        final byte[] buf = REQUEST_UUID.getBytes();
+        return new DatagramPacket(buf, buf.length);
     }
 }

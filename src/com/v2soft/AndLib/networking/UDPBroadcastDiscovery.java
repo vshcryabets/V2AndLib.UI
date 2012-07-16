@@ -15,6 +15,8 @@
  */
 package com.v2soft.AndLib.networking;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -32,6 +34,8 @@ public abstract class UDPBroadcastDiscovery {
         void onDiscoveryFinished();
         void onNewServer(Object item);
     }
+
+    protected static final String LOG_TAG = UDPBroadcastDiscovery.class.getSimpleName();
 
     protected UDPBroadcastListener mListener;
     private int mRetryCount;
@@ -104,8 +108,8 @@ public abstract class UDPBroadcastDiscovery {
         return (mSenderThread != null);
     }
 
-    protected abstract void sendRequest(InetAddress target, DatagramSocket socket);
-    protected abstract void handleIncomePacket(DatagramSocket socket, DatagramPacket income);
+    protected abstract DatagramPacket prepareRequest();
+    protected abstract void handleIncomePacket(DatagramPacket income);
 
     public UDPBroadcastListener getListener() {
         return mListener;
@@ -121,7 +125,14 @@ public abstract class UDPBroadcastDiscovery {
             int count = mRetryCount;
             while ( count -- > 0 ) {
                 // send packet
-                sendRequest(mTargetAddress, mSocket);
+                final DatagramPacket packet = prepareRequest();
+                packet.setAddress(mTargetAddress);
+                packet.setPort(mTargetPort);
+                try {
+                mSocket.send(packet);
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, e.toString(), e);
+                }
                 // delay
                 try {
                     Thread.sleep(mDelay);
@@ -147,7 +158,7 @@ public abstract class UDPBroadcastDiscovery {
                 try {
                     final DatagramPacket packet = new DatagramPacket(buf, buf.length);
                     mSocket.receive(packet);
-                    handleIncomePacket(mSocket, packet);
+                    handleIncomePacket(packet);
                     Thread.sleep(100);
                 } catch (IOException e) {
                     e.printStackTrace();

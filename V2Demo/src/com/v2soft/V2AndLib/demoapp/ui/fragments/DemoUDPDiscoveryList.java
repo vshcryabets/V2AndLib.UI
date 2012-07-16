@@ -70,7 +70,8 @@ implements LoaderCallbacks<List<String>>{
         try {
             mBroadcastAddresses = new LinkedList<InetAddress>();
             mLocalAddresses = new LinkedList<InetAddress>();
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> en = 
+                    NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();
                 if ( intf.isLoopback() ) continue;
 

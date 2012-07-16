@@ -22,7 +22,6 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.util.Log;
 
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +71,6 @@ extends Loader<List<T>> {
     }
 
     protected void restartDiscovery() throws SocketException {
-        // get bonded devices
-        //        final Set<BluetoothDevice> devices = mAdapter.getBondedDevices();
-        //        for (BluetoothDevice device : devices) {
-        //            addOrUpdateDevice(device);
-        //        }
         // If we're already discovering, stop it
         if (mDiscovery.isDiscovering()) {
             mDiscovery.stopDiscovery();
@@ -99,10 +93,7 @@ extends Loader<List<T>> {
     private UDPBroadcastListener mListener = new UDPBroadcastListener(){
         @Override
         public void onDiscoveryStarted() {
-            // TODO Auto-generated method stub
-
         }
-
         @Override
         public void onDiscoveryFinished() {
             // recalculate TTLs
@@ -119,18 +110,20 @@ extends Loader<List<T>> {
                 }
             }
             deliverResult(new ArrayList<T>(mDeviceList));
-            // discovery finished
-            mTimer = new Timer("UDPPeersLoader", true);
-            mTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        restartDiscovery();
-                    } catch (Exception e) {
-                        Log.e(LOG_TAG, e.toString(), e);
+            if ( UDPScannerLoader.this.isStarted() ) {
+                // discovery finished
+                mTimer = new Timer("UDPPeersLoader", true);
+                mTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            restartDiscovery();
+                        } catch (Exception e) {
+                            Log.e(LOG_TAG, e.toString(), e);
+                        }
                     }
-                }
-            }, mRestartDiscoverDelay);
+                }, mRestartDiscoverDelay);
+            }
         }
 
         @Override
