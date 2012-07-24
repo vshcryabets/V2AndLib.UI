@@ -29,13 +29,13 @@ import java.nio.ByteBuffer;
  *
  */
 public abstract class CustomizableRecorder {
-    private static final int  sEncoding = AudioFormat.ENCODING_PCM_16BIT;
-    public static final int sFrequencies[] = {44100,22050,22050,11025,8000};
+    private static final int  DEFAULT_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
+    public static final int SUPPORTED_FRAMERATES[] = {44100,22050,11025,8000};
     private static final String LOG_TAG = CustomizableRecorder.class.getSimpleName();
 
     protected AudioRecord mRecorder;
     protected int mBufferSizeInBytes;
-    public int mSampleRate = CustomizableRecorder.sFrequencies[0];
+    public int mSampleRate = CustomizableRecorder.SUPPORTED_FRAMERATES[0];
     protected int mChannels = AudioFormat.CHANNEL_IN_MONO;
     protected int mChannelsCount = 1;
     private ByteBuffer[] mBuffers;
@@ -49,7 +49,7 @@ public abstract class CustomizableRecorder {
      * Prepare recorder
      */
     public void prepare() throws IOException {
-        for (int sampleRate : sFrequencies) {
+        for (int sampleRate : SUPPORTED_FRAMERATES) {
             mRecorder = createRecorder(sampleRate);
             if ( mRecorder != null ) {
                 mSampleRate = sampleRate;
@@ -65,7 +65,7 @@ public abstract class CustomizableRecorder {
         for ( int i = 0; i < mMaxbuffersCount; i++ ) {
             mBuffers[i] = ByteBuffer.allocateDirect(mBufferSizeInBytes); 
         }
-        mReaderThread = new Thread(mBackgroundReader, "AudioRecordBackground");
+        mReaderThread = new Thread(mBackgroundReader, LOG_TAG);
     }
 
 
@@ -101,7 +101,8 @@ public abstract class CustomizableRecorder {
      */
     public void setAudioChannels(int channels) {
         mChannels = channels;
-        if ( channels == AudioFormat.CHANNEL_IN_MONO ) {
+        if ( channels == AudioFormat.CHANNEL_IN_MONO || 
+                channels == AudioFormat.CHANNEL_CONFIGURATION_MONO ) {
             mChannelsCount = 1;
         } else {
             mChannelsCount = 2;
@@ -122,22 +123,20 @@ public abstract class CustomizableRecorder {
         }
     }
 
-    protected AudioRecord createRecorder(int sampleRate) {
+    private AudioRecord createRecorder(int sampleRate) {
         AudioRecord res = null;
-        try	{
-            // Create a new AudioRecord object to record the audio.
-            // TODO there is possible bug, mBufferSize may be not in bytes
-            mBufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRate, mChannels,  sEncoding);
-            res = new AudioRecord(mAudioSource, 
-                    sampleRate, 
-                    mChannels, 
-                    sEncoding, 
-                    mBufferSizeInBytes);	
+        // Create a new AudioRecord object to record the audio.
+        // TODO there is possible bug, mBufferSize may be not in bytes
+        mBufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRate, 
+                mChannels,  DEFAULT_ENCODING);
+        res = new AudioRecord(mAudioSource, 
+                sampleRate, 
+                mChannels, 
+                DEFAULT_ENCODING, 
+                mBufferSizeInBytes);
+        if ( res != null ) {
             Log.d(LOG_TAG, "Initialized recorder "+sampleRate+"x"+
-                    mChannels+"x"+sEncoding+" BS"+mBufferSizeInBytes);
-        }
-        catch (Exception e) {
-            Log.e(LOG_TAG, e.toString(), e);
+                    mChannels+"x"+DEFAULT_ENCODING+" BS"+mBufferSizeInBytes);
         }
         return res;
     }
@@ -149,7 +148,15 @@ public abstract class CustomizableRecorder {
                 if ( mReaderThread.isInterrupted() ) {
                     return;
                 }
-                int read = mRecorder.read(mBuffers[mCurrentBuffer], mBufferSizeInBytes);
+                final int read = mRecorder.read(mBuffers[mCurrentBuffer], mBufferSizeInBytes);
+                if ( read ==  AudioRecord.ERROR_INVALID_OPERATION  ) {
+                    processError(read, "ERROR_INVALID_OPERATION: Denotes a failure due to the improper use of a method.");
+                    break;
+                }
+                if ( read ==  AudioRecord.ERROR_BAD_VALUE   ) {
+                    processError(read, "ERROR_BAD_VALUE: Denotes a failure due to the use of an invalid value.");
+                    break;
+                }
                 if ( mReaderThread.isInterrupted() ) {
                     return;
                 }
@@ -168,4 +175,5 @@ public abstract class CustomizableRecorder {
      */
     protected abstract int getMaxBuffersCount();
     protected abstract void processBuffer(ByteBuffer buffer, int read);
+    protected abstract void processError(int code, String someText);
 }

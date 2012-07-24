@@ -236,22 +236,22 @@ public class CustomizableMediaPlayer implements Runnable, OnCompletionListener
 		setState(PlayerState.PL_STOPED);
 	}
 	
-	private synchronized void prepare() throws Exception
-	{
+	private synchronized void prepare() throws Exception {
 		if ( ( mState != PlayerState.PL_UNPREPARED ) &&
 				( mState != PlayerState.PL_STOPED )) {
             return;
         }
-		
-		if ( mVideoHolder !=  null )
-		{
-			Log.d("prepare","="+mVideoHolder.toString());
+		// prepare video surface
+		if ( mVideoHolder !=  null ) {
 			mMediaPlayer.setScreenOnWhilePlaying(true);
 			mMediaPlayer.setDisplay(mVideoHolder);
 		}
 		mMediaPlayer.prepare();
 		final int duration = mMediaPlayer.getDuration();
 		if ( duration >  0) {
+            if ( mEndPosition <= 0 ) {
+                mEndPosition = duration;
+            }
             setState(PlayerState.PL_PREPARED);
         }
 	}
@@ -266,6 +266,10 @@ public class CustomizableMediaPlayer implements Runnable, OnCompletionListener
 		mEndPosition = pos;
 	}
 
+	/**
+	 * Specify startposition of player
+	 * @param i position in miliseconds
+	 */
 	public void setStartPosition(int i) 
 	{
 		if ( ( mEndPosition > 0 ) && ( i > mEndPosition )) {

@@ -23,7 +23,6 @@ package com.v2soft.AndLib.media;
 public interface CustomizableMediaPlayerListener {
 	void onUpdatePosition(int currentPosition);
 	void onBeginPlay();
-	void onEndPlay();
 	void onPausePlay(boolean state);
 	void onReadyStateChanged(boolean ready);
 	void onFinishPlay();

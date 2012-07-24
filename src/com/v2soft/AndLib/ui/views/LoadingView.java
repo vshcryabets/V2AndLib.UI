@@ -25,7 +25,7 @@ public class LoadingView extends LinearLayout {
 
     public LoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        inflate(getContext(), R.layout.v2andlib_listitem_loading, this);
+        inflate(context, R.layout.v2andlib_listitem_loading, this);
     }
 
     public LoadingView(Context context) {
