@@ -66,8 +66,7 @@ public class CustomizableMediaPlayer implements Runnable, OnCompletionListener
 		mBackgroundUpdate.start();
 	}
 	
-	public void close()
-	{
+	public void close() {
 		freePlayer();
 		setState(PlayerState.PL_FREE);
 		isProcessing = false;
@@ -75,13 +74,11 @@ public class CustomizableMediaPlayer implements Runnable, OnCompletionListener
     //--------------------------------------------------------------------------------------------
     // event routines
     //--------------------------------------------------------------------------------------------
-    public void addListener(CustomizableMediaPlayerListener listener)
-    {
+    public void addListener(CustomizableMediaPlayerListener listener) {
             mListeners.add(listener);
     }
 
-    public void removeListener(CustomizableMediaPlayerListener listener)
-    {
+    public void removeListener(CustomizableMediaPlayerListener listener) {
             mListeners.remove(listener);
     }
 	//--------------------------------------------------------------------------------------------
@@ -169,8 +166,7 @@ public class CustomizableMediaPlayer implements Runnable, OnCompletionListener
 	}
 	public String getSourceFilename() {return mSourceName;}
 
-	public synchronized void play() throws Exception
-	{
+	public synchronized void play() throws Exception {
 		switch ( mState ) {
 		case PL_UNPREPARED:
 		case PL_STOPED:
@@ -185,8 +181,7 @@ public class CustomizableMediaPlayer implements Runnable, OnCompletionListener
 		}
 	}
 	
-	public synchronized void pause()
-	{
+	public synchronized void pause() {
 		if ( mState != PlayerState.PL_PLAYING ) {
             return;
         }
