@@ -16,6 +16,7 @@
 package com.v2soft.V2AndLib.demoapp;
 
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
+import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
 import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
 
 import android.app.ListActivity;
@@ -36,10 +37,12 @@ public class V2DemoActivity
 extends ListActivity 
 implements OnItemClickListener {
     private final static String [] sItems = new String[]{"Bluetooth device list",
-        "UDP discovery"};
+        "UDP discovery",
+        "Upload to dropbox"};
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
     private static final int ITEM_BLUETOOTH_DEVICE = 0;
     private static final int ITEM_UDP_DISCOVERY = 1;
+    private static final int ITEM_DROPBOX_UPLOAD = 2;
     
     private ArrayAdapter<String> mAdapter;
     
@@ -62,7 +65,9 @@ implements OnItemClickListener {
         case ITEM_UDP_DISCOVERY:
             startActivity(new Intent(this, UDPDiscoveryList.class));
             break;
-
+        case ITEM_DROPBOX_UPLOAD:
+            startActivity(new Intent(this, DropBoxUpload.class));
+            break;
         default:
             break;
         }
