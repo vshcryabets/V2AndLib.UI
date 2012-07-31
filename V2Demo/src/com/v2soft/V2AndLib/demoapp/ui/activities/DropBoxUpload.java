@@ -44,6 +44,7 @@ import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.TokenPair;
 import com.v2soft.AndLib.ui.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoUDPDiscoveryList;
+import com.v2soft.V2AndLib.demoapp.ui.fragments.DropboxUploadFragment;
 
 /**
  * Activity taht upload to Dropbox test file
@@ -231,7 +232,9 @@ extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (!mLoggedIn) {
+        DropboxUploadFragment frag = DropboxUploadFragment.newInstance("/sdcard/cloc", "cloc");
+        frag.show(getFragmentManager(), "dialog");
+/*        if (!mLoggedIn) {
             // Start the remote authentication
             mApi.getSession().startAuthentication(this);
         } else {
@@ -265,6 +268,6 @@ extends Activity implements OnClickListener {
                 }
             });
             t.start();
-        }
+        }*/
     }
 }
