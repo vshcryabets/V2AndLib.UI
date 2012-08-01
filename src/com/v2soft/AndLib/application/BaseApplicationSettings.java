@@ -91,4 +91,12 @@ public abstract class BaseApplicationSettings {
     public void putString(String key, String value) {
         mStringSettings.put(key, value);
     }
+    /**
+     * Check does the specified key stored in settings
+     * @param key key name
+     * @return true if does
+     */
+    public boolean isKeyStored(String key) {
+    	return mStringSettings.containsKey(key);
+    }
 }
