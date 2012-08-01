@@ -1,4 +1,4 @@
-package com.v2soft.V2AndLib.demoapp.ui.fragments;
+package com.v2soft.AndLib.ui.fragments;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +36,7 @@ import com.dropbox.client2.session.TokenPair;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.text.NumberFormatters;
-import com.v2soft.V2AndLib.demoapp.R;
+import com.v2soft.AndLib.ui.R;
 
 /**
  * Dialog fragment that allows to uplaod specified file to dropbox application folder
@@ -130,7 +130,7 @@ implements OnClickListener {
 			Bundle savedInstanceState) {
 		File local = new File(mLocalPath);
 		mFileSize = local.length();
-		final View view = inflater.inflate(R.layout.fragment_dropbox_upload, null);
+		final View view = inflater.inflate(R.layout.v2andlib_fragment_dropbox_upload, null);
 		((TextView)view.findViewById(R.id.txtFileSize)).setText(
 				String.format(getString(R.string.v2andlib_file_size), 
 						NumberFormatters.sKiloBytesFormat.format(mFileSize/1024))
