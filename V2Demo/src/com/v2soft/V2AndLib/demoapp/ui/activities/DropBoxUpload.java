@@ -43,8 +43,8 @@ import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.TokenPair;
 import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.ui.fragments.DropboxUploadFragment;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoUDPDiscoveryList;
-import com.v2soft.V2AndLib.demoapp.ui.fragments.DropboxUploadFragment;
 
 /**
  * Activity taht upload to Dropbox test file
