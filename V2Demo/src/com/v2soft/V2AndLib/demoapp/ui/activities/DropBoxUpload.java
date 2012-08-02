@@ -43,8 +43,8 @@ import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.TokenPair;
 import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.ui.fragments.DropboxUploadFragment;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoUDPDiscoveryList;
-import com.v2soft.V2AndLib.demoapp.ui.fragments.DropboxUploadFragment;
 
 /**
  * Activity taht upload to Dropbox test file
@@ -76,47 +76,12 @@ extends Activity implements OnClickListener {
     public void onClick(View v) {
         try {
             DropboxUploadFragment frag;
-            frag = DropboxUploadFragment.newInstance(this, "/sdcard/cloc", "cloc",
+            frag = DropboxUploadFragment.newInstance(this, "/sdcard/res1.wav", "cloc",
                     APP_KEY, APP_SECRET);
             frag.show(getFragmentManager(), "dialog");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-/*        if (!mLoggedIn) {
-            // Start the remote authentication
-            mApi.getSession().startAuthentication(this);
-        } else {
-            Thread t = new Thread(new Runnable() {
-                
-                @Override
-                public void run() {
-                    byte[] buffer = "Test Dropbox".getBytes();
-                    ByteArrayInputStream is = new ByteArrayInputStream(buffer);
-                    UploadRequest request;
-                    try {
-                        request = mApi.putFileOverwriteRequest("v2demo_test", is, buffer.length,
-                                new ProgressListener() {
-                            @Override
-                            public long progressInterval() {
-                                // Update the progress bar every half-second or so
-                                return 500;
-                            }
-
-                            @Override
-                            public void onProgress(long bytes, long total) {
-                            }
-                        });
-                        if (request != null) {
-                            request.upload();
-                        }        
-                    } catch (DropboxException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            });
-            t.start();
-        }*/
     }
 }

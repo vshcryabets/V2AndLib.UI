@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="btn_yes">Да</string>
+    <string name="btn_no">Нет</string>
+    <string name="btn_ok">Ok</string>
+    <string name="btn_save">Сохранить</string>
+    <string name="btn_cancel">Отменить</string>
+    <string name="btn_close">Закрыть</string>
+    
+    <string name="menu_delete">Удалить</string>
+</resources>
