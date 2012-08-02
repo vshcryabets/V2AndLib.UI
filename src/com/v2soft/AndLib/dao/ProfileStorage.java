@@ -33,6 +33,12 @@ import com.v2soft.AndLib.dao.AbstractProfile;
 import com.v2soft.AndLib.dao.JSONSerializable;
 import com.v2soft.AndLib.dao.Storage;
 
+/**
+ * 
+ * @author V.Shcriyabets (vshcryabets@gmail.com)
+ *
+ * @param <T>
+ */
 public class ProfileStorage<T extends AbstractProfile>
 extends Storage
 implements Collection<T> {
