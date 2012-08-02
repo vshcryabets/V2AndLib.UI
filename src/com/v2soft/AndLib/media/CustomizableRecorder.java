@@ -20,37 +20,49 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- * 
+ * Customizable PCM audio recorder
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
 public abstract class CustomizableRecorder {
-    private static final int  DEFAULT_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-    public static final int SUPPORTED_FRAMERATES[] = {44100,22050,11025,8000};
+    public enum CustomizableRecorderChannels {
+        MONO, STEREO
+    };
+    public enum CustomizableRecorderPCMEncoding {
+        SIGNED_16BPS, SIGNED_8BPS
+    };
+
+    public static final int SUPPORTED_FRAMERATES[] = {44100, 22050, 16000, 11025, 8000};
     private static final String LOG_TAG = CustomizableRecorder.class.getSimpleName();
 
-    protected AudioRecord mRecorder;
+    private AudioRecord mRecorder;
     protected int mBufferSizeInBytes;
     public int mSampleRate = CustomizableRecorder.SUPPORTED_FRAMERATES[0];
-    protected int mChannels = AudioFormat.CHANNEL_IN_MONO;
-    protected int mChannelsCount = 1;
     private ByteBuffer[] mBuffers;
     private int mCurrentBuffer = 0;
     protected int mMaxbuffersCount;
     private Thread mReaderThread;
     protected int mAudioSource = MediaRecorder.AudioSource.DEFAULT;
-    protected int mBitsPerSample = 16;
 
     /**
-     * Prepare recorder
+     * Prepare recorder, autoselect samplerate
      */
-    public void prepare() throws IOException {
-        for (int sampleRate : SUPPORTED_FRAMERATES) {
-            mRecorder = createRecorder(sampleRate);
+    public void prepare(CustomizableRecorderChannels channels,
+            CustomizableRecorderPCMEncoding encoding) {
+        prepare(SUPPORTED_FRAMERATES, channels, encoding);
+    }
+
+    /**
+     * Prepare recorder with
+     */
+    public void prepare(int [] prefferedSampleRates,
+            CustomizableRecorderChannels channels,
+            CustomizableRecorderPCMEncoding encoding) {
+        for (int sampleRate : prefferedSampleRates ){
+            mRecorder = createRecorder(sampleRate, channels, encoding);
             if ( mRecorder != null ) {
                 mSampleRate = sampleRate;
                 break;
@@ -66,7 +78,7 @@ public abstract class CustomizableRecorder {
             mBuffers[i] = ByteBuffer.allocateDirect(mBufferSizeInBytes); 
         }
         mReaderThread = new Thread(mBackgroundReader, LOG_TAG);
-    }
+    }    
 
 
     /**
@@ -77,37 +89,28 @@ public abstract class CustomizableRecorder {
             throw new IllegalStateException("Recorder wasn't prepared");
         }
         mReaderThread.start();
-        mRecorder.startRecording();
     }
 
     /**
      * Stop recording process
      */
-    public void stopRecord() throws IOException {
+    public void stopRecord() {
         if ( mReaderThread.isAlive() ) {
             mReaderThread.interrupt();
         }
-        if (mRecorder!=null) {
-            mRecorder.stop();
-            mRecorder.release();
-            mRecorder = null;
-        }
     }
+    // =============================================================================
+    // Getters
+    // =============================================================================
     /**
-     * Sets the number of audio channels for recording. Call this method before prepare(). 
-     * Prepare() may perform additional checks on the parameter to make sure whether 
-     * the specified number of audio channels are applicable.
-     * @param channels the number of audio channels. Usually it is either 1 (mono) or 2 (stereo).
+     * @return Recorder samplerate
      */
-    public void setAudioChannels(int channels) {
-        mChannels = channels;
-        if ( channels == AudioFormat.CHANNEL_IN_MONO || 
-                channels == AudioFormat.CHANNEL_CONFIGURATION_MONO ) {
-            mChannelsCount = 1;
-        } else {
-            mChannelsCount = 2;
-        }
+    public int getSampleRate() {
+        return mSampleRate;
     }
+    // =============================================================================
+    // Setters
+    // =============================================================================
     /**
      * Sets the audio source to be used for recording.
      * @param source the audio source to use. Check MediaRecorder.AudioSource
@@ -123,20 +126,25 @@ public abstract class CustomizableRecorder {
         }
     }
 
-    private AudioRecord createRecorder(int sampleRate) {
+    private AudioRecord createRecorder(int sampleRate, CustomizableRecorderChannels channels,
+            CustomizableRecorderPCMEncoding encoding) {
         AudioRecord res = null;
+        int channelConfig = ( channels == CustomizableRecorderChannels.MONO ? AudioFormat.CHANNEL_IN_MONO :
+            AudioFormat.CHANNEL_IN_STEREO );
+        int audioFormat = ( encoding == CustomizableRecorderPCMEncoding.SIGNED_16BPS ?
+                AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT);
         // Create a new AudioRecord object to record the audio.
         // TODO there is possible bug, mBufferSize may be not in bytes
         mBufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRate, 
-                mChannels,  DEFAULT_ENCODING);
+                channelConfig,  audioFormat);
         res = new AudioRecord(mAudioSource, 
                 sampleRate, 
-                mChannels, 
-                DEFAULT_ENCODING, 
+                channelConfig, 
+                audioFormat, 
                 mBufferSizeInBytes);
         if ( res != null ) {
             Log.d(LOG_TAG, "Initialized recorder "+sampleRate+"x"+
-                    mChannels+"x"+DEFAULT_ENCODING+" BS"+mBufferSizeInBytes);
+                    channelConfig+"x"+audioFormat+" BS"+mBufferSizeInBytes);
         }
         return res;
     }
@@ -144,21 +152,25 @@ public abstract class CustomizableRecorder {
     private Runnable mBackgroundReader = new Runnable() {
         @Override
         public void run() {
+            processStartRecord();
+            mRecorder.startRecording();
             while ( true ) {
                 if ( mReaderThread.isInterrupted() ) {
-                    return;
+                    break;
                 }
                 final int read = mRecorder.read(mBuffers[mCurrentBuffer], mBufferSizeInBytes);
                 if ( read ==  AudioRecord.ERROR_INVALID_OPERATION  ) {
-                    processError(read, "ERROR_INVALID_OPERATION: Denotes a failure due to the improper use of a method.");
+                    processError(read, 
+                            "ERROR_INVALID_OPERATION: Denotes a failure due to the improper use of a method.");
                     break;
                 }
                 if ( read ==  AudioRecord.ERROR_BAD_VALUE   ) {
-                    processError(read, "ERROR_BAD_VALUE: Denotes a failure due to the use of an invalid value.");
+                    processError(read, 
+                            "ERROR_BAD_VALUE: Denotes a failure due to the use of an invalid value.");
                     break;
                 }
                 if ( mReaderThread.isInterrupted() ) {
-                    return;
+                    break;
                 }
                 processBuffer(mBuffers[mCurrentBuffer], read);
                 mCurrentBuffer++;
@@ -166,9 +178,15 @@ public abstract class CustomizableRecorder {
                     mCurrentBuffer = 0;
                 }
             }
+            mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
+            processStopRecord();
         }
     };
-
+    // =====================================================================
+    // Abstract methods
+    // =====================================================================
     /**
      * 
      * @return how many buffers will be used, at least 2.
@@ -176,4 +194,6 @@ public abstract class CustomizableRecorder {
     protected abstract int getMaxBuffersCount();
     protected abstract void processBuffer(ByteBuffer buffer, int read);
     protected abstract void processError(int code, String someText);
+    protected abstract void processStartRecord();
+    protected abstract void processStopRecord();
 }
