@@ -20,6 +20,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
@@ -51,7 +52,7 @@ public abstract class CustomizableRecorder {
      * Prepare recorder, autoselect samplerate
      */
     public void prepare(CustomizableRecorderChannels channels,
-            CustomizableRecorderPCMEncoding encoding) {
+            CustomizableRecorderPCMEncoding encoding) throws IOException {
         prepare(SUPPORTED_FRAMERATES, channels, encoding);
     }
 
@@ -60,7 +61,7 @@ public abstract class CustomizableRecorder {
      */
     public void prepare(int [] prefferedSampleRates,
             CustomizableRecorderChannels channels,
-            CustomizableRecorderPCMEncoding encoding) {
+            CustomizableRecorderPCMEncoding encoding) throws IOException {
         for (int sampleRate : prefferedSampleRates ){
             mRecorder = createRecorder(sampleRate, channels, encoding);
             if ( mRecorder != null ) {
@@ -84,7 +85,7 @@ public abstract class CustomizableRecorder {
     /**
      * Start recording process
      */
-    public void startRecord() {
+    public void startRecord() throws IOException {
         if ( mRecorder == null ) {
             throw new IllegalStateException("Recorder wasn't prepared");
         }
@@ -94,7 +95,7 @@ public abstract class CustomizableRecorder {
     /**
      * Stop recording process
      */
-    public void stopRecord() {
+    public void stopRecord() throws IOException {
         if ( mReaderThread.isAlive() ) {
             mReaderThread.interrupt();
         }
