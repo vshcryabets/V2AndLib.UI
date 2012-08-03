@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="btn_yes">Yes</string>
-    <string name="btn_no">No</string>
-    <string name="btn_ok">Ok</string>
-    <string name="btn_save">Save</string>
-    <string name="btn_cancel">Cancel</string>
-    <string name="btn_close">Close</string>
+    <string name="v2andlib_btn_yes">Yes</string>
+    <string name="v2andlib_btn_no">No</string>
+    <string name="v2andlib_btn_ok">Ok</string>
+    <string name="v2andlib_btn_save">Save</string>
+    <string name="v2andlib_btn_cancel">Cancel</string>
+    <string name="v2andlib_btn_close">Close</string>
     
-    <string name="menu_delete">Delete</string>    
+    <string name="v2andlib_menu_delete">Delete</string>    
 </resources>

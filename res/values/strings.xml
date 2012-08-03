@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, UIActivity!</string>
-    <string name="app_name">V2AndLib.UI</string>
+    <string name="v2andlib_app_name">V2AndLib.UI</string>
         
     <string name="v2andlib_uploading_file">Uploading file %s</string>
     <string name="v2andlib_file_size">File size %s</string>

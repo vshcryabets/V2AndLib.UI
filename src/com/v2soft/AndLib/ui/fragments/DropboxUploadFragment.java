@@ -208,7 +208,7 @@ implements OnClickListener {
 		protected void onPostExecute(Exception result) {
 			mUploadRequest = null;
 			mProgress.setProgress(mProgress.getMax());
-			mBtnClose.setText(R.string.btn_close);
+			mBtnClose.setText(R.string.v2andlib_btn_close);
 			super.onPostExecute(result);
 		}
 	}
