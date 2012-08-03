@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".DemoApplication"
@@ -27,6 +28,7 @@
         <activity android:name=".ui.activities.BluetoothList" />
         <activity android:name=".ui.activities.UDPDiscoveryList" />
         <activity android:name=".ui.activities.DropBoxUpload" />
+        <activity android:name=".ui.activities.OpenSLSample" />
         <!-- DropBox authentication activity -->
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
