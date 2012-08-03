@@ -24,6 +24,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="14dp"
         android:minWidth="160dp"
-        android:text="@string/btn_cancel" />
+        android:text="@string/v2andlib_btn_cancel" />
 
 </LinearLayout>
