@@ -16,6 +16,7 @@
 #include <assert.h>
 #include <jni.h>
 #include <string.h>
+#include <stdio.h>
 #include "android/log.h"
 // for native audio
 #include <SLES/OpenSLES.h>
@@ -35,11 +36,10 @@ static SLAndroidSimpleBufferQueueItf recorderBufferQueue;
 
 // 5 seconds of recorded audio at 16 kHz mono, 16-bit signed little endian
 #define RECORDER_FRAMES (16000 * 5)
-static short recorderBuffer[RECORDER_FRAMES];
-static short recorderBuffer2[RECORDER_FRAMES];
-static short recorderBuffer3[RECORDER_FRAMES];
+static short *recorderBuffer1, *recorderBuffer2;
 static unsigned recorderSize = 0;
 static SLmilliHertz recorderSR;
+FILE* fileOut;
 
 int mBufferCount;
 
@@ -51,14 +51,19 @@ __attribute__((constructor)) static void onDlOpen(void) {
 void bqRecorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
 	assert(bq == bqRecorderBufferQueue);
 	assert(NULL == context);
-
+	LOGI("CALLLLLLLLLLLLL");
 	// for streaming recording, here we would call Enqueue to give recorder the next buffer to fill
 	// but instead, this is a one-time buffer so we stop recording
 	SLresult result;
-	if ( mBufferCount < 1 ) {
+	if ( mBufferCount < 4 ) {
+		LOGI("3 recorded %p %p", recorderBuffer1, fileOut);
 		result = (*recorderBufferQueue)->Enqueue(recorderBufferQueue, recorderBuffer2,
 				RECORDER_FRAMES * sizeof(short));
-		LOGI("3 recorded %d", recorderSize);
+		fwrite(recorderBuffer1, RECORDER_FRAMES, sizeof(short), fileOut);
+		short *tmp = recorderBuffer1;
+		recorderBuffer1 = recorderBuffer2;
+		recorderBuffer2 = tmp;
+
 	} else {
 		result = (*recorderRecord)->SetRecordState(recorderRecord, SL_RECORDSTATE_STOPPED);
 		if (SL_RESULT_SUCCESS == result) {
@@ -66,6 +71,8 @@ void bqRecorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context) {
 			recorderSR = SL_SAMPLINGRATE_16;
 			LOGI("2 recorded %d", recorderSize);
 		}
+		fwrite(recorderBuffer1, RECORDER_FRAMES, sizeof(short), fileOut);
+		fclose(fileOut);
 	}
 	LOGI("recorded %d", recorderSize);
 	mBufferCount++;
@@ -133,6 +140,9 @@ jboolean Java_com_v2soft_V2AndLib_demoapp_ui_activities_OpenSLSample_createAudio
 			NULL);
 	assert(SL_RESULT_SUCCESS == result);
 
+	recorderBuffer1 = malloc(RECORDER_FRAMES*sizeof(short));
+	recorderBuffer2 = malloc(RECORDER_FRAMES*sizeof(short));
+
 	return JNI_TRUE;
 }
 
@@ -142,6 +152,10 @@ void Java_com_v2soft_V2AndLib_demoapp_ui_activities_OpenSLSample_startRecording(
 {
 	mBufferCount = 0;
 	SLresult result;
+
+	fileOut = fopen("/sdcard/osl.out","w");
+	assert(fileOut != NULL);
+	LOGI("File=%p", fileOut);
 
 	// in case already recording, stop recording and clear buffer queue
 	result = (*recorderRecord)->SetRecordState(recorderRecord, SL_RECORDSTATE_STOPPED);
@@ -154,7 +168,7 @@ void Java_com_v2soft_V2AndLib_demoapp_ui_activities_OpenSLSample_startRecording(
 
 	// enqueue an empty buffer to be filled by the recorder
 	// (for streaming recording, we would enqueue at least 2 empty buffers to start things off)
-	result = (*recorderBufferQueue)->Enqueue(recorderBufferQueue, recorderBuffer,
+	result = (*recorderBufferQueue)->Enqueue(recorderBufferQueue, recorderBuffer1,
 			RECORDER_FRAMES * sizeof(short));
 	// the most likely other result is SL_RESULT_BUFFER_INSUFFICIENT,
 	// which for this code example would indicate a programming error
@@ -168,6 +182,14 @@ void Java_com_v2soft_V2AndLib_demoapp_ui_activities_OpenSLSample_startRecording(
 // shut down the native audio system
 void Java_com_v2soft_V2AndLib_demoapp_ui_activities_OpenSLSample_shutdown(JNIEnv* env, jclass clazz)
 {
+	if ( recorderBuffer1 != NULL ) {
+		free(recorderBuffer1);
+		recorderBuffer1 = NULL;
+	}
+	if ( recorderBuffer2 != NULL ) {
+		free(recorderBuffer2);
+		recorderBuffer2 = NULL;
+	}
 
 	// destroy audio recorder object, and invalidate all associated interfaces
 	if (recorderObject != NULL) {
