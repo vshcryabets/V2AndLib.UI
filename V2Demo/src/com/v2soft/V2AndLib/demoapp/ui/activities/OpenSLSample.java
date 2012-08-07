@@ -23,7 +23,7 @@ import android.view.View.OnClickListener;
 import com.v2soft.AndLib.ui.R;
 
 /**
- * Activity taht upload to Dropbox test file
+ * 
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
@@ -31,15 +31,33 @@ public class OpenSLSample
 extends Activity implements OnClickListener {
     private static final String TAG = OpenSLSample.class.getSimpleName();
     
+    static {
+        System.loadLibrary("native-audio-jni");
+    }
+    
+    /** Native methods, implemented in jni folder */
+    public static native void createEngine();
+    public static native boolean createAudioRecorder();
+    public static native void startRecording();
+    public static native void shutdown();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_button);
         findViewById(R.id.btnStart).setOnClickListener(this);
+        createEngine();
+        createAudioRecorder();
     }
 
     @Override
     public void onClick(View v) {
+        startRecording();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        shutdown();
     }
 }
