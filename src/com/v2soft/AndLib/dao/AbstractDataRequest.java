@@ -11,10 +11,14 @@ public abstract class AbstractDataRequest<R, Params, RawData> {
 	public interface AbstractDataRequestCallback<R> {
 		void onDataReady(R result);
 	}
-
+	// ====================================================
+	// Class fields
+	// ====================================================
 	protected AbstractDataRequestCallback mCallback;
 	protected R mData;
-
+	// ====================================================
+	// Constructors
+	// ====================================================
 	public AbstractDataRequest(AbstractDataRequestCallback<R> callback) {
 		mCallback = callback;
 	}
