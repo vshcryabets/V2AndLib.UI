@@ -3,12 +3,15 @@ package com.v2soft.AndLib.networking;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.v2soft.AndLib.dao.AbstractDataRequest;
+
 /**
  * 
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public class HTTPBaseRequest implements Runnable {
+public abstract class HTTPBaseRequest<R, Params, RawData> 
+	extends AbstractDataRequest<R, Params, RawData> {
 	// ====================================================
 	// Constants
 	// ====================================================
@@ -18,16 +21,8 @@ public class HTTPBaseRequest implements Runnable {
 	// ====================================================
 	protected HttpClient mClient;
 	
-	public HTTPBaseRequest() {
+	public HTTPBaseRequest(AbstractDataRequestCallback<R> callback) {
+		super(callback);
 		mClient = new DefaultHttpClient();
 	}
-	
-	@Override
-	public void run() {
-		// prepare parameters
-		// send request
-		// parse results
-		// delivery results
-	}
-
 }
