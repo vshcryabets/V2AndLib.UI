@@ -1,6 +1,5 @@
 package com.v2soft.AndLib.dao;
 
-import java.io.IOException;
 
 /**
  * Abstract data request class
@@ -8,48 +7,45 @@ import java.io.IOException;
  *
  */
 public abstract class AbstractDataRequest<R, Params, RawData> {
-	public interface AbstractDataRequestCallback<R> {
-		void onDataReady(R result);
-	}
-	// ====================================================
-	// Class fields
-	// ====================================================
-	protected AbstractDataRequestCallback mCallback;
-	protected R mData;
-	// ====================================================
-	// Constructors
-	// ====================================================
-	public AbstractDataRequest(AbstractDataRequestCallback<R> callback) {
-		mCallback = callback;
-	}
-	
-	/**
-	 * Execute request
-	 * @throws AbstractDataRequestException 
-	 */
-	public void execute() throws AbstractDataRequestException {
-		final Params p = prepareParameters();
-		final RawData rawData = sendRequest(p);
-		mData = parseResult(rawData);
-		deliveryResult(mData);
-	}
+    public interface AbstractDataRequestCallback<R> {
+        void onDataReady(R result);
+    }
 
-	/**
-	 * Delivery data
-	 * @param data
-	 */
-	private void deliveryResult(R data) {
-		if ( mCallback != null ) {
-			mCallback.onDataReady(data);
-		}
-	}
+    protected AbstractDataRequestCallback<R> mCallback;
+    protected R mData;
 
-	protected abstract R parseResult(RawData data);
-	protected abstract RawData sendRequest(Params p) throws AbstractDataRequestException;
-	protected abstract Params prepareParameters();
-	
-	public R getResult() {
-		return mData;
-	}
+    public AbstractDataRequest(AbstractDataRequestCallback<R> callback) {
+        mCallback = callback;
+    }
+
+    /**
+     * Execute request
+     * @throws AbstractDataRequestException 
+     */
+    public void execute() throws AbstractDataRequestException {
+        final Params p = prepareParameters();
+        final RawData rawData = sendRequest(p);
+        final R res = parseResult(rawData);
+        deliveryResult(res);
+    }
+
+    /**
+     * Delivery data
+     * @param data
+     */
+    private void deliveryResult(R data) {
+        if ( mCallback != null ) {
+            mCallback.onDataReady(data);
+        }
+        mData = data;
+    }
+
+    protected abstract R parseResult(RawData data) throws AbstractDataRequestException;
+    protected abstract RawData sendRequest(Params p) throws AbstractDataRequestException;
+    protected abstract Params prepareParameters() throws AbstractDataRequestException;
+
+    public R getResult() {
+        return mData;
+    }
 
 }
