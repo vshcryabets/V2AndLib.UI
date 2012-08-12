@@ -36,6 +36,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.OpenSLSample" />
+        <activity android:name=".ui.activities.GCPDemo" />
+        <activity android:name=".ui.activities.PrintDialogActivity" />
         <!-- DropBox authentication activity -->
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
