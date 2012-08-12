@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>       
+<resources>
+
+    <string name="v2andlib_dropbox_operation">Операция с Dropbox</string>
     <string name="v2andlib_uploading_file">Отправка файла %s</string>
     <string name="v2andlib_file_size">Размер файла %s</string>
+
 </resources>

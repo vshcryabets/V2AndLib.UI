@@ -16,8 +16,8 @@
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
 import android.app.Activity;
-import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -41,24 +41,52 @@ extends Activity implements OnClickListener {
     public static native boolean createAudioRecorder();
     public static native void startRecording();
     public static native void shutdown();
+    public static native void createPlayerEngine();
+    public static native void createBufferQueueAudioPlayer();
+    public static native boolean selectClip(int clip, int count);
+    public static native void shutdownPlayer();
+    public static native void stopPlayer();
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_button);
-        findViewById(R.id.btnStart).setOnClickListener(this);
+        setContentView(R.layout.fragment_media_sample);
+        findViewById(R.id.btnStartPlay).setOnClickListener(this);
+        findViewById(R.id.btnStartRecord).setOnClickListener(this);
+        findViewById(R.id.btnStopPlay).setOnClickListener(this);
+        findViewById(R.id.btnStopRecord).setOnClickListener(this);
         createEngine();
+        createPlayerEngine();
         createAudioRecorder();
     }
 
     @Override
     public void onClick(View v) {
-        startRecording();
+    	int id = v.getId();
+    	switch (id) {
+		case R.id.btnStartRecord:
+	        startRecording();
+			break;
+		case R.id.btnStopRecord:
+			shutdown();
+			break;
+		case R.id.btnStartPlay:
+	        createBufferQueueAudioPlayer();
+	        boolean res = selectClip(3, 2);
+	        Log.d("qwe", res+"");
+			break;
+		case R.id.btnStopPlay:
+	        stopPlayer();
+			break;
+		default:
+			break;
+		}
     }
     
     @Override
     protected void onDestroy() {
+    	shutdownPlayer();
         super.onDestroy();
-        shutdown();
     }
 }
