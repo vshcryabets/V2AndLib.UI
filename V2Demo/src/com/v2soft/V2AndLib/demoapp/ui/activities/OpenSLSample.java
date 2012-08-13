@@ -18,8 +18,10 @@ package com.v2soft.V2AndLib.demoapp.ui.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 
 import com.v2soft.AndLib.ui.R;
 
@@ -29,24 +31,25 @@ import com.v2soft.AndLib.ui.R;
  *
  */
 public class OpenSLSample 
-extends Activity implements OnClickListener {
+extends Activity implements OnClickListener, OnTouchListener {
     private static final String TAG = OpenSLSample.class.getSimpleName();
-    
+
     static {
         System.loadLibrary("native-audio-jni");
     }
-    
+
     /** Native methods, implemented in jni folder */
     public static native void createEngine();
     public static native boolean createAudioRecorder();
     public static native void startRecording();
     public static native void shutdown();
+
     public static native void createPlayerEngine();
-    public static native void createBufferQueueAudioPlayer();
-    public static native boolean selectClip(int clip, int count);
-    public static native void shutdownPlayer();
-    public static native void stopPlayer();
-    
+    public static native void createPlayers();
+    public static native void stopPlayer(int idx);
+    public static native void shutdownPlayers();
+    public static native boolean startPlayer(int idx);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,37 +59,75 @@ extends Activity implements OnClickListener {
         findViewById(R.id.btnStartRecord).setOnClickListener(this);
         findViewById(R.id.btnStopPlay).setOnClickListener(this);
         findViewById(R.id.btnStopRecord).setOnClickListener(this);
+        findViewById(R.id.btnS1).setOnTouchListener(this);
+        findViewById(R.id.btnS2).setOnTouchListener(this);
+        findViewById(R.id.btnS3).setOnTouchListener(this);
+        findViewById(R.id.btnS4).setOnTouchListener(this);
         createEngine();
         createPlayerEngine();
         createAudioRecorder();
+        createPlayers();
     }
 
     @Override
     public void onClick(View v) {
-    	int id = v.getId();
-    	switch (id) {
-		case R.id.btnStartRecord:
-	        startRecording();
-			break;
-		case R.id.btnStopRecord:
-			shutdown();
-			break;
-		case R.id.btnStartPlay:
-	        createBufferQueueAudioPlayer();
-	        boolean res = selectClip(3, 2);
-	        Log.d("qwe", res+"");
-			break;
-		case R.id.btnStopPlay:
-	        stopPlayer();
-			break;
-		default:
-			break;
-		}
+        int id = v.getId();
+        switch (id) {
+        case R.id.btnStartRecord:
+            startRecording();
+            break;
+        case R.id.btnStopRecord:
+            shutdown();
+            break;
+        case R.id.btnStartPlay:
+            startPlayer(0);
+            break;
+        case R.id.btnStopPlay:
+            stopPlayer(0);
+            break;
+        default:
+            break;
+        }
     }
-    
+
     @Override
     protected void onDestroy() {
-    	shutdownPlayer();
+        shutdownPlayers();
         super.onDestroy();
+    }
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int id = v.getId();
+        int action = event.getAction();
+        int idx = -1;
+        switch (id) {
+        case R.id.btnS1:
+            idx= 0;
+            break;
+        case R.id.btnS2:
+            idx = 1;
+            break;
+        case R.id.btnS3:
+            idx = 2;
+            break;
+        case R.id.btnS4:
+            idx = 3;
+            break;
+        default:
+            break;
+        }
+        switch (action) {
+        case MotionEvent.ACTION_DOWN:
+            startPlayer(idx);
+            break;
+        case MotionEvent.ACTION_UP:
+        case MotionEvent.ACTION_OUTSIDE:
+        case MotionEvent.ACTION_CANCEL:
+            stopPlayer(idx);
+            break;
+        default:
+            break;
+        }
+        return true;
     }
 }
