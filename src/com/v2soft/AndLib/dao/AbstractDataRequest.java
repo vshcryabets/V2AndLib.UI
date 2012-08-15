@@ -13,6 +13,7 @@ public abstract class AbstractDataRequest<R, Params, RawData> {
 
     protected AbstractDataRequestCallback<R> mCallback;
     protected R mData;
+    protected Params mParams;
 
     public AbstractDataRequest(AbstractDataRequestCallback<R> callback) {
         mCallback = callback;
@@ -23,8 +24,8 @@ public abstract class AbstractDataRequest<R, Params, RawData> {
      * @throws AbstractDataRequestException 
      */
     public void execute() throws AbstractDataRequestException {
-        final Params p = prepareParameters();
-        final RawData rawData = sendRequest(p);
+        mParams = prepareParameters();
+        final RawData rawData = sendRequest(mParams);
         final R res = parseResult(rawData);
         deliveryResult(res);
     }
