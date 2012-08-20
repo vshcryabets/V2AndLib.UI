@@ -17,6 +17,8 @@ package com.v2soft.V2AndLib.demoapp;
 
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
+import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
+import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
 import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
 import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
 
@@ -40,12 +42,16 @@ implements OnItemClickListener {
     private final static String [] sItems = new String[]{"Bluetooth device list",
         "UDP discovery",
         "Upload to dropbox",
-        "OpenSL sample"};
+        "OpenSL sample",
+        "Google Cloud Printing Demo",
+        "Endless list"};
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
     private static final int ITEM_BLUETOOTH_DEVICE = 0;
     private static final int ITEM_UDP_DISCOVERY = 1;
     private static final int ITEM_DROPBOX_UPLOAD = 2;
     private static final int ITEM_OPEN_SL = 3;
+    private static final int ITEM_GCP = 4;
+    private static final int ITEM_ENDLESSLIST = 5;
     
     private ArrayAdapter<String> mAdapter;
     
@@ -73,6 +79,12 @@ implements OnItemClickListener {
             break;
         case ITEM_OPEN_SL:
             startActivity(new Intent(this, OpenSLSample.class));
+            break;
+        case ITEM_GCP:
+            startActivity(new Intent(this, GCPDemo.class));
+            break;
+        case ITEM_ENDLESSLIST:
+            startActivity(new Intent(this, EndlessListActivity.class));
             break;
         default:
             break;

@@ -54,6 +54,7 @@ implements Callback {
     protected static final int MSG_DATASET_CLEAR = 2;
     protected static final int MSG_DATASET_ADD = 3;
     protected static final int MSG_DATASET_REMOVE = 4;
+    protected static final int MSG_DATASET_ADD_LIST = 5;
     //---------------------------------------------------------------------------
     // Class fields
     //---------------------------------------------------------------------------
@@ -159,6 +160,10 @@ implements Callback {
             break;
         case MSG_DATASET_REMOVE:
             mItems.remove(msg.obj);
+            notifyDataSetChanged();
+            break;
+        case MSG_DATASET_ADD_LIST:
+            mItems.addAll((List<T>) msg.obj);
             notifyDataSetChanged();
             break;
 

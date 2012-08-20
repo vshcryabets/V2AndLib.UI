@@ -17,12 +17,13 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := native-audio-jni
-LOCAL_SRC_FILES := AudioRecorder.c
+LOCAL_SRC_FILES := AudioRecorder.c AudioPlayPool.c
 # for native audio
 LOCAL_LDLIBS    += -lOpenSLES
 # for logging
 LOCAL_LDLIBS    += -llog
 # for native asset manager
 LOCAL_LDLIBS    += -landroid
+LOCAL_CFLAGS = -std=c99
 
 include $(BUILD_SHARED_LIBRARY)

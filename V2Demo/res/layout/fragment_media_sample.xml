@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/btnStartRecord"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Record" />
+
+    <Button
+        android:id="@+id/btnStopRecord"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Stop Record" />
+
+    <Button
+        android:id="@+id/btnStartPlay"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Play" />
+
+    <Button
+        android:id="@+id/btnStopPlay"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Stop Play" />
+
+    <Button
+        android:id="@+id/btnS2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Start 1" />
+
+    <Button
+        android:id="@+id/btnS1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Start 2" />
+
+    <Button
+        android:id="@+id/btnS3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Start 3" />
+
+    <Button
+        android:id="@+id/btnS4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Start 4" />
+
+</LinearLayout>

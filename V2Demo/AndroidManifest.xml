@@ -27,9 +27,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.BluetoothList" />
+        <activity android:name=".ui.activities.EndlessListActivity" />
         <activity android:name=".ui.activities.UDPDiscoveryList" />
-        <activity android:name=".ui.activities.DropBoxUpload" />
+        <activity android:name=".ui.activities.DropBoxUpload" >
+            <intent-filter>
+                <action android:name="com.v2soft.AndLib.demoapp.ACTION_DROPBOX_UPLOAD" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.activities.OpenSLSample" />
+        <activity android:name=".ui.activities.GCPDemo" />
+        <activity android:name=".ui.activities.PrintDialogActivity" />
         <!-- DropBox authentication activity -->
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
@@ -46,6 +55,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service android:name="com.v2soft.AndLib.services.DropboxService" />
     </application>
 
 </manifest>

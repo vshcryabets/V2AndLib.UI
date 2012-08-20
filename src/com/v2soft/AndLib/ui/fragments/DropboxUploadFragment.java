@@ -1,16 +1,12 @@
 package com.v2soft.AndLib.ui.fragments;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -24,17 +20,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.DropboxAPI.UploadRequest;
-import com.dropbox.client2.ProgressListener;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.android.AuthActivity;
-import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
 import com.dropbox.client2.session.TokenPair;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
+import com.v2soft.AndLib.services.DropboxService;
 import com.v2soft.AndLib.text.NumberFormatters;
 import com.v2soft.AndLib.ui.R;
 
@@ -49,10 +43,6 @@ implements OnClickListener {
 	// =========================================================
 	// Constants
 	// =========================================================
-	private static final String KEY_LOCAL_FILE = "local";
-	private static final String KEY_REMOTE_FILE = "remote";
-	private static final String KEY_APP_SECRET = "appsecret";
-	private static final String KEY_APP_KEY = "appkey";
 	// If you'd like to change the access type to the full Dropbox instead of
 	// an app folder, change this value.
 	private final static AccessType ACCESS_TYPE = AccessType.APP_FOLDER;
@@ -66,26 +56,35 @@ implements OnClickListener {
 	private String mLocalPath, mRemotePath;
 	private String mDropBoxAppKey, mDropBoxAppSecret;
 	private ProgressBar mProgress;
-	private long mFileSize;
 	private DropboxAPI<AndroidAuthSession> mDropboxApi;
 	private Button mBtnClose;
 	private BaseApplicationSettings mSettings;
-	private UploadRequest mUploadRequest;
-	private UploadAsyncTask mTask;
 	// =========================================================
 	// Constructors
 	// =========================================================
+	/**
+	 * 
+	 * @param context
+	 * @param localFilePath
+	 * @param dropBoxPath
+	 * @param dropboxAppKey
+	 * @param dropboxAppSecret
+	 * @param action
+	 * @return
+	 * @throws Exception
+	 */
 	public static DropboxUploadFragment newInstance(Context context, String localFilePath, String dropBoxPath,
-			String dropboxAppKey, String dropboxAppSecret) throws Exception {
+			String dropboxAppKey, String dropboxAppSecret, String action) throws Exception {
 		final DropboxUploadFragment result = new DropboxUploadFragment();
 		if ( !checkAppKeySetup(context, dropboxAppKey) ) {
 			throw new Exception("DropBox application not installed");
 		}
 		final Bundle bundle = new Bundle();
-		bundle.putString(KEY_LOCAL_FILE, localFilePath);
-		bundle.putString(KEY_REMOTE_FILE, dropBoxPath);
-		bundle.putString(KEY_APP_KEY, dropboxAppKey);
-		bundle.putString(KEY_APP_SECRET, dropboxAppSecret);
+		bundle.putString(DropboxService.KEY_LOCAL, localFilePath);
+		bundle.putString(DropboxService.KEY_REMOTE, dropBoxPath);
+		bundle.putString(DropboxService.KEY_DROPBOXAPIKEY, dropboxAppKey);
+		bundle.putString(DropboxService.KEY_DROPBOXSECRET, dropboxAppSecret);
+		bundle.putString(DropboxService.KEY_ACTION, action);
 		result.setArguments(bundle);
 		return result;
 	}
@@ -93,10 +92,10 @@ implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mLocalPath = getArguments().getString(KEY_LOCAL_FILE);
-		mRemotePath = getArguments().getString(KEY_REMOTE_FILE);
-		mDropBoxAppKey = getArguments().getString(KEY_APP_KEY);
-		mDropBoxAppSecret = getArguments().getString(KEY_APP_SECRET);
+		mLocalPath = getArguments().getString(DropboxService.KEY_LOCAL);
+		mRemotePath = getArguments().getString(DropboxService.KEY_REMOTE);
+		mDropBoxAppKey = getArguments().getString(DropboxService.KEY_DROPBOXAPIKEY);
+		mDropBoxAppSecret = getArguments().getString(DropboxService.KEY_DROPBOXSECRET);
 
 		// We create a new AuthSession so that we can use the Dropbox API.
 		AndroidAuthSession session = buildSession();
@@ -129,15 +128,15 @@ implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		File local = new File(mLocalPath);
-		mFileSize = local.length();
+		long fileSize = local.length();
 		final View view = inflater.inflate(R.layout.v2andlib_fragment_dropbox_upload, null);
 		((TextView)view.findViewById(R.id.txtFileSize)).setText(
 				String.format(getString(R.string.v2andlib_file_size), 
-						NumberFormatters.sKiloBytesFormat.format(mFileSize/1024))
+						NumberFormatters.sKiloBytesFormat.format(fileSize/1024))
 				);
 		getDialog().setTitle(String.format(getString(R.string.v2andlib_uploading_file), local.getName()));
 		mProgress = (ProgressBar) view.findViewById(R.id.progress);
-		mProgress.setMax((int) mFileSize/1024);
+		mProgress.setMax((int) fileSize/1024);
 		mBtnClose = (Button) view.findViewById(R.id.btnClose);
 		mBtnClose.setOnClickListener(this);
 		return view;
@@ -161,55 +160,22 @@ implements OnClickListener {
 				mSettings.putString(ACCESS_KEY_NAME, tokens.key);
 				mSettings.putString(ACCESS_SECRET_NAME, tokens.secret);
 				mSettings.saveSettings();
-				mTask = new UploadAsyncTask();
-				mTask.execute(new String[]{mLocalPath, mRemotePath});
+				Log.d(LOG_TAG, "Params "+mLocalPath+" "+mRemotePath+" "+tokens.key+ " "+tokens.secret);
+				Intent intent = new Intent(getActivity(), DropboxService.class);
+				intent.putExtra(DropboxService.KEY_DROPBOXAPIKEY, mDropBoxAppKey);
+				intent.putExtra(DropboxService.KEY_DROPBOXSECRET, mDropBoxAppSecret);
+				intent.putExtra(DropboxService.KEY_DROPBOXAT1, tokens.key);
+				intent.putExtra(DropboxService.KEY_DROPBOXAT2, tokens.secret);
+				intent.putExtra(DropboxService.KEY_LOCAL, mLocalPath);
+				intent.putExtra(DropboxService.KEY_REMOTE, mRemotePath);
+				intent.putExtra(DropboxService.KEY_ACTION, getArguments().getString(DropboxService.KEY_ACTION));
+				getActivity().startService(intent);
 			} catch (IllegalStateException e) {
 				Toast.makeText(getActivity(), 
 						"Couldn't authenticate with Dropbox:" + e.getLocalizedMessage(), 
 						Toast.LENGTH_LONG).show();
 				Log.i(LOG_TAG, "Error authenticating", e);
 			}
-		}
-	}
-
-	private ProgressListener mListenr = new ProgressListener() {
-		@Override
-		public long progressInterval() {
-			// Update the progress bar every half-second or so
-			return 250;
-		}
-		@Override
-		public void onProgress(long bytes, long total) {
-			mProgress.setProgress((int) (bytes/1024));
-		}
-	};
-
-	private void startUpload() throws FileNotFoundException, DropboxException {
-		final InputStream fin = new FileInputStream(mLocalPath);
-		mUploadRequest = mDropboxApi.putFileOverwriteRequest(mRemotePath, fin, 
-				mFileSize, 
-				mListenr);
-			mUploadRequest.upload();
-	}
-
-	private class UploadAsyncTask extends AsyncTask<String, Integer, Exception> {
-
-		@Override
-		protected Exception doInBackground(String... params) {
-			try {
-				startUpload();
-				return null;
-			} catch (Exception e) {
-				return e;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Exception result) {
-			mUploadRequest = null;
-			mProgress.setProgress(mProgress.getMax());
-			mBtnClose.setText(R.string.v2andlib_btn_close);
-			super.onPostExecute(result);
 		}
 	}
 
@@ -248,15 +214,15 @@ implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if ( mUploadRequest == null ) {
-			getDialog().dismiss();
-		} else {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					mUploadRequest.abort();
-				}
-			}).start();
-		}
+//		if ( mUploadRequest == null ) {
+//			getDialog().dismiss();
+//		} else {
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					mUploadRequest.abort();
+//				}
+//			}).start();
+//		}
 	}   
 }
