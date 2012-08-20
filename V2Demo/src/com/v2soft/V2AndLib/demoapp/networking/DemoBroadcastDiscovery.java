@@ -38,7 +38,7 @@ extends UDPBroadcastDiscovery {
         byte [] data = packet.getData();
         String received = new String(data, 0, packet.getLength());
         if ( mListener != null ) {
-            mListener.onNewServer(received);
+            mListener.onNewServer(new DemoUDPHost(packet.getAddress(), received));
         }
         
     }
