@@ -47,16 +47,16 @@ public class DataView<T> extends LinearLayout implements IDataView<T>{
 			for (int i = 0; i < fields.length; i++ ) {
 				final Field field = fields[i];
 				if ( field.isAnnotationPresent(DataViewAnnotation.class)) {
-					final Object value = field.get(data);
 					if ( mTextViews[i] == null ) {
 						final DataViewAnnotation annotation = field.getAnnotation(DataViewAnnotation.class);
 						int res = annotation.resource();
 						if ( res > 0 ) {
 							mTextViews[i] = (TextView)findViewById(res);
-							field.setAccessible(true);
 						}
+						field.setAccessible(true);
 					}
 					if ( mTextViews[i] != null ) {
+						final Object value = field.get(data);
 						mTextViews[i].setText(value.toString());
 					}
 				}
