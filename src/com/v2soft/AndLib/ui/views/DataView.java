@@ -53,9 +53,9 @@ public class DataView<T> extends LinearLayout implements IDataView<T>{
 						if ( res > 0 ) {
 							mTextViews[i] = (TextView)findViewById(res);
 						}
-						field.setAccessible(true);
 					}
 					if ( mTextViews[i] != null ) {
+						field.setAccessible(true);
 						final Object value = field.get(data);
 						mTextViews[i].setText(value.toString());
 					}
