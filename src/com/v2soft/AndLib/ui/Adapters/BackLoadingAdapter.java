@@ -110,7 +110,7 @@ extends CustomViewAdapter<T> {
             @Override
             public void run() {
                 final List<T> part = getData(mItems.size(),mPartSize);
-                if ( part.size() == 0 ) {
+                if ( part == null || part.size() == 0 ) {
                     // No more data
                     mWantToLoadMore = false;
                 }
