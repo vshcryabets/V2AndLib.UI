@@ -28,7 +28,7 @@ import android.widget.TextView;
  * @param <T>
  */
 public class DataView<T> extends LinearLayout implements IDataView<T>{
-	private T mData;
+	protected T mData;
 	private TextView mTextViews[];
 
 	public DataView(Context context, int resource) {
