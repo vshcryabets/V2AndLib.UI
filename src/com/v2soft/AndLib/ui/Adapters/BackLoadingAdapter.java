@@ -41,7 +41,7 @@ extends CustomViewAdapter<T> {
     //---------------------------------------------------------------------------
     private int mPartSize;
     private LoadingView mLoadingView;
-    private Boolean isLoading;
+    private boolean isLoading;
     private boolean mWantToLoadMore;
 
     /**
@@ -109,20 +109,27 @@ extends CustomViewAdapter<T> {
         Thread back = new Thread(new Runnable() {
             @Override
             public void run() {
-                final List<T> part = getData(mItems.size(),mPartSize);
-                if ( part == null || part.size() == 0 ) {
-                    // No more data
-                    mWantToLoadMore = false;
-                }
                 final Message msg = new Message();
                 msg.what = MSG_DATASET_ADD_LIST;
-                msg.obj = part;
+                msg.obj = getData(mItems.size(),mPartSize);
                 mHandler.sendMessage(msg);
-                isLoading = false;
             }
         }, "LoadAdapterBack");
         back.start();
-    }    
+    }
+    
+    @Override
+    public boolean handleMessage(Message msg) {
+    	if ( msg.what == MSG_DATASET_ADD_LIST ) {
+    		final List<T> part = (List<T>) msg.obj;
+            if ( part == null || part.size() == 0 ) {
+                // No more data
+                mWantToLoadMore = false;
+            }
+            isLoading = false;
+    	}
+    	return super.handleMessage(msg);
+    }
 
     /**
      * 
