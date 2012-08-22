@@ -58,7 +58,15 @@ implements OnClickListener {
         }
     }
 
-    protected void startFragment(int resId, Fragment fragment, boolean addToStack, String stackTag) {
+    /**
+     * Start new fragment in specified container view
+     * @param resId container view resource ID
+     * @param fragment new fragment object
+     * @param addToStack
+     * @param stackTag
+     */
+    protected void startFragment(int resId, Fragment fragment, 
+            boolean addToStack, String stackTag) {
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(resId, fragment);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -67,4 +75,29 @@ implements OnClickListener {
         }
         ft.commit();
     }
+    
+    /**
+     * Start new fragment in specified container view with custom animations
+     * @param resId container view resource ID
+     * @param fragment new fragment object
+     * @param addToStack
+     * @param stackTag
+     * @param inAnimation animation resources to run for the fragments that are entering
+     * @param outAnimation animation resources to run for the fragments that are exiting
+     * @param popAnimation animation resources to run for the fragments that are pushing to backstack
+     * @param pushAnimation animation resources to run for the fragments that are popping from backstack
+     */
+    protected void startFragment(int resId, Fragment fragment, 
+            boolean addToStack, String stackTag,
+            int inAnimation, int outAnimation, 
+            int popAnimation, int pushAnimation) {
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(inAnimation, outAnimation, popAnimation, pushAnimation);
+        ft.replace(resId, fragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if ( addToStack ) {
+            ft.addToBackStack(stackTag);
+        }
+        ft.commit();
+    }    
 }
