@@ -17,6 +17,7 @@ package com.v2soft.AndLib.ui.fragments;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -29,13 +30,13 @@ import com.v2soft.AndLib.application.BaseApplicationSettings;
  *
  */
 public abstract class BaseFragment<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
-    extends Fragment 
-    implements OnClickListener {
+extends Fragment 
+implements OnClickListener {
     protected T mApp;
     protected S mSettings;
 
     public static final int DIALOG_FILE_SEND_SERVICE = 10;
-    
+
     @Override
     public void onAttach(Activity activity) {
         mApp = (T) activity.getApplication();
@@ -55,5 +56,15 @@ public abstract class BaseFragment<T extends BaseApplication<S>, S extends BaseA
             if ( view == null ) throw new NullPointerException("Can't get view with id "+i);
             view.setOnClickListener(this);
         }
+    }
+
+    protected void startFragment(int resId, Fragment fragment, boolean addToStack, String stackTag) {
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(resId, fragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if ( addToStack ) {
+            ft.addToBackStack(stackTag);
+        }
+        ft.commit();
     }
 }
