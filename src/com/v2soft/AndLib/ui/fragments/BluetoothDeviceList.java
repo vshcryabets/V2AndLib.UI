@@ -96,7 +96,7 @@ implements LoaderCallbacks<List<BluetoothDevice>>,
                 Context context) {
             super(context, new CustomViewAdapterFactory<BluetoothDevice, IDataView<BluetoothDevice>>() {
                 @Override
-                public IDataView<BluetoothDevice> createView(Context context) {
+                public IDataView<BluetoothDevice> createView(Context context, int type) {
                     return new BluetoothView(context);
                 }
             });

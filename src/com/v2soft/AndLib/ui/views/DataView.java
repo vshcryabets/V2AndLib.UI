@@ -28,51 +28,51 @@ import android.widget.TextView;
  * @param <T>
  */
 public class DataView<T> extends LinearLayout implements IDataView<T>{
-	protected T mData;
-	private TextView mTextViews[];
+    protected T mData;
+    private TextView mTextViews[];
 
-	public DataView(Context context, int resource) {
-		super(context);
-		inflate(context, resource, this);
-	}
+    public DataView(Context context, int resource) {
+        super(context);
+        inflate(context, resource, this);
+    }
 
-	@Override
-	public void setData(T data) {
-		mData = data;
-		final Field[] fields = data.getClass().getDeclaredFields();
-		if ( mTextViews == null ) {
-			mTextViews = new TextView[fields.length];
-		}
-		try {
-			for (int i = 0; i < fields.length; i++ ) {
-				final Field field = fields[i];
-				if ( field.isAnnotationPresent(DataViewAnnotation.class)) {
-					if ( mTextViews[i] == null ) {
-						final DataViewAnnotation annotation = field.getAnnotation(DataViewAnnotation.class);
-						int res = annotation.resource();
-						if ( res > 0 ) {
-							mTextViews[i] = (TextView)findViewById(res);
-						}
-					}
-					if ( mTextViews[i] != null ) {
-						field.setAccessible(true);
-						final Object value = field.get(data);
-						mTextViews[i].setText(value.toString());
-					}
-				}
-			}
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void setData(T data) {
+        mData = data;
+        final Field[] fields = data.getClass().getDeclaredFields();
+        if ( mTextViews == null ) {
+            mTextViews = new TextView[fields.length];
+        }
+        try {
+            for (int i = 0; i < fields.length; i++ ) {
+                final Field field = fields[i];
+                if ( field.isAnnotationPresent(DataViewAnnotation.class)) {
+                    if ( mTextViews[i] == null ) {
+                        final DataViewAnnotation annotation = field.getAnnotation(DataViewAnnotation.class);
+                        int res = annotation.resource();
+                        if ( res > 0 ) {
+                            mTextViews[i] = (TextView)findViewById(res);
+                        }
+                    }
+                    if ( mTextViews[i] != null ) {
+                        field.setAccessible(true);
+                        final Object value = field.get(data);
+                        mTextViews[i].setText(value.toString());
+                    }
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public T getData() {
-		return mData;
-	}
+    @Override
+    public T getData() {
+        return mData;
+    }
 
 }
