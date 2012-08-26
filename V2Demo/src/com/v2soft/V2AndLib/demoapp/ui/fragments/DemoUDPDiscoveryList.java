@@ -137,7 +137,7 @@ implements LoaderCallbacks<List<DemoUDPHost>>{
                 Context context) {
             super(context, new CustomViewAdapterFactory<DemoUDPHost, IDataView<DemoUDPHost>>() {
                 @Override
-                public IDataView<DemoUDPHost> createView(Context context) {
+                public IDataView<DemoUDPHost> createView(Context context, int type) {
                     return new BluetoothView(context);
                 }
             });

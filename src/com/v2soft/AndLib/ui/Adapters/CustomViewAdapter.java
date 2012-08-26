@@ -37,152 +37,152 @@ import com.v2soft.AndLib.ui.views.IDataView;
 public class CustomViewAdapter<T> 
 extends BaseAdapter 
 implements Callback {
-	//---------------------------------------------------------------------------
-	// Interfaces
-	//---------------------------------------------------------------------------
-	public interface CustomViewAdapterFactory<T, V extends IDataView<T>> {
-		public V createView(Context context);
-	}
-	//---------------------------------------------------------------------------
-	// Constants
-	//---------------------------------------------------------------------------
-	protected static final int MSG_DATASET_CHANGED = 1;
-	protected static final int MSG_DATASET_CLEAR = 2;
-	protected static final int MSG_DATASET_ADD = 3;
-	protected static final int MSG_DATASET_REMOVE = 4;
-	protected static final int MSG_DATASET_ADD_LIST = 5;
-	//---------------------------------------------------------------------------
-	// Class fields
-	//---------------------------------------------------------------------------
-	protected List<T> mItems;
-	protected Handler mHandler;
-	private CustomViewAdapterFactory<T, IDataView<T>> mFactory;
-	protected Context mContext;
-	//---------------------------------------------------------------------------
-	// Public methods
-	//---------------------------------------------------------------------------
-	public CustomViewAdapter(Context context) {
-		super();
-		if ( context == null ) throw new NullPointerException("Context is null");
-		mItems = new ArrayList<T>();
-		mHandler = new Handler(this);
-		mContext = context;
-	}
+    //---------------------------------------------------------------------------
+    // Interfaces
+    //---------------------------------------------------------------------------
+    public interface CustomViewAdapterFactory<T, V extends IDataView<T>> {
+        public V createView(Context context, int viewType);
+    }
+    //---------------------------------------------------------------------------
+    // Constants
+    //---------------------------------------------------------------------------
+    protected static final int MSG_DATASET_CHANGED = 1;
+    protected static final int MSG_DATASET_CLEAR = 2;
+    protected static final int MSG_DATASET_ADD = 3;
+    protected static final int MSG_DATASET_REMOVE = 4;
+    protected static final int MSG_DATASET_ADD_LIST = 5;
+    //---------------------------------------------------------------------------
+    // Class fields
+    //---------------------------------------------------------------------------
+    protected List<T> mItems;
+    protected Handler mHandler;
+    private CustomViewAdapterFactory<T, IDataView<T>> mFactory;
+    protected Context mContext;
+    //---------------------------------------------------------------------------
+    // Public methods
+    //---------------------------------------------------------------------------
+    public CustomViewAdapter(Context context) {
+        super();
+        if ( context == null ) throw new NullPointerException("Context is null");
+        mItems = new ArrayList<T>();
+        mHandler = new Handler(this);
+        mContext = context;
+    }
 
-	public CustomViewAdapter(Context context, CustomViewAdapterFactory<T, IDataView<T>> factory) {
-		this(context);
-		mFactory = factory;
-	}
+    public CustomViewAdapter(Context context, CustomViewAdapterFactory<T, IDataView<T>> factory) {
+        this(context);
+        mFactory = factory;
+    }
 
-	/**
-	 * Set adapter data
-	 * @param data
-	 */
-	public void setData(List<T> data) {
-		if ( data == null ) throw new NullPointerException("Data is null");
-		final Message message = new Message();
-		message.what = MSG_DATASET_CHANGED;
-		message.obj = data;
-		mHandler.sendMessage(message);
-	}
+    /**
+     * Set adapter data
+     * @param data
+     */
+    public void setData(List<T> data) {
+        if ( data == null ) throw new NullPointerException("Data is null");
+        final Message message = new Message();
+        message.what = MSG_DATASET_CHANGED;
+        message.obj = data;
+        mHandler.sendMessage(message);
+    }
 
-	@Override
-	public int getCount() {
-		return mItems.size();
-	}
+    @Override
+    public int getCount() {
+        return mItems.size();
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return mItems.get(position);
-	}
+    @Override
+    public Object getItem(int position) {
+        return mItems.get(position);
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		IDataView<T> view = (IDataView<T>) convertView;
-		if ( view == null ) {
-			view = mFactory.createView(mContext);
-		}
-		view.setData(mItems.get(position));
-		return (View) view;
-	}
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        IDataView<T> view = (IDataView<T>) convertView;
+        if ( view == null ) {
+            view = mFactory.createView(mContext, getItemViewType(position));
+        }
+        view.setData(mItems.get(position));
+        return (View) view;
+    }
 
-	/**
-	 * Add item to the list
-	 * @param item
-	 */
-	public void addItem(final T item) {
-		Message msg = new Message();
-		msg.what = MSG_DATASET_ADD;
-		msg.obj = item;
-		mHandler.sendMessage(msg);
-	}
+    /**
+     * Add item to the list
+     * @param item
+     */
+    public void addItem(final T item) {
+        Message msg = new Message();
+        msg.what = MSG_DATASET_ADD;
+        msg.obj = item;
+        mHandler.sendMessage(msg);
+    }
 
-	/**
-	 * Remove specified item from the list
-	 * @param item
-	 */
-	public void removeItem(final T item) {
-		final Message msg = new Message();
-		msg.what = MSG_DATASET_REMOVE;
-		msg.obj = item;
-		mHandler.sendMessage(msg);
-	}
+    /**
+     * Remove specified item from the list
+     * @param item
+     */
+    public void removeItem(final T item) {
+        final Message msg = new Message();
+        msg.what = MSG_DATASET_REMOVE;
+        msg.obj = item;
+        mHandler.sendMessage(msg);
+    }
 
-	/**
-	 * Remove all items from list
-	 */
-	public void clear() {
-		mHandler.sendEmptyMessage(MSG_DATASET_CLEAR);
-	}    
-	//---------------------------------------------------------------------------
-	// Handler callback
-	//---------------------------------------------------------------------------
-	@Override
-	public boolean handleMessage(Message msg) {
-		switch (msg.what) {
-		case MSG_DATASET_CHANGED:
-			mItems.clear();
-			if ( msg.obj != null ) {
-				mItems.addAll((List<T>)msg.obj);
-			}
-			notifyDataSetChanged();
-			break;
-		case MSG_DATASET_CLEAR:
-			mItems.clear();
-			notifyDataSetChanged();
-			break;
-		case MSG_DATASET_ADD:
-			if ( msg.obj != null ) {
-				mItems.add((T) msg.obj);
-			}
-			notifyDataSetChanged();
-			break;
-		case MSG_DATASET_REMOVE:
-			if ( msg.obj != null ) {
-				mItems.remove(msg.obj);
-			}
-			notifyDataSetChanged();
-			break;
-		case MSG_DATASET_ADD_LIST:
-			if ( msg.obj != null ) {
-				List<T> list = (List<T>) msg.obj;
-				if ( list.size() > 0 ) {
-					mItems.addAll(list);
-				}
-			}
-			notifyDataSetChanged();
-			break;
+    /**
+     * Remove all items from list
+     */
+    public void clear() {
+        mHandler.sendEmptyMessage(MSG_DATASET_CLEAR);
+    }    
+    //---------------------------------------------------------------------------
+    // Handler callback
+    //---------------------------------------------------------------------------
+    @Override
+    public boolean handleMessage(Message msg) {
+        switch (msg.what) {
+        case MSG_DATASET_CHANGED:
+            mItems.clear();
+            if ( msg.obj != null ) {
+                mItems.addAll((List<T>)msg.obj);
+            }
+            notifyDataSetChanged();
+            break;
+        case MSG_DATASET_CLEAR:
+            mItems.clear();
+            notifyDataSetChanged();
+            break;
+        case MSG_DATASET_ADD:
+            if ( msg.obj != null ) {
+                mItems.add((T) msg.obj);
+            }
+            notifyDataSetChanged();
+            break;
+        case MSG_DATASET_REMOVE:
+            if ( msg.obj != null ) {
+                mItems.remove(msg.obj);
+            }
+            notifyDataSetChanged();
+            break;
+        case MSG_DATASET_ADD_LIST:
+            if ( msg.obj != null ) {
+                List<T> list = (List<T>) msg.obj;
+                if ( list.size() > 0 ) {
+                    mItems.addAll(list);
+                }
+            }
+            notifyDataSetChanged();
+            break;
 
-		default:
-			break;
-		}
-		return true;
-	}
+        default:
+            break;
+        }
+        return true;
+    }
 
 
 }

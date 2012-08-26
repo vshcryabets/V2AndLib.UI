@@ -84,7 +84,7 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
         public EndlessAdapter(Context context) {
             super(context, new CustomViewAdapterFactory<Integer, IDataView<Integer>>(){
                 @Override
-                public IDataView<Integer> createView(Context context) {
+                public IDataView<Integer> createView(Context context, int type) {
                     return new IntegerView(context);
                 }
             }, 10);
