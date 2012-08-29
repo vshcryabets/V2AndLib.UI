@@ -398,7 +398,7 @@ implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
     //--------------------------------------------------------------------------------------------
     @Override
     public void onPrepared(MediaPlayer arg0) {
-        setState(PlayerState.PL_PREPARED);
+        // setState(PlayerState.PL_PREPARED);
     }
 
 }
