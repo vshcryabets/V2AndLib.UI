@@ -18,7 +18,7 @@
 // 
 // 
 // ***** END LICENSE BLOCK *****
-package com.v2soft.AndLib.ui.Activities;
+package com.v2soft.AndLib.ui.activities;
 
 import com.v2soft.AndLib.ui.views.CameraView;
 

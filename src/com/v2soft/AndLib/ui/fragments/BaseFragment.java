@@ -37,12 +37,17 @@ implements OnClickListener {
 
     public static final int DIALOG_FILE_SEND_SERVICE = 10;
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onAttach(Activity activity) {
         mApp = (T) activity.getApplication();
-        if ( mApp == null ) throw new NullPointerException("Application is null");
+        if ( mApp == null ) {
+            throw new NullPointerException("Application is null");
+        }
         mSettings = mApp.getSettings();
-        if ( mSettings == null ) throw new NullPointerException("Settings is null");
+        if ( mSettings == null ) {
+            throw new NullPointerException("Settings is null");
+        }
         super.onAttach(activity);
     }
 
