@@ -38,6 +38,10 @@ import com.v2soft.V2AndLib.demoapp.DemoApplication;
  *
  */
 public class DemoBackStack extends Activity implements OnClickListener {
+    private static final String TAB_A = "A";
+    private static final String TAB_B = "B";
+    private static final String TAB_C = "C";
+    private static final String TAB_D = "D";
     private TabsFragmentBackStack mStack ;
 
     @Override
@@ -50,21 +54,21 @@ public class DemoBackStack extends Activity implements OnClickListener {
         findViewById(R.id.btn4).setOnClickListener(this);
         mStack = new TabsFragmentBackStack(mFragmentsListener);
         if ( savedInstanceState == null ) {
-            mStack.activateTab("1");
+            mStack.activateTab(TAB_A);
         }
     }
-    
+
     private TabsFragmentBackStackListener mFragmentsListener = new TabsFragmentBackStackListener() {
         @Override
         public Fragment onNewTabOpened(String tag) {
-            if ( tag.equals("1")) {
-                return newInstance("1");
-            } else if ( tag.equals("2")) {
-                return newInstance("2");
-            } else if ( tag.equals("3")) {
-                return newInstance("3");
-            } else if ( tag.equals("4")) {
-                return newInstance("4");
+            if ( tag.equals(TAB_A)) {
+                return newInstance(TAB_A,1);
+            } else if ( tag.equals(TAB_B)) {
+                return newInstance(TAB_B,1);
+            } else if ( tag.equals(TAB_C)) {
+                return newInstance(TAB_C,1);
+            } else if ( tag.equals(TAB_D)) {
+                return newInstance(TAB_D,1);
             }
             return null;
         }
@@ -82,13 +86,13 @@ public class DemoBackStack extends Activity implements OnClickListener {
             findViewById(R.id.btn2).setBackgroundColor(0xFF000090);
             findViewById(R.id.btn3).setBackgroundColor(0xFF000090);
             findViewById(R.id.btn4).setBackgroundColor(0xFF000090);
-            if ( tag.equals("1")) {
+            if ( tag.equals(TAB_A)) {
                 findViewById(R.id.btn1).setBackgroundColor(0xFF009000);
-            } else if ( tag.equals("2")) {
+            } else if ( tag.equals(TAB_B)) {
                 findViewById(R.id.btn2).setBackgroundColor(0xFF009000);
-            } else if ( tag.equals("3")) {
+            } else if ( tag.equals(TAB_C)) {
                 findViewById(R.id.btn3).setBackgroundColor(0xFF009000);
-            } else if ( tag.equals("4")) {
+            } else if ( tag.equals(TAB_D)) {
                 findViewById(R.id.btn4).setBackgroundColor(0xFF009000);
             }
         }
@@ -100,16 +104,16 @@ public class DemoBackStack extends Activity implements OnClickListener {
         FragmentTransaction ft;
         switch (id) {
         case R.id.btn1:
-            mStack.activateTab("1");
+            mStack.activateTab(TAB_A);
             break;
         case R.id.btn2:
-            mStack.activateTab("2");
+            mStack.activateTab(TAB_B);
             break;
         case R.id.btn3:
-            mStack.activateTab("3");
+            mStack.activateTab(TAB_C);
             break;
         case R.id.btn4:
-            mStack.activateTab("4");
+            mStack.activateTab(TAB_D);
             break;
         default:
             break;
@@ -123,23 +127,27 @@ public class DemoBackStack extends Activity implements OnClickListener {
         }
     }
 
-    public Fragment newInstance(String text) {
+    public Fragment newInstance(String text, int id) {
         final Fragment result = new TextFragment();
         final Bundle args = new Bundle();
         args.putString(TextFragment.KEY_STR, text);
+        args.putInt(TextFragment.KEY_ID, id);
         result.setArguments(args);
         return result;
     }
 
     private class TextFragment 
     extends BaseFragment<DemoApplication, DemoAppSettings> {
+        public static final String KEY_ID = "id";
         private static final String KEY_STR = "str";
-        private String mText;
+        private String mTag;
+        private int mId;
 
-        public Fragment newInstance(String text) {
+        public Fragment newInstance(String text, int id) {
             final Fragment result = new TextFragment();
             final Bundle args = new Bundle();
             args.putString(KEY_STR, text);
+            args.putInt(KEY_ID, id);
             result.setArguments(args);
             return result;
         }
@@ -147,7 +155,8 @@ public class DemoBackStack extends Activity implements OnClickListener {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mText = getArguments().getString(KEY_STR);
+            mTag = getArguments().getString(KEY_STR);
+            mId = getArguments().getInt(KEY_ID);
         }
 
         @Override
@@ -156,12 +165,12 @@ public class DemoBackStack extends Activity implements OnClickListener {
             final View view = inflater.inflate(R.layout.fragment_button, null);
             final Button btn = (Button) view.findViewById(R.id.btnStart);
             btn.setOnClickListener(this);
-            btn.setText(mText);
+            btn.setText(mTag+"."+mId);
             return view;
         }
         @Override
         public void onClick(View v) {
-            mStack.startFragmentInCurrentTab(newInstance(mText+"+"));
+            mStack.startFragmentInCurrentTab(newInstance(mTag, ++mId));
         }
     }
 }

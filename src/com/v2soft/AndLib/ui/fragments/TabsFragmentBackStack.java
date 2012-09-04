@@ -92,6 +92,9 @@ public class TabsFragmentBackStack {
      * @param tag tab tag
      */
     public void activateTab(String tag) {
+        if ( tag.equals(mCurrentTabTag) ) {
+            return; // already at this tab
+        }
         if ( !mTabs.containsKey(tag)) {
             final Fragment tabHome = mListener.onNewTabOpened(tag);
             if ( tabHome == null ) {
