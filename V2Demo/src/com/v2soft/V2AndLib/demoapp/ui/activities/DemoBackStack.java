@@ -15,21 +15,22 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import com.v2soft.AndLib.ui.R;
-import com.v2soft.AndLib.ui.fragments.BaseFragment;
-import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
-import com.v2soft.V2AndLib.demoapp.DemoApplication;
-import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoBluetoothDeviceList;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.ui.fragments.BaseFragment;
+import com.v2soft.AndLib.ui.fragments.TabsFragmentBackStack;
+import com.v2soft.AndLib.ui.fragments.TabsFragmentBackStack.TabsFragmentBackStackListener;
+import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
+import com.v2soft.V2AndLib.demoapp.DemoApplication;
 
 /**
  * 
@@ -37,6 +38,7 @@ import android.widget.Button;
  *
  */
 public class DemoBackStack extends Activity implements OnClickListener {
+    private TabsFragmentBackStack mStack ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +48,51 @@ public class DemoBackStack extends Activity implements OnClickListener {
         findViewById(R.id.btn2).setOnClickListener(this);
         findViewById(R.id.btn3).setOnClickListener(this);
         findViewById(R.id.btn4).setOnClickListener(this);
+        mStack = new TabsFragmentBackStack(mFragmentsListener);
         if ( savedInstanceState == null ) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.v2andLibFragment, newInstance("1"));
-            ft.commit();
+            mStack.activateTab("1");
         }
     }
+    
+    private TabsFragmentBackStackListener mFragmentsListener = new TabsFragmentBackStackListener() {
+        @Override
+        public Fragment onNewTabOpened(String tag) {
+            if ( tag.equals("1")) {
+                return newInstance("1");
+            } else if ( tag.equals("2")) {
+                return newInstance("2");
+            } else if ( tag.equals("3")) {
+                return newInstance("3");
+            } else if ( tag.equals("4")) {
+                return newInstance("4");
+            }
+            return null;
+        }
+
+        @Override
+        public void onStartFragment(Fragment fragment) {
+            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.v2andLibFragment, fragment);
+            ft.commit();
+        }
+
+        @Override
+        public void onActivatedTab(String tag) {
+            findViewById(R.id.btn1).setBackgroundColor(0xFF000090);
+            findViewById(R.id.btn2).setBackgroundColor(0xFF000090);
+            findViewById(R.id.btn3).setBackgroundColor(0xFF000090);
+            findViewById(R.id.btn4).setBackgroundColor(0xFF000090);
+            if ( tag.equals("1")) {
+                findViewById(R.id.btn1).setBackgroundColor(0xFF009000);
+            } else if ( tag.equals("2")) {
+                findViewById(R.id.btn2).setBackgroundColor(0xFF009000);
+            } else if ( tag.equals("3")) {
+                findViewById(R.id.btn3).setBackgroundColor(0xFF009000);
+            } else if ( tag.equals("4")) {
+                findViewById(R.id.btn4).setBackgroundColor(0xFF009000);
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -59,33 +100,27 @@ public class DemoBackStack extends Activity implements OnClickListener {
         FragmentTransaction ft;
         switch (id) {
         case R.id.btn1:
-            ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.v2andLibFragment, newInstance("1"));
-            ft.commit();
+            mStack.activateTab("1");
             break;
         case R.id.btn2:
-            ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.v2andLibFragment, newInstance("2"));
-            ft.commit();
-
+            mStack.activateTab("2");
             break;
         case R.id.btn3:
-            ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.v2andLibFragment, newInstance("3"));
-            ft.commit();
-
+            mStack.activateTab("3");
             break;
         case R.id.btn4:
-            ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.v2andLibFragment, newInstance("4"));
-            ft.commit();
-
+            mStack.activateTab("4");
             break;
         default:
             break;
         }
-        // TODO Auto-generated method stub
+    }
 
+    @Override
+    public void onBackPressed() {
+        if ( !mStack.onBackPressed() ) {
+            super.onBackPressed();
+        }
     }
 
     public Fragment newInstance(String text) {
@@ -126,11 +161,7 @@ public class DemoBackStack extends Activity implements OnClickListener {
         }
         @Override
         public void onClick(View v) {
-            startFragment(R.id.v2andLibFragment, 
-                    newInstance(mText+"+"), 
-                    true, 
-                    "");
+            mStack.startFragmentInCurrentTab(newInstance(mText+"+"));
         }
-
     }
 }
