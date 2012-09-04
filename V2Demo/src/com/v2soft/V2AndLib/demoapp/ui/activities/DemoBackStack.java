@@ -170,7 +170,23 @@ public class DemoBackStack extends Activity implements OnClickListener {
         }
         @Override
         public void onClick(View v) {
-            mStack.startFragmentInCurrentTab(newInstance(mTag, ++mId));
+            Fragment fragment = null;
+            if ( mId > 4 ) {
+                String next = TAB_A;
+                if ( mTag.equals(TAB_A)) {
+                    next = TAB_B;
+                } else if ( mTag.equals(TAB_B)) {
+                    next = TAB_C;
+                } else if ( mTag.equals(TAB_C)) {
+                    next = TAB_D;
+                }
+                fragment = newInstance(next, 1);
+                mStack.startFragment(fragment, next);
+            } else {
+                fragment = newInstance(mTag, ++mId);
+                mStack.startFragmentInCurrentTab(fragment);
+            }
+
         }
     }
 }
