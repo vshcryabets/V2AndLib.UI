@@ -2,6 +2,8 @@ package com.v2soft.AndLib.ui.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
@@ -14,7 +16,7 @@ import com.v2soft.AndLib.application.BaseApplicationSettings;
  * @param <S>
  */
 public abstract class BaseActivity<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
-extends Activity {
+extends FragmentActivity {
     protected T mApp;
     protected S mSettings;
 
@@ -30,5 +32,9 @@ extends Activity {
         if ( mSettings == null ) {
             throw new NullPointerException("Settings is null");
         }
+    }
+    
+    protected FragmentManager getFragmentManager() {
+        return getSupportFragmentManager();
     }
 }

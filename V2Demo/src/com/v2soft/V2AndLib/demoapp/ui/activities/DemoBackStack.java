@@ -16,9 +16,9 @@
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.ui.activities.BaseActivity;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.AndLib.ui.fragments.TabsFragmentBackStack;
 import com.v2soft.AndLib.ui.fragments.TabsFragmentBackStack.TabsFragmentBackStackListener;
@@ -37,7 +38,8 @@ import com.v2soft.V2AndLib.demoapp.DemoApplication;
  * @author vshcryabets@gmail.com
  *
  */
-public class DemoBackStack extends Activity implements OnClickListener {
+public class DemoBackStack extends BaseActivity<DemoApplication, DemoAppSettings> 
+implements OnClickListener {
     private static final String TAB_A = "A";
     private static final String TAB_B = "B";
     private static final String TAB_C = "C";

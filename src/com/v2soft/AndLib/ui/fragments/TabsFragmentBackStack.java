@@ -15,10 +15,11 @@
  */
 package com.v2soft.AndLib.ui.fragments;
 
+import android.support.v4.app.Fragment;
+
 import java.util.HashMap;
 import java.util.Stack;
 
-import android.app.Fragment;
 
 /**
  * Specially organized back stack for fragment tabs
