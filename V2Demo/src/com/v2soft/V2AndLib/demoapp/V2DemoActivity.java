@@ -16,6 +16,7 @@
 package com.v2soft.V2AndLib.demoapp;
 
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
+import com.v2soft.V2AndLib.demoapp.ui.activities.DemoBackStack;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
 import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
@@ -44,7 +45,8 @@ implements OnItemClickListener {
         "Upload to dropbox",
         "OpenSL sample",
         "Google Cloud Printing Demo",
-        "Endless list"};
+        "Endless list",
+        "Custom back stack"};
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
     private static final int ITEM_BLUETOOTH_DEVICE = 0;
     private static final int ITEM_UDP_DISCOVERY = 1;
@@ -52,6 +54,7 @@ implements OnItemClickListener {
     private static final int ITEM_OPEN_SL = 3;
     private static final int ITEM_GCP = 4;
     private static final int ITEM_ENDLESSLIST = 5;
+    private static final int ITEM_CUSTOM_BACKSTACK = 6;
     
     private ArrayAdapter<String> mAdapter;
     
@@ -85,6 +88,9 @@ implements OnItemClickListener {
             break;
         case ITEM_ENDLESSLIST:
             startActivity(new Intent(this, EndlessListActivity.class));
+            break;
+        case ITEM_CUSTOM_BACKSTACK:
+            startActivity(new Intent(this, DemoBackStack.class));
             break;
         default:
             break;

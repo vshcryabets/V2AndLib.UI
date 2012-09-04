@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.BluetoothList" />
+        <activity android:name=".ui.activities.DemoBackStack" />
         <activity android:name=".ui.activities.EndlessListActivity" />
         <activity android:name=".ui.activities.UDPDiscoveryList" />
         <activity android:name=".ui.activities.DropBoxUpload" >
