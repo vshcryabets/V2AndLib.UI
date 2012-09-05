@@ -40,8 +40,13 @@ extends BaseFragment<DemoApplication, DemoAppSettings> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTag = getArguments().getString(KEY_STR);
-        mId = getArguments().getInt(KEY_ID);
+        if ( getArguments() != null ) {
+            mTag = getArguments().getString(KEY_STR);
+            mId = getArguments().getInt(KEY_ID);
+        } else {
+            mTag = "U";
+            mId= -100;
+        }
     }
 
     @Override

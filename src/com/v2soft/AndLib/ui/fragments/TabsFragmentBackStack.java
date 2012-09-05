@@ -31,7 +31,7 @@ import android.os.Bundle;
  *
  */
 public class TabsFragmentBackStack 
-    implements IBackStack {
+implements IBackStack {
     public interface TabsFragmentBackStackListener {
         Fragment onNewTabOpened(String tag);
         void onStartFragment(Fragment fragment);
@@ -42,6 +42,7 @@ public class TabsFragmentBackStack
     private static final String KEY_TAB_NAMES = "tabNames";
     private static final String KEY_FRAGMENT_CLASS = "fragmentClass";
     private static final String KEY_CLASS_NAMES = "classNames";
+    private static final String KEY_ARGUMENTS = "arguments";
     private Context mContext;
     private HashMap<String, Stack<Fragment>> mTabs;
     private Stack<Fragment> mCurrentStack;
@@ -102,7 +103,7 @@ public class TabsFragmentBackStack
         }
         return false;
     }
-    
+
     /**
      * Show specified tab
      * @param tag tab tag
@@ -125,7 +126,7 @@ public class TabsFragmentBackStack
         startFragment(mCurrentStack.lastElement(), mCurrentTabTag, false);
         mListener.onActivatedTab(tag);
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         final Bundle tabStackState = new Bundle();
@@ -142,8 +143,12 @@ public class TabsFragmentBackStack
             final String [] classNames = new String[tabStack.size()];
             int pos = 0;
             for (Fragment fragment : tabStack) {
-                final String classname = fragment.getClass().toString();
-                classNames[pos++] = classname;
+                final String classname = fragment.getClass().getName();
+                classNames[pos] = classname;
+                final Bundle fragmentData = new Bundle();
+                fragmentData.putBundle(KEY_ARGUMENTS, fragment.getArguments());
+                bundle.putBundle(String.valueOf(pos), fragmentData);
+                pos++;
             }
             bundle.putStringArray(KEY_CLASS_NAMES, classNames);
             tabStackState.putBundle(string, bundle);
@@ -153,16 +158,24 @@ public class TabsFragmentBackStack
     @Override
     public void onRestoreInstanceState(Bundle state) {
         final Bundle bundle = state.getBundle(KEY_TABSTACK_STATE);
+        mTabs = new HashMap<String, Stack<Fragment>>();
         if ( bundle != null ) {
             final String []tabNames = bundle.getStringArray(KEY_TAB_NAMES);
             for (String string : tabNames) {
                 final Bundle tabBundle = bundle.getBundle(string);
                 final String classNames[] = tabBundle.getStringArray(KEY_CLASS_NAMES);
                 final Stack<Fragment> stack = new Stack<Fragment>();
+                int pos = 0;
                 for (String classname : classNames) {
-                    final Fragment fragment = Fragment.instantiate(context, fname)
+                    final Bundle fragmentData = tabBundle.getBundle(String.valueOf(pos));
+                    final Fragment fragment = Fragment.instantiate(mContext, classname);
+                    fragment.setArguments(fragmentData.getBundle(KEY_ARGUMENTS));
+                    stack.push(fragment);
+                    pos++;
                 }
+                mTabs.put(string, stack);
             }
+            activateTab(bundle.getString(KEY_CURRENT_TAB));
         }
     }
 }
