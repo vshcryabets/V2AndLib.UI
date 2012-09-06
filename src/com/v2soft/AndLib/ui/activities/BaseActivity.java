@@ -55,6 +55,14 @@ extends Activity {
         }
     }
     
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if ( mCustomStack != null ) {
+            mCustomStack.onRestoreInstanceState(savedInstanceState);
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+    
     public IBackStack getBackStack() {
         return mCustomStack;
     }
