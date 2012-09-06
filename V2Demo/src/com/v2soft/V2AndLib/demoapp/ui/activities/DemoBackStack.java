@@ -53,9 +53,7 @@ implements OnClickListener {
         findViewById(R.id.btn4).setOnClickListener(this);
         mStack = new TabsFragmentBackStack(this, mFragmentsListener);
         mCustomStack = mStack;
-        if ( savedInstanceState != null ) {
-            mStack.onRestoreInstanceState(savedInstanceState);
-        } else {
+        if ( savedInstanceState == null ) {
             mStack.activateTab(TAB_A);
         }
     }
