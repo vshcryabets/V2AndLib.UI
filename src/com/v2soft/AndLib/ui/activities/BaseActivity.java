@@ -1,7 +1,7 @@
 package com.v2soft.AndLib.ui.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
@@ -17,8 +17,22 @@ import com.v2soft.AndLib.application.BaseApplicationSettings;
  */
 public abstract class BaseActivity<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
 extends FragmentActivity {
+    // =================================================================
+    // Interfaces
+    // =================================================================
+    public interface IBackStack {
+        void startFragmentAt(Fragment fragment, String where);
+        void startFragment(Fragment fragment);
+        boolean onBackPressed();
+        void onSaveInstanceState(Bundle outState);
+        void onRestoreInstanceState(Bundle state);
+    }
+    // =================================================================
+    // Class fields
+    // =================================================================
     protected T mApp;
     protected S mSettings;
+    protected IBackStack mCustomStack;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -36,5 +50,17 @@ extends FragmentActivity {
     
     protected FragmentManager getFragmentManager() {
         return getSupportFragmentManager();
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if ( mCustomStack != null ) {
+            mCustomStack.onSaveInstanceState(outState);
+        }
+    }
+    
+    public IBackStack getBackStack() {
+        return mCustomStack;
     }
 }
