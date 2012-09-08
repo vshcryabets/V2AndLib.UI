@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.ui.activities.BaseActivity;
@@ -24,6 +25,7 @@ extends BaseFragment<DemoApplication, DemoAppSettings> {
     private static final String KEY_STR = "str";
     private String mTag;
     private int mId;
+    private EditText mEdit;
 
     public TextButtonFragment() {
     }
@@ -53,6 +55,7 @@ extends BaseFragment<DemoApplication, DemoAppSettings> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_button, null);
+        mEdit = (EditText) view.findViewById(R.id.edit);
         final Button btn = (Button) view.findViewById(R.id.btnStart);
         btn.setOnClickListener(this);
         btn.setText(mTag+"."+mId);

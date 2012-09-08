@@ -1,4 +1,4 @@
-package com.v2soft.AndLib.dao;
+package com.v2soft.AndLib.dataproviders;
 
 /**
  * Data request exception
