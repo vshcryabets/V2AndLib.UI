@@ -63,6 +63,7 @@ extends JSONSerializable {
         }
         return result;
     }
+    // TODO WTF??
     @Override
     public boolean equals(Object o) {
         if ( !(o instanceof JSONSerializableDataArray)) {
