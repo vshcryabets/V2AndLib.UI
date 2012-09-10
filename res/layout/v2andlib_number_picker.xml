@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="horizontal"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-	<ImageButton
-		android:id="@+id/v2andlib_btn_decrement"
-		android:src="@drawable/v2andlib_ic_minus"
-		android:layout_width="wrap_content"
-		android:layout_height="fill_parent" 
-		android:baselineAlignBottom="false"
-		android:padding="2dp" 
-		/>
-	<EditText
-		android:id="@+id/v2andlib_edit"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_weight="1"
-		android:singleLine="true"
-		android:gravity="center"
-		android:numeric="integer"
-		android:baselineAlignBottom="false"/>
-	<ImageButton
-		android:id="@+id/v2andlib_btn_increment"
-		android:src="@drawable/v2andlib_ic_plus"
-		android:layout_width="wrap_content"
-		android:layout_height="fill_parent"
-		android:baselineAlignBottom="false"
-		android:padding="2dp" 
-		/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <ImageButton
+        android:id="@+id/v2andlib_btn_decrement"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:baselineAlignBottom="false"
+        android:padding="2dp"
+        android:src="@drawable/v2andlib_ic_minus" />
+
+    <EditText
+        android:id="@+id/v2andlib_edit"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:baselineAlignBottom="false"
+        android:gravity="center"
+        android:inputType="number"
+        android:singleLine="true" />
+
+    <ImageButton
+        android:id="@+id/v2andlib_btn_increment"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:baselineAlignBottom="false"
+        android:padding="2dp"
+        android:src="@drawable/v2andlib_ic_plus" />
+
 </LinearLayout>
