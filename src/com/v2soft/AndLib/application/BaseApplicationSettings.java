@@ -54,8 +54,7 @@ public abstract class BaseApplicationSettings {
         }
     }
     /**
-     * Load all string values from SharedPreferences
-     * @param keyNames
+     * Save all string values to SharedPreferences
      */
     protected void saveStringSettings() {
         final Editor editor = mSettings.edit();

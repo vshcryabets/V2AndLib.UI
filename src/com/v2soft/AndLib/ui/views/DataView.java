@@ -18,6 +18,7 @@ package com.v2soft.AndLib.ui.views;
 import java.lang.reflect.Field;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +37,10 @@ public class DataView<T> extends LinearLayout implements IDataView<T>{
         inflate(context, resource, this);
     }
 
+    public DataView(Context context, AttributeSet attrs, int resource) {
+        super(context, attrs);
+        inflate(context, resource, this);
+    }
     @Override
     public void setData(T data) {
         mData = data;
