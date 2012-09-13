@@ -76,14 +76,14 @@ public class TasksMultiplexor {
         }
     }
 
-    public void handleException(final ITask task, Exception e) {
+    public void handleException(final ITask task, final Exception e) {
         final ITaskListener listener = mListeners.get(task.getTaskId());
         if ( listener != null ) {
             removeTask(task, listener);
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    listener.onTaskFinished(task);
+                    listener.onTaskFailed(task, e);
                 }
             });
         }

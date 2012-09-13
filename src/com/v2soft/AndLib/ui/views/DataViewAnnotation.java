@@ -28,5 +28,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataViewAnnotation {
-	int resource() default -1;
+    int resource() default -1;
+    String patternString() default "";
+    Class<?> formater() default Object.class;
 }
