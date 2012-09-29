@@ -19,7 +19,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
