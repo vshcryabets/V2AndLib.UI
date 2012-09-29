@@ -15,6 +15,8 @@
  */
 package com.v2soft.AndLib.exceptions;
 
+import android.widget.EditText;
+
 /**
  * Input form validation helper class
  * @author V.Shcriyabets (vshcryabets@gmail.com)
@@ -31,6 +33,14 @@ public class InputFormException extends Exception {
     public static void assertFalse(boolean value, int resource) throws InputFormException {
         if (value) {
             throw new InputFormException(resource);
+        }
+    }
+    
+    public static void assertBlankEditText(EditText edit, int resource) throws InputFormException {
+        final String text = edit.getEditableText().toString().trim();
+        if ( text.length() == 0 ) {
+            assertFalse(true, resource);
+            return;
         }
     }
 
