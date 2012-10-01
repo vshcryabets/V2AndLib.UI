@@ -15,8 +15,6 @@
  */
 package com.v2soft.AndLib.networking;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -76,6 +74,7 @@ public abstract class UDPBroadcastDiscovery {
             throw new IllegalStateException("Broadcast discovery process already started");
         }
         mSocket = new DatagramSocket();
+        mSocket.setSoTimeout(mDelay);
         // start receiver thread
         mReceiverThread = new Thread(mBackgroundReceiver,
                 UDPBroadcastDiscovery.class.getSimpleName()+"R");
@@ -129,9 +128,9 @@ public abstract class UDPBroadcastDiscovery {
                 packet.setAddress(mTargetAddress);
                 packet.setPort(mTargetPort);
                 try {
-                mSocket.send(packet);
+                    mSocket.send(packet);
                 } catch (Exception e) {
-                    Log.e(LOG_TAG, e.toString(), e);
+                    //                    Log.e(LOG_TAG, e.toString(), e);
                 }
                 // delay
                 try {
@@ -140,12 +139,7 @@ public abstract class UDPBroadcastDiscovery {
                     break;
                 }
             }
-            mSocket.close();
-            mSenderThread = null;
-            stopDiscovery();
-            if ( mListener != null ) {
-                mListener.onDiscoveryFinished();
-            }
+            mReceiverThread.interrupt();
         }
     };
 
@@ -156,20 +150,27 @@ public abstract class UDPBroadcastDiscovery {
 
             while ( true ) {
                 try {
+                    if ( mReceiverThread.isInterrupted() ) {
+                        break;
+                    }
                     final DatagramPacket packet = new DatagramPacket(buf, buf.length);
                     mSocket.receive(packet);
                     handleIncomePacket(packet);
                     Thread.sleep(100);
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    if ( mSocket.isClosed() ) {
-                        break;
-                    }
+                    // ignore it
                 } catch (InterruptedException e) {
+                    System.out.println("Interrupt");
                     break;
                 }
             }
+            mSocket.close();
+            mSenderThread = null;
             mReceiverThread = null;
+//            stopDiscovery();
+            if ( mListener != null ) {
+                mListener.onDiscoveryFinished();
+            }
         }
     };
 }
