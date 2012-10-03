@@ -61,7 +61,7 @@ public abstract class BaseApplicationSettings {
         for (String key : mStringSettings.keySet()) {
             editor.putString(key, mStringSettings.get(key));
         }
-        editor.commit();
+        editor.apply();
     }
 
     /**
