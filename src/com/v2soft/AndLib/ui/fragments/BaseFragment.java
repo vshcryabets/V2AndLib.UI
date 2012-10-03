@@ -23,11 +23,13 @@ import android.view.View.OnClickListener;
 
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
+import com.v2soft.AndLib.ui.activities.BaseActivity;
 
 /**
  * Base fragment class
  * @author diacht
- *
+ * @param <T> application class
+ * @param <S> settings class
  */
 public abstract class BaseFragment<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
 extends Fragment 
@@ -71,5 +73,45 @@ implements OnClickListener {
             ft.addToBackStack(stackTag);
         }
         ft.commit();
+    }
+    // =================================================================
+    // UI routines
+    // =================================================================
+    /**
+     * Show error to user 
+     * @param message
+     */
+    public void showError(String message) {
+        if ( getActivity() instanceof BaseActivity<?, ?>) {
+            final BaseActivity<?, ?> activity = (BaseActivity<?, ?>) getActivity();
+            activity.showError(message);
+        }
+    }
+    /**
+     * Show error to user 
+     * @param message
+     */
+    public void showError(int messageResource) {
+        showError(getString(messageResource));
+    }
+    /**
+     * This method will show some kind of a unblocking progress view, that means that background data loading process is ongoing
+     * @param value
+     */
+    public void setLoadingProcess(boolean value, Object tag) {
+        if ( getActivity() instanceof BaseActivity<?, ?>) {
+            final BaseActivity<?, ?> activity = (BaseActivity<?, ?>) getActivity();
+            activity.setLoadingProcess(value, tag);
+        }
+    }
+    /**
+     * This method will show some kind of a progress dialog, that block the user
+     * @param value
+     */
+    public void setBlockingProcess(boolean value, Object tag) {
+        if ( getActivity() instanceof BaseActivity<?, ?>) {
+            final BaseActivity<?, ?> activity = (BaseActivity<?, ?>) getActivity();
+            activity.setBlockingProcess(value, tag);
+        }
     }
 }
