@@ -64,25 +64,6 @@ implements OnClickListener {
             view.setOnClickListener(this);
         }
     }
-
-    /**
-     * Start new fragment in specified container view
-     * @param resId container view resource ID
-     * @param fragment new fragment object
-     * @param addToStack
-     * @param stackTag
-     */
-    protected void startFragment(int resId, Fragment fragment, 
-            boolean addToStack, String stackTag) {
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(resId, fragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if ( addToStack ) {
-            ft.addToBackStack(stackTag);
-        }
-        ft.commit();
-    }
-    
     /**
      * Start new fragment in specified container view with custom animations
      * @param resId container view resource ID
