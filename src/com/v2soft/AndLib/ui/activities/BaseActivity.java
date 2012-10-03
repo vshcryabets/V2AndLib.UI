@@ -12,8 +12,8 @@ import com.v2soft.AndLib.application.BaseApplicationSettings;
  * Base activity class
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
- * @param <T>
- * @param <S>
+ * @param <T> application class
+ * @param <S> settings class
  */
 public abstract class BaseActivity<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
 extends FragmentActivity {
@@ -71,4 +71,29 @@ extends FragmentActivity {
     public IBackStack getBackStack() {
         return mCustomStack;
     }
+    // =================================================================
+    // UI routines
+    // =================================================================
+    /**
+     * Show error to user 
+     * @param message
+     */
+    public abstract void showError(String message);
+    /**
+     * Show error to user 
+     * @param message
+     */
+    public void showError(int messageResource) {
+        showError(getString(messageResource));
+    }
+    /**
+     * This method will show some kind of a unblocking progress view, that means that background data loading process is ongoing
+     * @param value
+     */
+    public abstract void setLoadingProcess(boolean value, Object tag);
+    /**
+     * This method will show some kind of a progress dialog, that block the user
+     * @param value
+     */
+    public abstract void setBlockingProcess(boolean value, Object tag);
 }
