@@ -40,7 +40,7 @@ public class LoadBitmapTask extends DummyTask {
     @Override
     public void execute() throws Exception {
         // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        final BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(mFilePath, bmOptions);
         int photoW = bmOptions.outWidth;
@@ -53,8 +53,8 @@ public class LoadBitmapTask extends DummyTask {
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mFilePath, bmOptions);
-        setBitmap(BitmapFactory.decodeFile(mFilePath));
+        final Bitmap bitmap = BitmapFactory.decodeFile(mFilePath, bmOptions);
+        setBitmap(bitmap);
     }
 
     public Bitmap getBitmap() {
