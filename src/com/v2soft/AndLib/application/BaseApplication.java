@@ -49,6 +49,7 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
 //        .penaltyDeath()
 //        .build());        
         onCreateSettings(createApplicationSettings());
+        mSettings.loadSettings();
     }
 
     protected void onCreateSettings(S settings) {
