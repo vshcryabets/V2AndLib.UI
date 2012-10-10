@@ -25,17 +25,12 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.v2soft.AndLib.dataproviders.ITask;
-
 /**
  * Task that will download file from specified URL to local cache
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class CacheHTTPFile implements ITask {
-    private int mId;
-    private int mTag;
-    private Object mTagObj;
+public class CacheHTTPFile extends DummyTask {
     private URL mFileAddress;
     private File mLocalCacheDir;
     
@@ -73,37 +68,5 @@ public class CacheHTTPFile implements ITask {
         }
         is.close();
         fos.close();
-    }
-
-    @Override
-    public void setTaskId(int id) {
-        mId = id;
-    }
-
-    @Override
-    public int getTaskId() {
-        return mId;
-    }
-
-    @Override
-    public int getTaskTag() {
-        return mTag;
-    }
-
-    @Override
-    public ITask setTaskTag(int id) {
-        mTag = id;
-        return this;
-    }
-
-    @Override
-    public ITask setTaskTagObject(Object tag) {
-        mTagObj = tag;
-        return this;
-    }
-
-    @Override
-    public Object getTaskTagObject() {
-        return mTagObj;
     }
 }
