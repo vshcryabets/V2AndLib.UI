@@ -18,8 +18,10 @@ package com.v2soft.V2AndLib.demoapp.ui.activities;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.ui.activities.BaseActivity;
@@ -41,6 +43,7 @@ implements OnClickListener {
     private static final String TAB_B = "B";
     private static final String TAB_C = "C";
     private static final String TAB_D = "D";
+    private static final String LOG_TAG = DemoBackStack.class.getSimpleName();
     private TabsFragmentBackStack mStack ;
 
     @Override
@@ -101,7 +104,6 @@ implements OnClickListener {
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        FragmentTransaction ft;
         switch (id) {
         case R.id.btn1:
             mStack.activateTab(TAB_A);
@@ -125,6 +127,24 @@ implements OnClickListener {
         if ( !mStack.onBackPressed() ) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Log.e(LOG_TAG, message);
+    }
+
+    @Override
+    public void setLoadingProcess(boolean value, Object tag) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setBlockingProcess(boolean value, Object tag) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
