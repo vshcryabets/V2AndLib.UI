@@ -26,13 +26,34 @@ import android.graphics.BitmapFactory;
 public class LoadBitmapTask extends DummyTask {
     private String mFilePath;
     private Bitmap mBitmap;
-    
+    private int mRequiredWidth, mRequiredHeight;
+
     public LoadBitmapTask(String filePath) {
-        mFilePath = filePath;
+        this(filePath, Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
-    
+    public LoadBitmapTask(String filePath, int width, int height) {
+        mFilePath = filePath;
+        mRequiredHeight = height;
+        mRequiredWidth = width;
+    }
+
     @Override
     public void execute() throws Exception {
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mFilePath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/mRequiredWidth, photoH/mRequiredHeight);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mFilePath, bmOptions);
         setBitmap(BitmapFactory.decodeFile(mFilePath));
     }
 
