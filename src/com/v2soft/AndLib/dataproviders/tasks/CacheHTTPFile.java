@@ -33,19 +33,30 @@ import java.security.NoSuchAlgorithmException;
 public class CacheHTTPFile extends DummyTask {
     private URL mFileAddress;
     private File mLocalCacheDir;
-    
+    private String mCustomHashString;
+
     public CacheHTTPFile(URL filePath, File localCacheDir) {
         mFileAddress = filePath;
         mLocalCacheDir = localCacheDir;
     }
-    
+
+    public CacheHTTPFile(URL filePath, File localCacheDir, String customHashString) {
+        mFileAddress = filePath;
+        mLocalCacheDir = localCacheDir;
+        mCustomHashString = customHashString;
+    }
+
     public String getLocalPath() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        // get file path hash
-        final MessageDigest md = MessageDigest.getInstance("MD5");
-        final byte [] path = mFileAddress.toExternalForm().getBytes("utf-8");
-        md.update(path, 0, path.length);
-        final String filename = new BigInteger( 1, md.digest() ).toString( 16 );
-        return filename;
+        if ( mCustomHashString != null ) {
+            return mCustomHashString;
+        } else {
+            // get file path hash
+            final MessageDigest md = MessageDigest.getInstance("MD5");
+            final byte [] path = mFileAddress.toExternalForm().getBytes("utf-8");
+            md.update(path, 0, path.length);
+            final String filename = new BigInteger( 1, md.digest() ).toString( 16 );
+            return filename;
+        }
     }
 
     @Override
