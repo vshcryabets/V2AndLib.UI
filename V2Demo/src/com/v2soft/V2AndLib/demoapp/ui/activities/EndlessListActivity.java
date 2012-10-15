@@ -41,4 +41,11 @@ public class EndlessListActivity extends Activity {
             trans.commit();
         }
     }
+    /**
+     * Return sample display name
+     * @return
+     */
+    public static String getSampleName() {
+        return "Endless list demo";
+    }
 }

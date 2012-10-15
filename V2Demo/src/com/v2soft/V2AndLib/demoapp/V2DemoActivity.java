@@ -15,13 +15,9 @@
  */
 package com.v2soft.V2AndLib.demoapp;
 
-import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
-import com.v2soft.V2AndLib.demoapp.ui.activities.DemoBackStack;
-import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
-import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
-import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
-import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
-import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -32,6 +28,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
+import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
+import com.v2soft.V2AndLib.demoapp.ui.activities.DemoBackStack;
+import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
+import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
+import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
+import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
+import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
+
 /**
  * Demo start activity
  * @author vshcryabets@gmail.com
@@ -40,61 +44,40 @@ import android.widget.ArrayAdapter;
 public class V2DemoActivity 
 extends ListActivity 
 implements OnItemClickListener {
-    private final static String [] sItems = new String[]{"Bluetooth device list",
-        "UDP discovery",
-        "Upload to dropbox",
-        "OpenSL sample",
-        "Google Cloud Printing Demo",
-        "Endless list",
-        "Custom back stack"};
+    private final static Class<?>[] sActivities = new Class[]{
+        BluetoothList.class,
+        UDPDiscoveryList.class,
+        DropBoxUpload.class,
+        OpenSLSample.class,
+        GCPDemo.class,
+        EndlessListActivity.class,
+        DemoBackStack.class
+    };
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
-    private static final int ITEM_BLUETOOTH_DEVICE = 0;
-    private static final int ITEM_UDP_DISCOVERY = 1;
-    private static final int ITEM_DROPBOX_UPLOAD = 2;
-    private static final int ITEM_OPEN_SL = 3;
-    private static final int ITEM_GCP = 4;
-    private static final int ITEM_ENDLESSLIST = 5;
-    private static final int ITEM_CUSTOM_BACKSTACK = 6;
-    
+
     private ArrayAdapter<String> mAdapter;
-    
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sItems);
+        final List<String> names= new ArrayList<String>();
+        for (Class<?> activity : sActivities) {
+            try {
+                final Method method = activity.getMethod("getSampleName");
+                names.add( (String) method.invoke(null));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         setListAdapter(mAdapter);
         getListView().setOnItemClickListener(this);
     }
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        switch ((int)arg3) {
-        case ITEM_BLUETOOTH_DEVICE:
-            startActivity(new Intent(this, BluetoothList.class));
-            break;
-        case ITEM_UDP_DISCOVERY:
-            startActivity(new Intent(this, UDPDiscoveryList.class));
-            break;
-        case ITEM_DROPBOX_UPLOAD:
-            startActivity(new Intent(this, DropBoxUpload.class));
-            break;
-        case ITEM_OPEN_SL:
-            startActivity(new Intent(this, OpenSLSample.class));
-            break;
-        case ITEM_GCP:
-            startActivity(new Intent(this, GCPDemo.class));
-            break;
-        case ITEM_ENDLESSLIST:
-            startActivity(new Intent(this, EndlessListActivity.class));
-            break;
-        case ITEM_CUSTOM_BACKSTACK:
-            startActivity(new Intent(this, DemoBackStack.class));
-            break;
-        default:
-            break;
-        }
-        Log.d(LOG_TAG, "item="+arg3);
+        startActivity(new Intent(this, sActivities[arg2]));
     }
 }
