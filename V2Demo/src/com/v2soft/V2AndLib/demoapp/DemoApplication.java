@@ -15,8 +15,8 @@
  */
 package com.v2soft.V2AndLib.demoapp;
 
-import org.acra.ACRA;
-import org.acra.annotation.ReportsCrashes;
+//import org.acra.ACRA;
+//import org.acra.annotation.ReportsCrashes;
 
 import com.v2soft.AndLib.application.BaseApplication;
 
@@ -25,11 +25,11 @@ import com.v2soft.AndLib.application.BaseApplication;
  * @author vshcryabets@gmail.com
  *
  */
-@ReportsCrashes(formKey = "4EACFC6E-B77D-4555-ACE9-F7B3A96E13C5", mailTo = "info@2vsoft.com")
+//@ReportsCrashes(formKey = "4EACFC6E-B77D-4555-ACE9-F7B3A96E13C5", mailTo = "info@2vsoft.com")
 public class DemoApplication extends BaseApplication<DemoAppSettings> {
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
+//		ACRA.init(this);
 		super.onCreate();
 	}
 	

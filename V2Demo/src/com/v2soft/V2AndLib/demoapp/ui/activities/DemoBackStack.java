@@ -46,6 +46,14 @@ implements OnClickListener {
     private static final String LOG_TAG = DemoBackStack.class.getSimpleName();
     private TabsFragmentBackStack mStack ;
 
+    /**
+     * Return sample display name
+     * @return
+     */
+    public static String getSampleName() {
+        return "Custom back stack";
+    }
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

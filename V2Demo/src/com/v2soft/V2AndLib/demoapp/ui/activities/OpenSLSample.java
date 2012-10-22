@@ -130,4 +130,12 @@ extends Activity implements OnClickListener, OnTouchListener {
         }
         return true;
     }
+    
+    /**
+     * Return sample display name
+     * @return
+     */
+    public static String getSampleName() {
+        return "OpenSL sample";
+    }
 }

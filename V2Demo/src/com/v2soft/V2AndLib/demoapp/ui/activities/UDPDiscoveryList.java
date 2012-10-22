@@ -30,6 +30,14 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoUDPDiscoveryList;
  */
 public class UDPDiscoveryList 
 extends FragmentActivity {
+    /**
+     * Return sample display name
+     * @return
+     */
+    public static String getSampleName() {
+        return "UDP discovery sample";
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

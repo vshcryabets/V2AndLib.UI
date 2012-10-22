@@ -24,7 +24,7 @@ import com.v2soft.AndLib.ui.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoBluetoothDeviceList;
 
 /**
- * 
+ * Bluetooth device discovering list
  * @author vshcryabets@gmail.com
  *
  */
@@ -40,5 +40,9 @@ public class BluetoothList extends FragmentActivity {
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
         }
+    }
+
+    public static String getSampleName() {
+        return "Bluetooth device list";
     }
 }

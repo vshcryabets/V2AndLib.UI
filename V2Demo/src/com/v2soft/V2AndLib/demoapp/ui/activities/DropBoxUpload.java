@@ -39,7 +39,7 @@ extends FragmentActivity implements OnClickListener {
     // Obfuscation is good.
     final static private String APP_KEY = "01ljvjlj0pbrow6";
     final static private String APP_SECRET = "yknmjmfogs868ad";
-	private static final String ACTION_DROPBOX_UPLOAD = "com.v2soft.AndLib.demoapp.ACTION_DROPBOX_UPLOAD";
+    private static final String ACTION_DROPBOX_UPLOAD = "com.v2soft.AndLib.demoapp.ACTION_DROPBOX_UPLOAD";
     ///////////////////////////////////////////////////////////////////////////
     //                      End app-specific settings.                       //
     ///////////////////////////////////////////////////////////////////////////
@@ -62,5 +62,13 @@ extends FragmentActivity implements OnClickListener {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Return sample display name
+     * @return
+     */
+    public static String getSampleName() {
+        return "Upload to dropbox";
     }
 }
