@@ -28,7 +28,7 @@ import com.v2soft.AndLib.ui.activities.BaseActivity.IBackStack;
 /**
  * Specially organized back stack for fragment tabs
  * @author V.Shcryabets<vshcryabets@gmail.com>
- *
+ * @deprecated this component is really buggy and shouldn't be used in real applications
  */
 public class TabsFragmentBackStack 
 implements IBackStack {
