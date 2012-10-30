@@ -16,6 +16,8 @@
 package com.v2soft.AndLib.dataproviders.tasks;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import com.v2soft.AndLib.dataproviders.ITask;
@@ -25,7 +27,7 @@ import com.v2soft.AndLib.dataproviders.ITask;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class ListTask extends DummyTask {
+public class ListTask extends DummyTask implements Collection<ITask> {
     private List<ITask> mSubTasks;
     
     public ListTask() {
@@ -39,12 +41,14 @@ public class ListTask extends DummyTask {
         }
     }
     /**
-     * Add sub task
-     * @param subtask
-     * @return
+     * 
+     * @return number of subtasks
      */
-    public boolean addSubTask(ITask subtask) {
-        return mSubTasks.add(subtask);
+    public int size() {
+        return mSubTasks.size();
+    }
+    public ITask get(int location){
+        return mSubTasks.get(location);
     }
 
     @Override
@@ -53,5 +57,72 @@ public class ListTask extends DummyTask {
             subtask.execute();
         }
     }
+    // ===================================================================
+    // Collection interface
+    // ===================================================================
+    /**
+     * Add sub task
+     * @param subtask
+     * @return
+     */
+    @Override
+    public boolean add(ITask arg0) {
+        return mSubTasks.add(arg0);
+    }
 
+    @Override
+    public boolean addAll(Collection<? extends ITask> arg0) {
+        return mSubTasks.addAll(arg0);
+    }
+
+    @Override
+    public void clear() {
+        mSubTasks.clear();
+    }
+
+    @Override
+    public boolean contains(Object arg0) {
+        return mSubTasks.contains(arg0);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> arg0) {
+        return mSubTasks.containsAll(arg0);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return mSubTasks.isEmpty();
+    }
+
+    @Override
+    public Iterator<ITask> iterator() {
+        return mSubTasks.iterator();
+    }
+
+    @Override
+    public boolean remove(Object arg0) {
+        // TODO Auto-generated method stub
+        return mSubTasks.remove(arg0);
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> arg0) {
+        return mSubTasks.removeAll(arg0);
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> arg0) {
+        return mSubTasks.retainAll(arg0);
+    }
+
+    @Override
+    public Object[] toArray() {
+        return mSubTasks.toArray();
+    }
+
+    @Override
+    public <T> T[] toArray(T[] arg0) {
+        return mSubTasks.toArray(arg0);
+    }
 }
