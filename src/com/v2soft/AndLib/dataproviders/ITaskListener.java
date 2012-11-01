@@ -15,12 +15,19 @@
  */
 package com.v2soft.AndLib.dataproviders;
 
+import android.os.Message;
+
 /**
  * Task listener iterface
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
 public interface ITaskListener {
+    /**
+     * Will be called if task finished without exception
+     * @param task
+     */
+    void onMessageFromTask(ITask task, Message message);
     /**
      * Will be called if task finished without exception
      * @param task

@@ -30,12 +30,18 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.os.Message;
+
+import com.v2soft.AndLib.dataproviders.ITaskHub;
+
 /**
  * Task that will download file from specified URL to local cache
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
 public class CacheHTTPFile extends DummyTask {
+    public static final int MSG_CONTENT_LENGTH = 1;
+    private static final int MSG_RECEIVED_LENGTH = 2;
     private URL mFileAddress;
     private File mLocalCacheDir;
     private String mCustomHashString;
@@ -53,7 +59,6 @@ public class CacheHTTPFile extends DummyTask {
         mCustomHashString = customHashString;
         mClient = new DefaultHttpClient();
     }
-    
     public void setHttpClient(HttpClient client) {
         mClient = client;
     }
@@ -72,7 +77,7 @@ public class CacheHTTPFile extends DummyTask {
     }
 
     @Override
-    public void execute() throws Exception {
+    public void execute(ITaskHub handler) throws Exception {
         final String filename = getLocalPath();
         final File file = new File(mLocalCacheDir, filename);
         if ( file.exists() ) {
@@ -87,12 +92,26 @@ public class CacheHTTPFile extends DummyTask {
         if ( statusCode != 200 ) {
             throw new IOException("Status code "+statusCode);
         }
+        long length = response.getEntity().getContentLength();
+        final Message msg = new Message();
+        if ( handler != null ) {
+            msg.what = MSG_CONTENT_LENGTH;
+            msg.obj = length;
+            handler.sendMessage(this, msg);
+        }
         final InputStream is = response.getEntity().getContent();
         final FileOutputStream fos = new FileOutputStream(file);
         final byte [] buffer = new byte[4096];
         int read = 0;
+        long total = 0;
         while ( (read = is.read(buffer)) > 0 ) {
             fos.write(buffer, 0, read);
+            total += read;
+            if ( handler != null ) {
+                msg.what = MSG_RECEIVED_LENGTH;
+                msg.obj = total;
+                handler.sendMessage(this, msg);
+            }
         }
         is.close();
         fos.close();

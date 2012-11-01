@@ -16,6 +16,7 @@
 package com.v2soft.AndLib.dataproviders;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.SparseArray;
 
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import java.util.Map;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class TasksMultiplexor {
+public class TasksMultiplexor implements ITaskHub {
     private Object mLock = new Object();
     private int mLastId = 1;
     private RunnableQueueExecutor mExecutor;
@@ -125,5 +126,18 @@ public class TasksMultiplexor {
 
     public void attachToTasks(ITaskListener listener, int[] taskIds) {
         // TODO
+    }
+
+    @Override
+    public void sendMessage(final ITask task, final Message message) {
+        final ITaskListener listener = mListeners.get(task.getTaskId());
+        if ( listener != null ) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onMessageFromTask(task, message);
+                }
+            });
+        }    
     }
 }
