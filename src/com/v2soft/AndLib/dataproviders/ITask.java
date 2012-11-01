@@ -21,7 +21,7 @@ package com.v2soft.AndLib.dataproviders;
  *
  */
 public interface ITask {
-    public void execute() throws Exception;
+    public void execute(ITaskHub handler) throws Exception;
     public void setTaskId(int id);
     public int getTaskId();
     // Task tag - extra piece of information

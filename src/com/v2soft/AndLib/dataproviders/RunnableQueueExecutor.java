@@ -48,7 +48,7 @@ public class RunnableQueueExecutor extends Thread {
                         TimeUnit.MILLISECONDS);
                 if ( task != null ) {
                     try {
-                        task.execute();
+                        task.execute(mParent);
                         mParent.handleFinished(task);
                     } catch (Exception e) {
                         mParent.handleException(task, e);

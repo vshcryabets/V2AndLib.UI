@@ -15,6 +15,8 @@
  */
 package com.v2soft.AndLib.dataproviders.tasks;
 
+import com.v2soft.AndLib.dataproviders.ITaskHub;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -38,7 +40,7 @@ public class LoadBitmapTask extends DummyTask {
     }
 
     @Override
-    public void execute() throws Exception {
+    public void execute(ITaskHub hub) throws Exception {
         // Get the dimensions of the bitmap
         final BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
