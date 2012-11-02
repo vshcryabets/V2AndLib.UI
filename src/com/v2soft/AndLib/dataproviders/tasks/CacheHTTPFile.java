@@ -41,7 +41,7 @@ import com.v2soft.AndLib.dataproviders.ITaskHub;
  */
 public class CacheHTTPFile extends DummyTask {
     public static final int MSG_CONTENT_LENGTH = 1;
-    private static final int MSG_RECEIVED_LENGTH = 2;
+    public static final int MSG_RECEIVED_LENGTH = 2;
     private URL mFileAddress;
     private File mLocalCacheDir;
     private String mCustomHashString;
