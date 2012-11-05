@@ -173,9 +173,12 @@ public abstract class CustomizableRecorder {
                 if ( mReaderThread.isInterrupted() ) {
                     break;
                 }
+                if ( mCurrentBuffer >= mBuffers.length ) {
+                    mCurrentBuffer = 0;
+                }
                 processBuffer(mBuffers[mCurrentBuffer], read);
                 mCurrentBuffer++;
-                if ( mCurrentBuffer <= mMaxbuffersCount ) {
+                if ( mCurrentBuffer >= mBuffers.length ) {
                     mCurrentBuffer = 0;
                 }
             }
