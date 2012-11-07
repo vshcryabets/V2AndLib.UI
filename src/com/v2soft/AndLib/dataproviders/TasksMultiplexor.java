@@ -67,10 +67,6 @@ public class TasksMultiplexor implements ITaskHub {
         }
     }
 
-    public void cancelTask(int taskId) {
-        // TODO
-    }
-
     public void handleFinished(final ITask task) {
         final ITaskListener listener = mListeners.get(task.getTaskId());
         if ( listener != null ) {
@@ -106,7 +102,7 @@ public class TasksMultiplexor implements ITaskHub {
     }
 
     /**
-     * Отсоединение от задач
+     * Detach listener from specified tasks
      * @param listener
      * @return
      */
@@ -139,5 +135,21 @@ public class TasksMultiplexor implements ITaskHub {
                 }
             });
         }    
+    }
+
+    @Override
+    public boolean cancelTask(ITaskListener listener, int taskId, boolean stopIfRunning) {
+        // TODO find task object
+        return false;
+    }
+
+    @Override
+    public boolean cancelTask(ITaskListener listener, ITask task,
+            boolean stopIfRunning) {
+        boolean res = mExecutor.cancelTask(task, stopIfRunning);
+        if ( res ) {
+            removeTask(task, listener);
+        }
+        return res;
     }
 }

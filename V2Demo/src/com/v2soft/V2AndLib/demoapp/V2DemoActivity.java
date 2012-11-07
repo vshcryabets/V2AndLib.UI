@@ -22,7 +22,6 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,6 +33,7 @@ import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
 import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
 import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
+import com.v2soft.V2AndLib.demoapp.ui.activities.TaskStartStopActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
 
 /**
@@ -51,7 +51,8 @@ implements OnItemClickListener {
         OpenSLSample.class,
         GCPDemo.class,
         EndlessListActivity.class,
-        DemoBackStack.class
+        DemoBackStack.class,
+        TaskStartStopActivity.class
     };
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
 

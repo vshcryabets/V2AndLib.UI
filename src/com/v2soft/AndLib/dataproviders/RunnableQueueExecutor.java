@@ -26,17 +26,20 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class RunnableQueueExecutor extends Thread {
-    private static final long REQUEST_POLL_TIMEOUT_MS = 10000;
+    private static final long REQUEST_POLL_TIMEOUT_MS = 250;
     private static final String LOG_TAG = RunnableQueueExecutor.class.getSimpleName();
 
     private boolean isWorking;
     private ArrayBlockingQueue<ITask> mRequests;
     private TasksMultiplexor mParent;
+    private Object mSync;
+    private ITask mCurrentTask;
 
     public RunnableQueueExecutor(String threadName, int maxTasks, TasksMultiplexor parent) {
         super(threadName);
         mRequests = new ArrayBlockingQueue<ITask>(maxTasks);
         mParent = parent;
+        mSync = new Object();
     }
 
     @Override
@@ -44,14 +47,16 @@ public class RunnableQueueExecutor extends Thread {
         isWorking = true;
         while ( isWorking ) {
             try {
-                final ITask task = mRequests.poll(REQUEST_POLL_TIMEOUT_MS, 
-                        TimeUnit.MILLISECONDS);
-                if ( task != null ) {
+                synchronized (mSync) {
+                    mCurrentTask = mRequests.poll(REQUEST_POLL_TIMEOUT_MS, 
+                            TimeUnit.MILLISECONDS);
+                }
+                if ( mCurrentTask != null ) {
                     try {
-                        task.execute(mParent);
-                        mParent.handleFinished(task);
+                        mCurrentTask.execute(mParent);
+                        mParent.handleFinished(mCurrentTask);
                     } catch (Exception e) {
-                        mParent.handleException(task, e);
+                        mParent.handleException(mCurrentTask, e);
                     }
                 }
             } catch (Exception e) {
@@ -72,5 +77,26 @@ public class RunnableQueueExecutor extends Thread {
      */
     public boolean post(ITask runnable) {
         return mRequests.offer(runnable);
+    }
+
+    /**
+     * Cancel execution of the specified task
+     * @param task
+     * @param stopIfRunning stop task if it is already running
+     * @return
+     */
+    public boolean cancelTask(ITask task, boolean stopIfRunning) {
+        // check does this task are executing right now
+        if ( task.equals(mCurrentTask)) {
+            if ( stopIfRunning ) {
+                this.interrupt();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // remove from poll
+            return mRequests.remove(task);
+        }
     }
 }
