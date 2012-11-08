@@ -4,5 +4,10 @@
     <string name="hello">Hello World, V2DemoActivity!</string>
     <string name="app_name">V2Demo</string>
 
-    
+    <!-- Task start stop sample -->
+    <string name="btnStartTaskA">Start Task A</string>
+    <string name="btnStartTaskB">Start Task B</string>
+    <string name="btnStopTaskA">Stop Task A</string>
+    <string name="btnStopTaskB">Stop Task B</string>
+
 </resources>
