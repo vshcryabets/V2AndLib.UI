@@ -113,7 +113,7 @@ public class TaskStartStopActivity
             mMultiplexor.addTask(mTask, this);
             break;
         case R.id.btnStopTaskA:
-            mMultiplexor.cancelTask(this, mTask, false);
+            mMultiplexor.cancelTask(this, mTask, true);
             break;
         default:
             break;
