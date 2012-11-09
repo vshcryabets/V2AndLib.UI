@@ -24,4 +24,16 @@ public interface ITaskHub {
      * @return true if task was canceled
      */
     boolean cancelTask(ITaskListener listener, int taskId, boolean stopIfRunning);
+    /**
+     * Detach listener from specified tasks
+     * @param listener
+     * @return
+     */
+    public int[] detachFromTasks(ITaskListener listener);
+    /**
+     * Cancel all task of specified listeners. Note that listener after that operation 
+     * will not got any callback call 
+     * @param listener
+     */
+    public void cancelAllTasksByListener(ITaskListener listener, boolean stopIfRunning);
 }
