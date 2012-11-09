@@ -53,8 +53,15 @@ public class RunnableQueueExecutor extends Thread {
                 }
                 if ( mCurrentTask != null ) {
                     try {
-                        mCurrentTask.execute(mParent);
-                        mParent.handleFinished(mCurrentTask);
+                        if ( !isInterrupted() ) { 
+                            mCurrentTask.execute(mParent);
+                        }
+                        if ( !isInterrupted() ) {
+                            mParent.handleFinished(mCurrentTask);
+                        } else {
+                            mParent.handleException(mCurrentTask, 
+                                    new InterruptedException("Task interrupted (not successfull)"));
+                        }
                     } catch (Exception e) {
                         mParent.handleException(mCurrentTask, e);
                     }
@@ -62,7 +69,6 @@ public class RunnableQueueExecutor extends Thread {
             } catch (Exception e) {
                 Log.e(LOG_TAG, e.toString(), e);
             }
-
         }
     }
 
@@ -85,7 +91,7 @@ public class RunnableQueueExecutor extends Thread {
      * @param stopIfRunning stop task if it is already running
      * @return
      */
-    public boolean cancelTask(ITask task, boolean stopIfRunning) {
+    public synchronized boolean cancelTask(ITask task, boolean stopIfRunning) {
         // check does this task are executing right now
         if ( task.equals(mCurrentTask)) {
             if ( stopIfRunning ) {

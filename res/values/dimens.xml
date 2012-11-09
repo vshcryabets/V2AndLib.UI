@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="v2andlib_default_padding">12dp</dimen>
+    <dimen name="v2andlib_default_font_sizeg">12sp</dimen>
+    
+</resources>

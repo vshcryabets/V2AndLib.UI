@@ -146,10 +146,18 @@ public class TasksMultiplexor implements ITaskHub {
     @Override
     public boolean cancelTask(ITaskListener listener, ITask task,
             boolean stopIfRunning) {
-        boolean res = mExecutor.cancelTask(task, stopIfRunning);
-        if ( res ) {
-            removeTask(task, listener);
+        return mExecutor.cancelTask(task, stopIfRunning);
+    }
+
+    @Override
+    public void cancelAllTasksByListener(ITaskListener listener, boolean stopIfRunning) {
+        if ( mTasksByListener.containsKey(listener)) {
+            final List<ITask> tasks = mTasksByListener.get(listener);
+            for (ITask task : tasks) {
+                cancelTask(listener, task, stopIfRunning);
+            }
+            mTasksByListener.remove(listener);
         }
-        return res;
+        return;
     }
 }
