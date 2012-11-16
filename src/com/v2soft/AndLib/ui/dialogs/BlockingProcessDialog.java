@@ -11,10 +11,11 @@ import android.content.DialogInterface;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 import android.content.DialogInterface.OnCancelListener;;;
 
 /**
- * Диалог блокировки
+ * Dialog that show intermediate progress and cancel button
  * @author vshcryabets@gmail.com
  *
  */
@@ -25,6 +26,7 @@ implements android.view.View.OnClickListener, OnCancelListener {
     private ITaskHub mTaskHub;
     private ITaskListener mListener;
     private Button mBtnCancel;
+    private TextView mTxtMessage;
 
     public BlockingProcessDialog(Context context, ITaskListener listener, ITaskHub hub, ITask task) {
         super(context);
@@ -33,10 +35,19 @@ implements android.view.View.OnClickListener, OnCancelListener {
         setContentView(R.layout.v2andlib_dialog_progress);
         mBtnCancel = (Button) findViewById(R.id.btnCancle);
         mBtnCancel.setOnClickListener(this);
+        mTxtMessage = (TextView) findViewById(R.id.txtDescription);
         setOnCancelListener(this);
         setTask(task);
     }
 
+    public void setCancelButtonText(CharSequence text) {
+        mBtnCancel.setText(text);
+    }
+    
+    public void setMessage(CharSequence text) {
+        mTxtMessage.setText(text);
+    }
+    
     @Override
     public void onClick(View arg0) {
         cancel();
