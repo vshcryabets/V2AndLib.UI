@@ -18,6 +18,7 @@
             android:textSize="@dimen/v2andlib_default_padding" />
 
         <TextView
+            android:id="@+id/txtDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/v2andlib_default_padding"
