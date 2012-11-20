@@ -3,4 +3,5 @@
     <string name="v2andlib_dropbox_operation">Dropbox operation</string>
     <string name="v2andlib_uploading_file">Uploading file %s</string>
     <string name="v2andlib_file_size">File size %s</string>
+    <string name="v2andlib_loading">Please wait, loading&#8230;</string>
 </resources>
