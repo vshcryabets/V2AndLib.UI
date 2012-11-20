@@ -9,6 +9,14 @@ import android.os.Message;
  */
 public interface ITaskHub {
     /**
+     * Add task to execution queue
+     * @param task
+     * @return new task id
+     */
+    public int addTask(ITask task, ITaskListener listener);
+    // TODO write description
+    public void attachToTasks(ITaskListener listener, int[] taskIds);
+    /**
      * Send message to task listener
      * @param from
      * @param message

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
+import com.v2soft.AndLib.dataproviders.ITaskHub;
 
 /**
  * Base activity class
@@ -33,6 +34,7 @@ extends FragmentActivity {
     protected T mApp;
     protected S mSettings;
     protected IBackStack mCustomStack;
+    protected ITaskHub mBackgroundExecutor;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -70,6 +72,12 @@ extends FragmentActivity {
     
     public IBackStack getBackStack() {
         return mCustomStack;
+    }
+    /**
+     * @return assigned background xecution thread
+     */
+    public ITaskHub getExecutor() {
+        return mBackgroundExecutor;
     }
     // =================================================================
     // UI routines
