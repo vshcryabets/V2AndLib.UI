@@ -4,5 +4,6 @@
     <string name="v2andlib_dropbox_operation">Операция с Dropbox</string>
     <string name="v2andlib_uploading_file">Отправка файла %s</string>
     <string name="v2andlib_file_size">Размер файла %s</string>
+    <string name="v2andlib_loading">Пожалуйста подождите, у нас обеденный перерыв&#8230;</string>
 
 </resources>
