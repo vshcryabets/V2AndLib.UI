@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.v2soft.AndLib.dataproviders.ITaskHub;
 
@@ -31,21 +30,32 @@ import com.v2soft.AndLib.dataproviders.ITaskHub;
 public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
     private String mInputFile, mOutputFile;
     private int mMaxSize;
+    private int mMaxWidth;
+    private int mMaxHeight;
+    private boolean useMinimalScaleFactor;
 
     public WriteBitmapWithSpecifiedSizeTask(String inputPath, String outputPath, int maxSize) {
         mInputFile = inputPath;
         mOutputFile = outputPath;
         mMaxSize = maxSize;
     }
+    
+    public void setSizeLimits(int maxWidth, int maxHeight, boolean useMinimalScaleFactor) {
+        mMaxHeight = maxHeight;
+        mMaxWidth = maxWidth;
+        this.useMinimalScaleFactor = useMinimalScaleFactor;
+    }
 
     @Override
     public void execute(ITaskHub hub) throws Exception {
-        final Bitmap thumbnail = BitmapFactory.decodeFile(mInputFile);
+        final LoadBitmapTask loader = new LoadBitmapTask(mInputFile, mMaxWidth, mMaxHeight);
+        loader.setUseMinimalScaleFactor(useMinimalScaleFactor);
+        loader.execute(null);
+        final Bitmap thumbnail = loader.getBitmap();
         final File file = new File(mOutputFile);
         int quality = 100;
         while (file.length() > mMaxSize ) {
-            FileOutputStream of;
-            of = new FileOutputStream(file);
+            final FileOutputStream of = new FileOutputStream(file);
             thumbnail.compress(Bitmap.CompressFormat.JPEG, quality, of);
             quality /= 2;
             of.close();

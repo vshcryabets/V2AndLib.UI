@@ -28,15 +28,20 @@ import android.graphics.BitmapFactory;
 public class LoadBitmapTask extends DummyTask {
     private String mFilePath;
     private Bitmap mBitmap;
-    private int mRequiredWidth, mRequiredHeight;
+    private int mMaxWidth, mMaxHeight;
+    private boolean useMinimalFactor = true;
 
     public LoadBitmapTask(String filePath) {
         this(filePath, Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
-    public LoadBitmapTask(String filePath, int width, int height) {
+    public LoadBitmapTask(String filePath, int maxWidth, int maxHeight) {
         mFilePath = filePath;
-        mRequiredHeight = height;
-        mRequiredWidth = width;
+        mMaxHeight = maxHeight;
+        mMaxWidth = maxWidth;
+    }
+    
+    public void setUseMinimalScaleFactor(boolean value) {
+        useMinimalFactor = value;
     }
 
     @Override
@@ -47,8 +52,17 @@ public class LoadBitmapTask extends DummyTask {
         BitmapFactory.decodeFile(mFilePath, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/mRequiredWidth, photoH/mRequiredHeight);
+        int scaleFactor = 1;
+        if ( mMaxWidth > 0 ) {
+            scaleFactor = photoW/mMaxWidth;
+        }
+        if ( mMaxHeight > 0 ) {
+            if ( useMinimalFactor ) {
+                scaleFactor = Math.min(scaleFactor, photoH/mMaxHeight);
+            } else {
+                scaleFactor = Math.max(scaleFactor, photoH/mMaxHeight);
+            }
+        }
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
