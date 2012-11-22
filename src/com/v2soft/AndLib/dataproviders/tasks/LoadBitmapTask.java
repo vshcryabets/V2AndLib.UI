@@ -15,6 +15,8 @@
  */
 package com.v2soft.AndLib.dataproviders.tasks;
 
+import java.io.File;
+
 import com.v2soft.AndLib.dataproviders.ITaskHub;
 
 import android.graphics.Bitmap;
@@ -26,10 +28,10 @@ import android.graphics.BitmapFactory;
  *
  */
 public class LoadBitmapTask extends DummyTask {
-    private String mFilePath;
-    private Bitmap mBitmap;
-    private int mMaxWidth, mMaxHeight;
-    private boolean useMinimalFactor = true;
+    protected String mFilePath;
+    protected Bitmap mBitmap;
+    protected int mMaxWidth, mMaxHeight;
+    protected boolean useMinimalFactor = true;
 
     public LoadBitmapTask(String filePath) {
         this(filePath, Integer.MIN_VALUE, Integer.MIN_VALUE);
@@ -39,7 +41,9 @@ public class LoadBitmapTask extends DummyTask {
         mMaxHeight = maxHeight;
         mMaxWidth = maxWidth;
     }
-    
+    public LoadBitmapTask(File file, int maxWidth, int maxHeight) {
+        this(file.getAbsolutePath(), maxWidth, maxHeight);
+    }
     public void setUseMinimalScaleFactor(boolean value) {
         useMinimalFactor = value;
     }

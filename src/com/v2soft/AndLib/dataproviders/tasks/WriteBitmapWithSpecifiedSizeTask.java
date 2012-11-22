@@ -50,7 +50,7 @@ public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
     public void execute(ITaskHub hub) throws Exception {
         final LoadBitmapTask loader = new LoadBitmapTask(mInputFile, mMaxWidth, mMaxHeight);
         loader.setUseMinimalScaleFactor(useMinimalScaleFactor);
-        loader.execute(null);
+        loader.execute(hub);
         final Bitmap thumbnail = loader.getBitmap();
         final File file = new File(mOutputFile);
         int quality = 100;

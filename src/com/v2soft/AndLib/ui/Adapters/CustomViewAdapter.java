@@ -137,7 +137,14 @@ implements Callback {
      */
     public void clear() {
         mHandler.sendEmptyMessage(MSG_DATASET_CLEAR);
-    }    
+    }
+    /**
+     * Get copy of items list
+     * @return
+     */
+    public List<T> getData() {
+        return new ArrayList<T>(mItems);
+    }
     //---------------------------------------------------------------------------
     // Handler callback
     //---------------------------------------------------------------------------
