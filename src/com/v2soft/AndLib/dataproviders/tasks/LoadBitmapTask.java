@@ -38,8 +38,7 @@ public class LoadBitmapTask extends DummyTask {
     }
     public LoadBitmapTask(String filePath, int maxWidth, int maxHeight) {
         mFilePath = filePath;
-        mMaxHeight = maxHeight;
-        mMaxWidth = maxWidth;
+        setImageSizeLimits(maxWidth, maxHeight);
     }
     public LoadBitmapTask(File file, int maxWidth, int maxHeight) {
         this(file.getAbsolutePath(), maxWidth, maxHeight);
@@ -47,7 +46,10 @@ public class LoadBitmapTask extends DummyTask {
     public void setUseMinimalScaleFactor(boolean value) {
         useMinimalFactor = value;
     }
-
+    public void setImageSizeLimits(int maxWidth, int maxHeight) {
+        mMaxHeight = maxHeight;
+        mMaxWidth = maxWidth;
+    }
     @Override
     public void execute(ITaskHub hub) throws Exception {
         // Get the dimensions of the bitmap
