@@ -18,7 +18,7 @@ package com.v2soft.AndLib.dataproviders.tasks;
 import com.v2soft.AndLib.dataproviders.ITask;
 
 /**
- * Abstract class, that handles work with task tags, ids etc.
+ * Abstract class, that handles work with task tags, id's etc.
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
@@ -26,36 +26,43 @@ public abstract class DummyTask implements ITask {
     private int mId;
     private int mTag;
     private Object mTagObj;
-
-    @Override
-    public void setTaskId(int id) {
-        mId = id;
-    }
-
+    protected boolean isCanceled;
+    // ===========================================================
+    // Getters
+    // ===========================================================
     @Override
     public int getTaskId() {
         return mId;
     }
-
     @Override
     public int getTaskTag() {
         return mTag;
     }
-
+    @Override
+    public Object getTaskTagObject() {
+        return mTagObj;
+    }
+    // ===========================================================
+    // Setters
+    // ===========================================================
+    @Override
+    public void setTaskId(int id) {
+        mId = id;
+    }
     @Override
     public ITask setTaskTag(int id) {
         mTag = id;
         return this;
     }
-
     @Override
     public ITask setTaskTagObject(Object tag) {
         mTagObj = tag;
         return this;
     }
-
-    @Override
-    public Object getTaskTagObject() {
-        return mTagObj;
+    // ===========================================================
+    // Commands
+    // ===========================================================
+    public void cancelTask() {
+        isCanceled = true;
     }
 }
