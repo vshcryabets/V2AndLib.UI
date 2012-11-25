@@ -29,5 +29,5 @@ public interface ITask {
     public int getTaskTag();
     public ITask setTaskTagObject(Object tag);
     public Object getTaskTagObject();
-
+    public void cancelTask();
 }

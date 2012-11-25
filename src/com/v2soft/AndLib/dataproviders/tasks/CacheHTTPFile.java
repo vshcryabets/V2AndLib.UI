@@ -105,7 +105,13 @@ public class CacheHTTPFile extends DummyTask {
         int read = 0;
         long total = 0;
         while ( (read = is.read(buffer)) > 0 ) {
+            if ( isCanceled == true ) {
+                break;
+            }
             fos.write(buffer, 0, read);
+            if ( isCanceled == true ) {
+                break;
+            }
             total += read;
             if ( handler != null ) {
                 msg.what = MSG_RECEIVED_LENGTH;
