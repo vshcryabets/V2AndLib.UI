@@ -65,4 +65,9 @@ public abstract class DummyTask implements ITask {
     public void cancelTask() {
         isCanceled = true;
     }
+    protected void checkCanceled() throws InterruptedException {
+        if ( isCanceled ) {
+            throw new InterruptedException("Task was canceled");
+        }
+    }
 }

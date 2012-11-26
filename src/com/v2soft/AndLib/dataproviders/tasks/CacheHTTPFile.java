@@ -84,10 +84,12 @@ public class CacheHTTPFile extends DummyTask {
             // we have this file in cache
             return;
         }
+        checkCanceled();
         // download this file
         // Open a connection to that URL.
         final HttpGet request = new HttpGet(mFileAddress.toString());
         final HttpResponse response = mClient.execute(request);
+        checkCanceled();
         int statusCode = response.getStatusLine().getStatusCode();
         if ( statusCode != 200 ) {
             throw new IOException("Status code "+statusCode);
@@ -105,13 +107,9 @@ public class CacheHTTPFile extends DummyTask {
         int read = 0;
         long total = 0;
         while ( (read = is.read(buffer)) > 0 ) {
-            if ( isCanceled == true ) {
-                break;
-            }
+            checkCanceled();
             fos.write(buffer, 0, read);
-            if ( isCanceled == true ) {
-                break;
-            }
+            checkCanceled();
             total += read;
             if ( handler != null ) {
                 msg.what = MSG_RECEIVED_LENGTH;
