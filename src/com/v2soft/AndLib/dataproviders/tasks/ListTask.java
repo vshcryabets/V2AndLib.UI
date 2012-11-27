@@ -55,6 +55,7 @@ public class ListTask extends DummyTask implements Collection<ITask> {
     @Override
     public void execute(ITaskHub hub) throws Exception {
         for (ITask subtask : mSubTasks) {
+            checkCanceled();
             subtask.execute(hub);
         }
     }

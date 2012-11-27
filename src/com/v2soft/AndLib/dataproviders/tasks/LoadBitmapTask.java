@@ -55,10 +55,12 @@ public class LoadBitmapTask extends DummyTask {
         // Get the dimensions of the bitmap
         final BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
+        checkCanceled();
         BitmapFactory.decodeFile(mFilePath, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
         int scaleFactor = 1;
+        checkCanceled();
         if ( mMaxWidth > 0 ) {
             scaleFactor = photoW/mMaxWidth;
         }
@@ -74,7 +76,7 @@ public class LoadBitmapTask extends DummyTask {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
-
+        checkCanceled();
         final Bitmap bitmap = BitmapFactory.decodeFile(mFilePath, bmOptions);
         setBitmap(bitmap);
     }
@@ -85,5 +87,12 @@ public class LoadBitmapTask extends DummyTask {
 
     public void setBitmap(Bitmap mBitmap) {
         this.mBitmap = mBitmap;
+    }
+    
+    /**
+     * Return path to file with surce image
+     */
+    public String getFilePath() {
+        return mFilePath;
     }
 }

@@ -51,11 +51,14 @@ public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
         final LoadBitmapTask loader = new LoadBitmapTask(mInputFile, mMaxWidth, mMaxHeight);
         loader.setUseMinimalScaleFactor(useMinimalScaleFactor);
         loader.execute(hub);
+        checkCanceled();
         final Bitmap thumbnail = loader.getBitmap();
         final File file = new File(mOutputFile);
         int quality = 100;
+        checkCanceled();
         while (file.length() > mMaxSize ) {
             final FileOutputStream of = new FileOutputStream(file);
+            checkCanceled();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, quality, of);
             quality /= 2;
             of.close();

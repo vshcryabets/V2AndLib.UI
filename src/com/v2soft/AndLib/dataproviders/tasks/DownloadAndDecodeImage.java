@@ -39,6 +39,7 @@ public class DownloadAndDecodeImage extends LoadBitmapTask {
     public void execute(ITaskHub hub) throws Exception {
         final CacheHTTPFile cache = new CacheHTTPFile(mURL, mCacheDir);
         cache.execute(hub);
+        checkCanceled();
         mFilePath = new File(mCacheDir, cache.getLocalPath()).getAbsolutePath();
         super.execute(hub);
     }
