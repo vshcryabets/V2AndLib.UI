@@ -45,6 +45,7 @@ public abstract class UDPBroadcastDiscovery {
     protected int mTargetPort;
     private InetAddress mTargetAddress;
     private InetAddress mSourceAddress;
+    protected boolean isWorking;
 
     /**
      * 
@@ -75,11 +76,6 @@ public abstract class UDPBroadcastDiscovery {
         }
         mSocket = new DatagramSocket();
         mSocket.setSoTimeout(mDelay);
-        // start receiver thread
-        mReceiverThread = new Thread(mBackgroundReceiver,
-                UDPBroadcastDiscovery.class.getSimpleName()+"R");
-        mReceiverThread.start();
-
         // start 
         mSenderThread = new Thread(mBackgroundSender,
                 UDPBroadcastDiscovery.class.getSimpleName());
@@ -90,21 +86,14 @@ public abstract class UDPBroadcastDiscovery {
     }
 
     /**
-     * Start searching of other hosts
+     * Stop searching of other hosts
      */
     public void stopDiscovery() {
-        if ( mSenderThread != null ) {
-            mSenderThread.interrupt();
-            mSenderThread = null;
-        }
-        if ( mReceiverThread != null ) {
-            mReceiverThread.interrupt();
-            mReceiverThread = null;
-        }
+        isWorking = false;
     }
 
     public boolean isDiscovering() {
-        return (mSenderThread != null);
+        return isWorking;
     }
 
     protected abstract DatagramPacket prepareRequest();
@@ -121,25 +110,44 @@ public abstract class UDPBroadcastDiscovery {
     private Runnable mBackgroundSender = new Runnable() {
         @Override
         public void run() {
+            isWorking = true;
+            // start receiver thread
+            mReceiverThread = new Thread(mBackgroundReceiver,
+                    UDPBroadcastDiscovery.class.getSimpleName()+"R");
+            mReceiverThread.start();
+
             int count = mRetryCount;
-            while ( count -- > 0 ) {
-                // send packet
-                final DatagramPacket packet = prepareRequest();
-                packet.setAddress(mTargetAddress);
-                packet.setPort(mTargetPort);
-                try {
-                    mSocket.send(packet);
-                } catch (Exception e) {
-                    //                    Log.e(LOG_TAG, e.toString(), e);
-                }
-                // delay
-                try {
+            try {
+                while ( count -- > 0 && isWorking ) {
+                    // send packet
+                    final DatagramPacket packet = prepareRequest();
+                    packet.setAddress(mTargetAddress);
+                    packet.setPort(mTargetPort);
+                    try {
+                        mSocket.send(packet);
+                    } catch (Exception e) {
+                        //                    Log.e(LOG_TAG, e.toString(), e);
+                    }
+                    // delay
                     Thread.sleep(mDelay);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            isWorking = false;
+            if ( mReceiverThread.isAlive() ) {
+                try {
+                    mReceiverThread.join();
                 } catch (InterruptedException e) {
-                    break;
+                    e.printStackTrace();
                 }
             }
-            mReceiverThread.interrupt();
+            mSenderThread = null;
+            mReceiverThread = null;
+            mSocket.close();
+            if ( mListener != null ) {
+                mListener.onDiscoveryFinished();
+            }
         }
     };
 
@@ -148,11 +156,8 @@ public abstract class UDPBroadcastDiscovery {
         public void run() {
             final byte[] buf = new byte[256];
 
-            while ( true ) {
+            while ( isWorking ) {
                 try {
-                    if ( mReceiverThread.isInterrupted() ) {
-                        break;
-                    }
                     final DatagramPacket packet = new DatagramPacket(buf, buf.length);
                     mSocket.receive(packet);
                     handleIncomePacket(packet);
@@ -160,16 +165,9 @@ public abstract class UDPBroadcastDiscovery {
                 } catch (IOException e) {
                     // ignore it
                 } catch (InterruptedException e) {
-                    System.out.println("Interrupt");
+                    e.printStackTrace();
                     break;
                 }
-            }
-            mSocket.close();
-            mSenderThread = null;
-            mReceiverThread = null;
-//            stopDiscovery();
-            if ( mListener != null ) {
-                mListener.onDiscoveryFinished();
             }
         }
     };
