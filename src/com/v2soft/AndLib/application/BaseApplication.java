@@ -18,6 +18,8 @@ package com.v2soft.AndLib.application;
 import com.v2soft.AndLib.ui.fonts.FontManager;
 
 import android.app.Application;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.StrictMode;
 
 /**
@@ -66,6 +68,19 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
         .penaltyLog()
         .penaltyDeath()
         .build());
+    }
+    
+    /**
+     * 
+     * @return The version name of this package, as specified by the <manifest> tag's versionName attribute.
+     */
+    public String getApplicationBuildVersion() {
+        try {
+            PackageInfo manager = getPackageManager().getPackageInfo(getPackageName(), 0);
+            return manager.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            return null;
+        }
     }
 
     /**
