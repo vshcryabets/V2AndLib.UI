@@ -24,6 +24,7 @@ import android.view.View.OnClickListener;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.ui.activities.BaseActivity;
+import com.v2soft.AndLib.ui.fonts.FontManager;
 
 /**
  * Base fragment class
@@ -92,6 +93,12 @@ implements OnClickListener {
     // =================================================================
     // UI routines
     // =================================================================
+    /**
+     * @return application custom font manager
+     */
+    public FontManager getFontManager() {
+        return mApp.getFontManager();
+    }
     /**
      * Show error to user 
      * @param message

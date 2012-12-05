@@ -34,50 +34,50 @@ import com.v2soft.AndLib.ui.R;
  */
 public class SplashScreenView extends FrameLayout
 {	
-	//----------------------------------------------------------------------------------------------
-	// Variables	
-	//----------------------------------------------------------------------------------------------
-	private ImageView mImage;
-	//----------------------------------------------------------------------------------------------
-	// Constructor	
-	//----------------------------------------------------------------------------------------------
-	public SplashScreenView(Context context) {
-		this(context, null);
-	}
-	public SplashScreenView(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
+    //----------------------------------------------------------------------------------------------
+    // Variables	
+    //----------------------------------------------------------------------------------------------
+    private ImageView mImage;
+    //----------------------------------------------------------------------------------------------
+    // Constructor	
+    //----------------------------------------------------------------------------------------------
+    public SplashScreenView(Context context) {
+        this(context, null);
+    }
+    public SplashScreenView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-	public SplashScreenView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		mImage = new ImageView(getContext());
-		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, 
-				LayoutParams.FILL_PARENT);
-		params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
-		this.addView(mImage, params);
-		mImage.setScaleType(ScaleType.FIT_XY);
-		// parse attributes
-		final TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.SplashScreenView,
-				0, 0);
-		setImageResource(arr.getDrawable(R.styleable.SplashScreenView_src),
-				arr.getInt(R.styleable.SplashScreenView_delay, 1000));
-		arr.recycle();
+    public SplashScreenView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        mImage = new ImageView(getContext());
+        LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, 
+                LayoutParams.FILL_PARENT);
+        params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
+        this.addView(mImage, params);
+        mImage.setScaleType(ScaleType.FIT_XY);
+        // parse attributes
+        final TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.SplashScreenView,
+                0, 0);
+        setImageResource(arr.getDrawable(R.styleable.SplashScreenView_src),
+                arr.getInt(R.styleable.SplashScreenView_delay, 1000));
+        arr.recycle();
 
-	}
-	//-----------------------------------------------------------------------------------------------
+    }
+    //-----------------------------------------------------------------------------------------------
     // Getters&Setters
     //-----------------------------------------------------------------------------------------------
     public void setImageResource(Drawable drawable, int delay)
     {
-    	if ( drawable != null ) {
-    		mImage.setImageDrawable(drawable);
-    		mImage.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					SplashScreenView.this.setVisibility(View.INVISIBLE);
-					mImage.setImageBitmap(null);
-				}
-			}, delay);
-    	}
+        if ( drawable != null ) {
+            mImage.setImageDrawable(drawable);
+            mImage.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    SplashScreenView.this.setVisibility(View.INVISIBLE);
+                    mImage.setImageBitmap(null);
+                }
+            }, delay);
+        }
     }
 }

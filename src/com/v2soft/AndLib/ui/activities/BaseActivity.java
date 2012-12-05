@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.dataproviders.ITaskHub;
+import com.v2soft.AndLib.ui.fonts.FontManager;
 
 /**
  * Base activity class
@@ -77,6 +78,12 @@ extends Activity {
     // =================================================================
     // UI routines
     // =================================================================
+    /**
+     * @return application custom font manager
+     */
+    public FontManager getFontManager() {
+        return mApp.getFontManager();
+    }
     /**
      * Show error to user 
      * @param message

@@ -15,5 +15,8 @@
         <attr name="startDelay" format="integer" />
         <attr name="delay" />
     </declare-styleable>
+    <declare-styleable name="TextViewWithFont">
+        <attr name="fontName" format="string" />
+    </declare-styleable>
 
 </resources>

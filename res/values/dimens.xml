@@ -2,6 +2,12 @@
 <resources>
 
     <dimen name="v2andlib_default_padding">12dp</dimen>
-    <dimen name="v2andlib_default_font_sizeg">12sp</dimen>
+    <dimen name="v2andlib_default_font_size">12sp</dimen>
+    <dimen name="v2andlib_middle_font_size">15sp</dimen>
+    <dimen name="v2andlib_button_text_size">12sp</dimen>
+    <dimen name="v2andlib_small_horiz_margin">7dp</dimen>
+    <dimen name="v2andlib_default_horiz_margin">14dp</dimen>
+    <dimen name="v2andlib_default_vert_margin">14dp</dimen>
+    <dimen name="v2andlib_small_vert_margin">7dp</dimen>
     
 </resources>

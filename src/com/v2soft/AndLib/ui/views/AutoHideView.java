@@ -39,101 +39,101 @@ import com.v2soft.AndLib.ui.Animation.DeleteAnimationListener;
  */
 public class AutoHideView implements OnTouchListener, SpecialTimerListener
 {	
-	private static final String LOG_TAG = AutoHideView.class.getSimpleName();
-	//----------------------------------------------------------------------------------------------
-	// Variables	
-	//----------------------------------------------------------------------------------------------
-	private Animation anim_fadein, anim_fadeout;
-	private View view;
-	private SpecialTimer animationTimer;
-	private int mMaxTimer = 20;
-	//----------------------------------------------------------------------------------------------
-	// Constructor	
-	//----------------------------------------------------------------------------------------------
-	public AutoHideView(View view, int max)
-	{
-		mMaxTimer = max;
-		anim_fadein = AnimationUtils.loadAnimation(view.getContext(), R.anim.andlib_fadein);
-		anim_fadein.setAnimationListener(
-				new DeleteAnimationListener(view,true));
+    private static final String LOG_TAG = AutoHideView.class.getSimpleName();
+    //----------------------------------------------------------------------------------------------
+    // Variables	
+    //----------------------------------------------------------------------------------------------
+    private Animation anim_fadein, anim_fadeout;
+    private View view;
+    private SpecialTimer animationTimer;
+    private int mMaxTimer = 20;
+    //----------------------------------------------------------------------------------------------
+    // Constructor	
+    //----------------------------------------------------------------------------------------------
+    public AutoHideView(View view, int max)
+    {
+        mMaxTimer = max;
+        anim_fadein = AnimationUtils.loadAnimation(view.getContext(), R.anim.andlib_fadein);
+        anim_fadein.setAnimationListener(
+                new DeleteAnimationListener(view,true));
 
-		anim_fadeout = AnimationUtils.loadAnimation(view.getContext(), R.anim.andlib_fadeout);
-		anim_fadeout.setAnimationListener(
-				new DeleteAnimationListener(view,false));
-		view.setOnTouchListener(this);
-		view.setVisibility(View.GONE);
-		this.view = view;
-	}
+        anim_fadeout = AnimationUtils.loadAnimation(view.getContext(), R.anim.andlib_fadeout);
+        anim_fadeout.setAnimationListener(
+                new DeleteAnimationListener(view,false));
+        view.setOnTouchListener(this);
+        view.setVisibility(View.GONE);
+        this.view = view;
+    }
 
-	public void show() {
-		if ( view.getVisibility() == View.VISIBLE )	{
-			if ( (view.getAnimation()!=null) && ( view.getAnimation().equals(anim_fadeout)))
-			{
-				view.setAnimation(null);
-				anim_fadeout.reset();
-				return;
-			} else {
-				// continue timer
-				animationTimer.prolongTimer();
-				return;
-			}
-		} else {
-			startShowAnimation();
-			animationTimer = new SpecialTimer(100, this, "For view "+view.toString());
-			animationTimer.setTimerMax(mMaxTimer);
-		}
-	}
-	
-	public void hide() {
-		Log.d(LOG_TAG, "hide");
-		if ( view.getVisibility() == View.VISIBLE )
-		{
-			Log.d(LOG_TAG, "hide2");
-			animationTimer.start();
-		}
-	}
-	
-	public void startShowAnimation()
-	{
-		view.post(new Runnable() {
-			public void run() {
-				if ( anim_fadeout.hasStarted() )
-				{
-					anim_fadeout.reset();
-				}
-				view.setVisibility(View.VISIBLE);
-    			view.startAnimation(anim_fadein);    			
-			}
-		});
-	}
-	
-	public void startHideAnimation() {
-		Log.d(LOG_TAG, "startHideAnimation");
-		view.post(new Runnable() {
-			public void run() {
-    			view.startAnimation(anim_fadeout);
-			}
-		});
-	}
-	
-	@Override
-	public boolean onTouch(View v, MotionEvent event) 
-	{
-    	if ( event.getAction() == MotionEvent.ACTION_DOWN )	{
-    		show();
-    		return true;
-    	} else if ( event.getAction() == MotionEvent.ACTION_UP ) {
-    		hide();
-    		return true;
-    	}
-    	return view.onTouchEvent(event);
-	}
-	//----------------------------------------------------------------------------------------------
-	// Timer listener	
-	//----------------------------------------------------------------------------------------------
-	@Override
-	public void onTimer() {
-		startHideAnimation();
-	}
+    public void show() {
+        if ( view.getVisibility() == View.VISIBLE )	{
+            if ( (view.getAnimation()!=null) && ( view.getAnimation().equals(anim_fadeout)))
+            {
+                view.setAnimation(null);
+                anim_fadeout.reset();
+                return;
+            } else {
+                // continue timer
+                animationTimer.prolongTimer();
+                return;
+            }
+        } else {
+            startShowAnimation();
+            animationTimer = new SpecialTimer(100, this, "For view "+view.toString());
+            animationTimer.setTimerMax(mMaxTimer);
+        }
+    }
+
+    public void hide() {
+        Log.d(LOG_TAG, "hide");
+        if ( view.getVisibility() == View.VISIBLE )
+        {
+            Log.d(LOG_TAG, "hide2");
+            animationTimer.start();
+        }
+    }
+
+    public void startShowAnimation()
+    {
+        view.post(new Runnable() {
+            public void run() {
+                if ( anim_fadeout.hasStarted() )
+                {
+                    anim_fadeout.reset();
+                }
+                view.setVisibility(View.VISIBLE);
+                view.startAnimation(anim_fadein);    			
+            }
+        });
+    }
+
+    public void startHideAnimation() {
+        Log.d(LOG_TAG, "startHideAnimation");
+        view.post(new Runnable() {
+            public void run() {
+                view.startAnimation(anim_fadeout);
+            }
+        });
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) 
+    {
+        if ( event.getAction() == MotionEvent.ACTION_DOWN )	{
+            show();
+            return true;
+        } else if ( event.getAction() == MotionEvent.ACTION_UP ) {
+            hide();
+            return true;
+        }
+        return view.onTouchEvent(event);
+    }
+    //----------------------------------------------------------------------------------------------
+    // Timer listener	
+    //----------------------------------------------------------------------------------------------
+    @Override
+    public void onTimer() {
+        startHideAnimation();
+    }
 
 }
