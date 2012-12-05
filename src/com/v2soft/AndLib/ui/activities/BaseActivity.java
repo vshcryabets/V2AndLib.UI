@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.dataproviders.ITaskHub;
+import com.v2soft.AndLib.ui.fonts.FontManager;
 
 /**
  * Base activity class
@@ -82,6 +83,12 @@ extends FragmentActivity {
     // =================================================================
     // UI routines
     // =================================================================
+    /**
+     * @return application custom font manager
+     */
+    public FontManager getFontManager() {
+        return mApp.getFontManager();
+    }
     /**
      * Show error to user 
      * @param message

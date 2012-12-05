@@ -15,7 +15,10 @@
  */
 package com.v2soft.AndLib.application;
 
+import com.v2soft.AndLib.ui.fonts.FontManager;
+
 import android.app.Application;
+import android.os.StrictMode;
 
 /**
  * Base application class
@@ -31,23 +34,13 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
     // Private fields
     //-----------------------------------------------------------------------
     private S mSettings;
+    protected FontManager mFontManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
-//        if (DEV)
-//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-//        .detectDiskReads()
-//        .detectDiskWrites()
-//        .detectNetwork()   // or .detectAll() for all detectable problems
-//        .penaltyLog()
-//        .build());
-//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-//        .detectLeakedSqlLiteObjects()
-//        .detectLeakedClosableObjects()
-//        .penaltyLog()
-//        .penaltyDeath()
-//        .build());        
+        super.onCreate();
+        mFontManager = new FontManager(this);
         onCreateSettings(createApplicationSettings());
         mSettings.loadSettings();
     }
@@ -58,7 +51,33 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
         }
         mSettings = settings;
     }
+    /**
+     * Initialize development mode (in this mode many leaks will be logged)
+     */
+    protected void initDevMode() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+        .detectDiskReads()
+        .detectDiskWrites()
+        .detectAll()
+        .penaltyLog()
+        .build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+        .detectLeakedSqlLiteObjects()
+        .penaltyLog()
+        .penaltyDeath()
+        .build());
+    }
 
+    /**
+     * @return application custom font manager
+     */
+    public FontManager getFontManager() {
+        return mFontManager;
+    }
+    /**
+     * 
+     * @return settings holder object
+     */
     public S getSettings(){return mSettings;}
 
     protected abstract S createApplicationSettings();
