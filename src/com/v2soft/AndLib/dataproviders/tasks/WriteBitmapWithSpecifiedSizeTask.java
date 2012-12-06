@@ -28,22 +28,32 @@ import com.v2soft.AndLib.dataproviders.ITaskHub;
  *
  */
 public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
+    public enum RegressionMode {
+        DIVIDE2, DECREMENT
+    }
     private String mInputFile, mOutputFile;
     private int mMaxSize;
     private int mMaxWidth;
     private int mMaxHeight;
     private boolean useMinimalScaleFactor;
+    private RegressionMode mMode = RegressionMode.DIVIDE2;
+    private int mRegresionParam;
 
     public WriteBitmapWithSpecifiedSizeTask(String inputPath, String outputPath, int maxSize) {
         mInputFile = inputPath;
         mOutputFile = outputPath;
         mMaxSize = maxSize;
     }
-    
+
     public void setSizeLimits(int maxWidth, int maxHeight, boolean useMinimalScaleFactor) {
         mMaxHeight = maxHeight;
         mMaxWidth = maxWidth;
         this.useMinimalScaleFactor = useMinimalScaleFactor;
+    }
+    
+    public void setRegression(RegressionMode mode, int param) {
+        mMode = mode;
+        mRegresionParam = param;
     }
 
     @Override
@@ -60,7 +70,11 @@ public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
             final FileOutputStream of = new FileOutputStream(file);
             checkCanceled();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, quality, of);
-            quality /= 2;
+            if ( mMode == RegressionMode.DECREMENT ) {
+                quality -= mRegresionParam;
+            } else {
+                quality /= 2;
+            }
             of.close();
         }
         thumbnail.recycle();
