@@ -38,11 +38,11 @@ public class TasksMultiplexor implements ITaskHub {
     private Handler mHandler;
 
     public TasksMultiplexor(Handler handler) {
+        mHandler = handler;
         mExecutor = new RunnableQueueExecutor("BGTasks", 20, this);
         mExecutor.start();
         mListeners = new SparseArray<ITaskListener>();
         mTasksByListener = new HashMap<ITaskListener, List<ITask>>();
-        mHandler = handler;
     }
 
     /**
