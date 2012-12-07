@@ -130,6 +130,12 @@ extends CustomViewAdapter<T> {
     	}
     	return super.handleMessage(msg);
     }
+    
+    @Override
+    public void clear() {
+        super.clear();
+        mWantToLoadMore = true;
+    }
 
     /**
      * 
