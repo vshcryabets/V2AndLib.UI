@@ -1,2 +1,4 @@
 Something new in December 2012
-- com.v2sot.AndLib.ui.fonts.FontMager - class for managing custom application fonts
+- com.v2soft.AndLib.ui.fonts.FontMager - class for managing custom application fonts
+- com.v2soft.AndLib.ui.views.TextViewWithFont - TextView inhariter that allows to change font
+- com.v2soft.AndLib.ui.animations.SimpleAnimationUtils - helper class for animations
