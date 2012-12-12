@@ -61,7 +61,11 @@ public abstract class BaseApplicationSettings {
         for (String key : mStringSettings.keySet()) {
             editor.putString(key, mStringSettings.get(key));
         }
-        editor.apply();
+        if (android.os.Build.VERSION.SDK_INT>=9) {
+            editor.apply();
+        } else {
+            editor.commit();
+        }
     }
 
     /**
@@ -96,6 +100,6 @@ public abstract class BaseApplicationSettings {
      * @return true if does
      */
     public boolean isKeyStored(String key) {
-    	return mStringSettings.containsKey(key);
+        return mStringSettings.containsKey(key);
     }
 }
