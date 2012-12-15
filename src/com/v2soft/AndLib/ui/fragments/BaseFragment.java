@@ -79,9 +79,9 @@ implements OnClickListener {
     protected void startFragment(int resId, Fragment fragment, 
             boolean addToStack, String stackTag,
             int inAnimation, int outAnimation, 
-            int popAnimation, int pushAnimation) {
+            int pushAnimation, int popAnimation) {
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(inAnimation, outAnimation, popAnimation, pushAnimation);
+        ft.setCustomAnimations(inAnimation, outAnimation, pushAnimation, popAnimation);
         ft.replace(resId, fragment);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         if ( addToStack ) {
