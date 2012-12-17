@@ -53,9 +53,9 @@ public abstract class AbstractCache<ID, T> implements ICache<ID, T>{
                     @Override
                     public void run() {
                         try {
-                            startUpdate();
-                        } catch (AbstractDataRequestException e) {
-                            onUpdateFailed(e);
+                            getUpdateTask().execute(null);
+                        } catch (Exception e) {
+                            onUpdateFailed(new AbstractDataRequestException(e));
                         }
                     }
                 }, this.getClass().getName());

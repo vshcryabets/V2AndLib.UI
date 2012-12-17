@@ -3,6 +3,7 @@ package com.v2soft.AndLib.dao;
 import java.util.List;
 
 import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
+import com.v2soft.AndLib.dataproviders.ITask;
 
 /**
  * Base cache interface
@@ -13,9 +14,9 @@ import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
  */
 public interface ICache<ID,T> {
     /**
-     * Update cache items
+     * Update cache task
      */
-    public void startUpdate() throws AbstractDataRequestException;
+    public ITask getUpdateTask();
     /**
      * Asynchronous update
      */
