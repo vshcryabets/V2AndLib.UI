@@ -20,7 +20,7 @@ import java.io.FileOutputStream;
 
 import android.graphics.Bitmap;
 
-import com.v2soft.AndLib.dataproviders.ITaskHub;
+import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 
 /**
  * Task that will encode bitmap file in background thread
@@ -57,7 +57,7 @@ public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
     }
 
     @Override
-    public void execute(ITaskHub hub) throws Exception {
+    public void execute(ITaskSimpleListener hub) throws Exception {
         final LoadBitmapTask loader = new LoadBitmapTask(mInputFile, mMaxWidth, mMaxHeight);
         loader.setUseMinimalScaleFactor(useMinimalScaleFactor);
         loader.execute(hub);

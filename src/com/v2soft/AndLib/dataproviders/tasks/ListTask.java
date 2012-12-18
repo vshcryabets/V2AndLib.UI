@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.v2soft.AndLib.dataproviders.ITask;
-import com.v2soft.AndLib.dataproviders.ITaskHub;
+import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 
 /**
  * Task allows to group few tasks in single execution flow
@@ -53,7 +53,7 @@ public class ListTask extends DummyTask implements Collection<ITask> {
     }
 
     @Override
-    public void execute(ITaskHub hub) throws Exception {
+    public void execute(ITaskSimpleListener hub) throws Exception {
         for (ITask subtask : mSubTasks) {
             checkCanceled();
             subtask.execute(hub);

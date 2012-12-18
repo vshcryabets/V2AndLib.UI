@@ -32,7 +32,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.Message;
 
-import com.v2soft.AndLib.dataproviders.ITaskHub;
+import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 
 /**
  * Task that will download file from specified URL to local cache
@@ -77,7 +77,7 @@ public class CacheHTTPFile extends DummyTask {
     }
 
     @Override
-    public void execute(ITaskHub handler) throws Exception {
+    public void execute(ITaskSimpleListener handler) throws Exception {
         final String filename = getLocalPath();
         final File file = new File(mLocalCacheDir, filename);
         if ( file.exists() ) {
@@ -99,7 +99,7 @@ public class CacheHTTPFile extends DummyTask {
         if ( handler != null ) {
             msg.what = MSG_CONTENT_LENGTH;
             msg.obj = length;
-            handler.sendMessage(this, msg);
+            handler.onMessageFromTask(this, msg);
         }
         final InputStream is = response.getEntity().getContent();
         final FileOutputStream fos = new FileOutputStream(file);
@@ -114,7 +114,7 @@ public class CacheHTTPFile extends DummyTask {
             if ( handler != null ) {
                 msg.what = MSG_RECEIVED_LENGTH;
                 msg.obj = total;
-                handler.sendMessage(this, msg);
+                handler.onMessageFromTask(this, msg);
             }
         }
         is.close();

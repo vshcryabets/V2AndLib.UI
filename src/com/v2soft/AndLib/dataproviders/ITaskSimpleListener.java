@@ -18,19 +18,15 @@ package com.v2soft.AndLib.dataproviders;
 import android.os.Message;
 
 /**
- * Task listener iterface
+ * Simple task listener iterface
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public interface ITaskListener extends ITaskSimpleListener {
+public interface ITaskSimpleListener {
     /**
      * Will be called if task finished without exception
      * @param task
+     * @param message
      */
-    void onTaskFinished(ITask task);
-    /**
-     * Will be called if task finished with exception
-     * @param task
-     */
-    void onTaskFailed(ITask task, Throwable error);
+    void onMessageFromTask(ITask task, Message message);
 }

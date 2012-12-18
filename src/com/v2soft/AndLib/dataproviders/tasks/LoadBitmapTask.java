@@ -17,10 +17,10 @@ package com.v2soft.AndLib.dataproviders.tasks;
 
 import java.io.File;
 
-import com.v2soft.AndLib.dataproviders.ITaskHub;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 
 /**
  * Task that will decode bitmap file in background thread
@@ -51,7 +51,7 @@ public class LoadBitmapTask extends DummyTask {
         mMaxWidth = maxWidth;
     }
     @Override
-    public void execute(ITaskHub hub) throws Exception {
+    public void execute(ITaskSimpleListener hub) throws Exception {
         // Get the dimensions of the bitmap
         final BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;

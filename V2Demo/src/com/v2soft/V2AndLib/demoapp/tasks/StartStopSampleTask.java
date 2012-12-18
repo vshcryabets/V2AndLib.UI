@@ -17,7 +17,7 @@ package com.v2soft.V2AndLib.demoapp.tasks;
 
 import android.os.Message;
 
-import com.v2soft.AndLib.dataproviders.ITaskHub;
+import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 import com.v2soft.AndLib.dataproviders.tasks.DummyTask;
 
 /**
@@ -29,7 +29,7 @@ public class StartStopSampleTask extends DummyTask {
     public static final int TASK_MESSAGE_NEWTIME = 1;
 
     @Override
-    public void execute(ITaskHub handler) throws Exception {
+    public void execute(ITaskSimpleListener handler) throws Exception {
         Thread.sleep(500);
         while ( true ) {
             Thread.sleep(1000);
@@ -37,7 +37,7 @@ public class StartStopSampleTask extends DummyTask {
             msg.what = TASK_MESSAGE_NEWTIME;
             msg.obj = System.currentTimeMillis();
             if ( handler != null ) {
-                handler.sendMessage(this, msg);
+                handler.onMessageFromTask(this, msg);
             }
         }
     }

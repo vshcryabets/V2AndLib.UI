@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Message;
 
 /**
- * Asynchronious task executor
+ * Asynchronious executor that periodically start specified task
  * 
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  * 
@@ -51,7 +51,7 @@ public class AsyncTaskExecutor extends AsyncTask<Void, Void, Void> implements IT
         while ( isWorking ) {
             try {
                 if ( mTask != null ) {
-                    mTask.execute(this);
+                    mTask.execute(mListener);
                 }
             } catch (Exception e) {
             }
@@ -84,16 +84,6 @@ public class AsyncTaskExecutor extends AsyncTask<Void, Void, Void> implements IT
     }
 
     @Override
-    public void sendMessage(final ITask from, final Message message) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mListener.onMessageFromTask(from, message);
-            }
-        });
-    }
-
-    @Override
     public boolean cancelTask(ITaskListener listener, ITask taskId,
             boolean stopIfRunning) {
         if ( taskId.equals(mTask)) {
@@ -120,6 +110,17 @@ public class AsyncTaskExecutor extends AsyncTask<Void, Void, Void> implements IT
         if (mTask != null ) {
             mTask.cancelTask();
         }
+    }
+
+    @Override
+    public void onMessageFromTask(final ITask task, final Message message) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mListener.onMessageFromTask(task, message);
+            }
+        });
+        
     }
 }
 

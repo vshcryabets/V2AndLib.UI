@@ -21,10 +21,10 @@ package com.v2soft.AndLib.dataproviders;
  *
  */
 public interface ITask {
-    public void execute(ITaskHub handler) throws Exception;
+    public void execute(ITaskSimpleListener handler) throws Exception;
     public void setTaskId(int id);
     public int getTaskId();
-    // Task tag - extra piece of information
+    // Task tags - extra piece of information
     public ITask setTaskTag(int id);
     public int getTaskTag();
     public ITask setTaskTagObject(Object tag);
