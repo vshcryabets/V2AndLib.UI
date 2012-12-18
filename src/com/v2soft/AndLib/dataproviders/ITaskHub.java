@@ -1,13 +1,12 @@
 package com.v2soft.AndLib.dataproviders;
 
-import android.os.Message;
 
 /**
  * 
  * @author vshcryabets@gmail.com
  *
  */
-public interface ITaskHub {
+public interface ITaskHub extends ITaskSimpleListener {
     /**
      * Add task to execution queue
      * @param task
@@ -16,12 +15,6 @@ public interface ITaskHub {
     public int addTask(ITask task, ITaskListener listener);
     // TODO write description
     public void attachToTasks(ITaskListener listener, int[] taskIds);
-    /**
-     * Send message to task listener
-     * @param from
-     * @param message
-     */
-    void sendMessage(ITask from, Message message);
     /**
      * Cancel execution of the specified task
      * @return true if task was canceled

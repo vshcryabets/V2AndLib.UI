@@ -18,7 +18,7 @@ package com.v2soft.AndLib.dataproviders.tasks;
 import java.io.File;
 import java.net.URL;
 
-import com.v2soft.AndLib.dataproviders.ITaskHub;
+import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 
 /**
  * Task that will download & encode bitmap file in background thread
@@ -28,16 +28,23 @@ import com.v2soft.AndLib.dataproviders.ITaskHub;
 public class DownloadAndDecodeImage extends LoadBitmapTask {
     private URL mURL;
     private File mCacheDir;
+    protected String mCustomHashString;
 
     public DownloadAndDecodeImage(URL imageURL, File cacheDir) {
         super("");
         mURL = imageURL;
         mCacheDir = cacheDir;
     }
+    public DownloadAndDecodeImage(URL imageURL, File cacheDir, String customHash) {
+        super("");
+        mURL = imageURL;
+        mCacheDir = cacheDir;
+        mCustomHashString = customHash;
+    }
 
     @Override
-    public void execute(ITaskHub hub) throws Exception {
-        final CacheHTTPFile cache = new CacheHTTPFile(mURL, mCacheDir);
+    public void execute(ITaskSimpleListener hub) throws Exception {
+        final CacheHTTPFile cache = new CacheHTTPFile(mURL, mCacheDir, mCustomHashString);
         cache.execute(hub);
         checkCanceled();
         mFilePath = new File(mCacheDir, cache.getLocalPath()).getAbsolutePath();
