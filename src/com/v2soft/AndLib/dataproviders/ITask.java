@@ -16,11 +16,13 @@
 package com.v2soft.AndLib.dataproviders;
 
 /**
- * Task description
+ * Task interface.
  * @author V.Shcriyabets (vshcryabets@gmail.com)
- *
+ * Please don't use task messages with "what" over 0x80000000
  */
 public interface ITask {
+    public int MESSAGE_TASK_FINISHED_SUCCESS = 0x80000000;
+    public int MESSAGE_TASK_EXCEPTION = 0x80000001;
     public void execute(ITaskSimpleListener handler) throws Exception;
     public void setTaskId(int id);
     public int getTaskId();
