@@ -18,6 +18,7 @@ package com.v2soft.AndLib.dataproviders;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * Asynchronious executor that periodically start specified task
@@ -27,6 +28,7 @@ import android.os.Message;
  */
 public class AsyncTaskExecutor extends AsyncTask<Void, Void, Void> implements ITaskHub {
     private static final int DEFAULT_DELAY = 30*1000; // 30 seconds 
+    private static final String LOG_TAG = AsyncTaskExecutor.class.getSimpleName();
     private boolean isWorking;
     private int mDelay = DEFAULT_DELAY;
     protected ITaskListener mListener;
@@ -54,6 +56,7 @@ public class AsyncTaskExecutor extends AsyncTask<Void, Void, Void> implements IT
                     mTask.execute(mListener);
                 }
             } catch (Exception e) {
+                Log.e(LOG_TAG, e.toString(), e);
             }
             if ( isWorking ) {
                 try {
