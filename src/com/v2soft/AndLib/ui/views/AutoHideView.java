@@ -53,11 +53,11 @@ public class AutoHideView implements OnTouchListener, SpecialTimerListener
     public AutoHideView(View view, int max)
     {
         mMaxTimer = max;
-        anim_fadein = AnimationUtils.loadAnimation(view.getContext(), R.anim.andlib_fadein);
+        anim_fadein = AnimationUtils.loadAnimation(view.getContext(), R.anim.v2andlib_fadein);
         anim_fadein.setAnimationListener(
                 new DeleteAnimationListener(view,true));
 
-        anim_fadeout = AnimationUtils.loadAnimation(view.getContext(), R.anim.andlib_fadeout);
+        anim_fadeout = AnimationUtils.loadAnimation(view.getContext(), R.anim.v2andlib_fadeout);
         anim_fadeout.setAnimationListener(
                 new DeleteAnimationListener(view,false));
         view.setOnTouchListener(this);
