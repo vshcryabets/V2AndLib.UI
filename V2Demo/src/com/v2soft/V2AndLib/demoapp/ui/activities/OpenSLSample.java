@@ -15,6 +15,8 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
+import com.v2soft.V2AndLib.demoapp.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,8 +24,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-
-import com.v2soft.AndLib.ui.R;
 
 /**
  * 

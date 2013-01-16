@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.v2soft.AndLib.ui.Adapters.BackLoadingAdapter;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.AndLib.ui.views.IDataView;
+import com.v2soft.AndLib.ui.views.LoadingView;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 
@@ -80,6 +81,7 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
     }
 
     private class EndlessAdapter extends BackLoadingAdapter<Integer> {
+        private View mLoadIndicator;
 
         public EndlessAdapter(Context context) {
             super(context, new CustomViewAdapterFactory<Integer, IDataView<Integer>>(){
@@ -88,13 +90,19 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
                     return new IntegerView(context);
                 }
             }, 10);
+            mLoadIndicator = new LoadingView(context);
         }
 
         @Override
         protected List<Integer> getData(int start, int count) {
+//            Log.d(LOG_TAG, String.format("from %d count %d", start, count));
+//            StackTraceElement items[] = Thread.currentThread().getStackTrace();
+//            for (StackTraceElement stackTraceElement : items) {
+//                Log.d(LOG_TAG, stackTraceElement.toString());
+//            }
             List<Integer> result = new LinkedList<Integer>();
             for ( int i = 0; i< count; i++ ) {
-                if ( start+i > 100 ) {
+                if ( start+i > 500 ) {
                     break;
                 }
                 result.add(start+i);
@@ -106,6 +114,23 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
                 e.printStackTrace();
             }
             return result;
+        }
+
+        @Override
+        protected void onLoadStarted(boolean first) {
+            if ( first ) {
+                getActivity().setProgressBarIndeterminateVisibility(true);
+            } else {
+                showLoaderAtBottom(mLoadIndicator);
+            }
+        }
+
+        @Override
+        protected void onLoadFinished() {
+            if ( isAdded() ) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+                hideLoaderAtBottom();
+            }
         }
     }
 }

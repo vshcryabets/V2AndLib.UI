@@ -20,8 +20,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.ui.fragments.DropboxUploadFragment;
+import com.v2soft.V2AndLib.demoapp.R;
 
 /**
  * Activity taht upload to Dropbox test file

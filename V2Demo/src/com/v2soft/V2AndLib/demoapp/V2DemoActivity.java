@@ -28,7 +28,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
-import com.v2soft.V2AndLib.demoapp.ui.activities.DemoBackStack;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
 import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
@@ -51,7 +50,6 @@ implements OnItemClickListener {
         OpenSLSample.class,
         GCPDemo.class,
         EndlessListActivity.class,
-        DemoBackStack.class,
         TaskStartStopActivity.class
     };
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
