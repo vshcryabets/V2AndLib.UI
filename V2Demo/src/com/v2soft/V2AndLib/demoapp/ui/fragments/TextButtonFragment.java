@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.ui.activities.BaseActivity;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
+import com.v2soft.V2AndLib.demoapp.R;
 
 /**
  * Fragment for testing back stack

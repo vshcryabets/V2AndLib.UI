@@ -26,10 +26,10 @@ import android.widget.TextView;
 import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskListener;
 import com.v2soft.AndLib.dataproviders.TasksMultiplexor;
-import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.ui.activities.BaseActivity;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
+import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.tasks.StartStopSampleTask;
 
 /**

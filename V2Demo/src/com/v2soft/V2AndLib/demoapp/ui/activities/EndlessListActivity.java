@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.Window;
 
 import com.v2soft.AndLib.ui.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoEndlessList;
@@ -33,6 +34,7 @@ public class EndlessListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
             Fragment fragment = DemoEndlessList.newInstance();

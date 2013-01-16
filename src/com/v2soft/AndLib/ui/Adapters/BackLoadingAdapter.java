@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2010-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  */
 package com.v2soft.AndLib.ui.Adapters;
 
+import java.util.List;
+
 import android.content.Context;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import com.v2soft.AndLib.ui.views.IDataView;
-import com.v2soft.AndLib.ui.views.LoadingView;
 
 /**
  * 
  * @author V.Shcriyabets (vshcryabets@gmail.com)
+ * @version 5
  *
  */
 public abstract class BackLoadingAdapter<T> 
@@ -36,13 +36,20 @@ extends CustomViewAdapter<T> {
     // Constants
     //---------------------------------------------------------------------------
     protected static final String LOG_TAG = BackLoadingAdapter.class.getSimpleName();
+    public enum LoadingNotificationType {
+        AtTheEndOfList,
+        Custom
+    };
+    public static final int VIEW_TYPE_NORMAL = 0;
+    public static final int VIEW_TYPE_LOADER = 1;
     //---------------------------------------------------------------------------
     // Class fields
     //---------------------------------------------------------------------------
     private int mPartSize;
-    private LoadingView mLoadingView;
+    private View mLoadingView;
     private boolean isLoading;
     private boolean mWantToLoadMore;
+    protected LoadingNotificationType mCurrentNotification;
 
     /**
      * 
@@ -54,14 +61,21 @@ extends CustomViewAdapter<T> {
             int partSize) {
         super(context, factory);
         mWantToLoadMore = true;
-        mLoadingView = new LoadingView(context);
+        //        mLoadingView = new LoadingView(context);
         mPartSize = partSize;
         isLoading = false;
     }
 
     @Override
     public int getCount() {
-        return ( mWantToLoadMore ? super.getCount()+1 : super.getCount() );
+        int res = super.getCount();
+        if ( res < 1 && mWantToLoadMore && !isLoading ) {
+            loadNextPart(true);
+        }
+        if ( mLoadingView != null ) {
+            res++;
+        }
+        return res;
     }
 
     @Override
@@ -71,40 +85,31 @@ extends CustomViewAdapter<T> {
 
     @Override
     public int getItemViewType(int position) {
-        if ( mWantToLoadMore  && ( position == super.getCount() )) {
-            return 1;
+        if ( position == super.getCount() && mLoadingView != null ) {
+            return VIEW_TYPE_LOADER;
         }
-        return 0;
+        return VIEW_TYPE_NORMAL;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if ( getItemViewType(position) == 1 ) {
-            // start load part
-            if ( !isLoading ) {
-                loadNextPart();
-            }
+        if ( position == super.getCount()-1 && mWantToLoadMore && !isLoading ) {
+            // all items was shown
+            loadNextPart(false);
+        }
+        if ( getItemViewType(position) == VIEW_TYPE_LOADER ) {
             return mLoadingView;
         }
         return super.getView(position, convertView, parent);
     }    
 
-//    public void startUpdate() {
-//        isLoading = true;
-//        mWantToLoadMore = true;
-//        Thread loaderThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                mItems = getData(0, Integer.MAX_VALUE);
-//                isLoading = false;
-//                mWantToLoadMore = false;
-//                mHandler.sendEmptyMessage(MSG_DATASET_CHANGED);
-//            }
-//        });
-//        loaderThread.start();
-//    }
-
-    private void loadNextPart() {
+    private void loadNextPart(boolean first) {
+//        Log.d(LOG_TAG, "================================================");
+//        StackTraceElement items[] = Thread.currentThread().getStackTrace();
+//        for (StackTraceElement stackTraceElement : items) {
+//            Log.d(LOG_TAG, stackTraceElement.toString());
+//        }
+//        Log.d(LOG_TAG, "================================================");
         isLoading = true;
         Thread back = new Thread(new Runnable() {
             @Override
@@ -116,25 +121,41 @@ extends CustomViewAdapter<T> {
             }
         }, "LoadAdapterBack");
         back.start();
+        onLoadStarted(first);
     }
-    
+
     @Override
     public boolean handleMessage(Message msg) {
-    	if ( msg.what == MSG_DATASET_ADD_LIST ) {
-    		final List<T> part = (List<T>) msg.obj;
+        if ( msg.what == MSG_DATASET_ADD_LIST ) {
+            final List<T> part = (List<T>) msg.obj;
             if ( part == null || part.size() == 0 ) {
                 // No more data
                 mWantToLoadMore = false;
             }
+            onLoadFinished();
             isLoading = false;
-    	}
-    	return super.handleMessage(msg);
+        }
+        return super.handleMessage(msg);
     }
-    
+
     @Override
     public void clear() {
         super.clear();
         mWantToLoadMore = true;
+    }
+    /**
+     * Show specified view at the end of list
+     * @param loader load indicator view
+     */
+    protected void showLoaderAtBottom(View loader) {
+        mLoadingView = loader;
+        notifyDataSetChanged();
+    }
+    /**
+     * Hide load indicator that was shown at the bottom of list 
+     */
+    protected void hideLoaderAtBottom() {
+        showLoaderAtBottom(null);
     }
 
     /**
@@ -144,4 +165,6 @@ extends CustomViewAdapter<T> {
      * @return data partition
      */
     protected abstract List<T> getData(int start, int count);
+    protected abstract void onLoadStarted(boolean first);
+    protected abstract void onLoadFinished();
 }
