@@ -157,6 +157,9 @@ extends CustomViewAdapter<T> {
     protected void hideLoaderAtBottom() {
         showLoaderAtBottom(null);
     }
+    public void tryToLoadMore() {
+        mWantToLoadMore = true;
+    }
 
     /**
      * 
