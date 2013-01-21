@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
 import com.v2soft.AndLib.ui.R;
@@ -43,9 +44,23 @@ public class TextViewWithFont extends TextView {
     }
     public TextViewWithFont(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        if ( getContext() instanceof BaseActivity ) {
+        Context subcontext = context;
+        BaseActivity<?, ?> activity = null;
+        if ( subcontext instanceof BaseActivity ) {
+            // may be this is dialog?
+            activity = (BaseActivity<?, ?>) subcontext;
+        } else {
+            if ( context instanceof ContextThemeWrapper ) {
+                subcontext = ((ContextThemeWrapper)context).getBaseContext();
+            }
+            if ( subcontext instanceof BaseActivity ) {
+                // may be this is dialog?
+                activity = (BaseActivity<?, ?>) subcontext;
+            }
+        }
+        if ( activity != null ) {
             // we can get font manager
-            final FontManager fm = ((BaseActivity)getContext()).getFontManager();
+            final FontManager fm = activity.getFontManager();
             final TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.TextViewWithFont,
                     0, 0);
             final String fontName = arr.getString(R.styleable.TextViewWithFont_fontName);
