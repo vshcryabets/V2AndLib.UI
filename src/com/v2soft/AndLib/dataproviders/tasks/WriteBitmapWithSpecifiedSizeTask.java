@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
         final File file = new File(mOutputFile);
         int quality = 100;
         checkCanceled();
-        while (file.length() > mMaxSize ) {
+        while ( !file.exists() || file.length() > mMaxSize ) {
             final FileOutputStream of = new FileOutputStream(file);
             checkCanceled();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, quality, of);
