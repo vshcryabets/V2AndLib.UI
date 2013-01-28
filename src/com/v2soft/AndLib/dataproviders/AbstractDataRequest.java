@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,27 @@
  */
 package com.v2soft.AndLib.dataproviders;
 
+import java.io.Serializable;
+
 /**
  * Abstract data request class
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public abstract class AbstractDataRequest<R, Params, RawData> {
+public abstract class AbstractDataRequest<R, Params, RawData> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     public interface AbstractDataRequestCallback<R> {
         void onDataReady(R result);
     }
 
-    protected AbstractDataRequestCallback<R> mCallback;
+    transient protected AbstractDataRequestCallback<R> mCallback;
     protected R mData;
     protected Params mParams;
 
+    public AbstractDataRequest() {
+
+    }
     public AbstractDataRequest(AbstractDataRequestCallback<R> callback) {
         mCallback = callback;
     }
@@ -48,11 +55,11 @@ public abstract class AbstractDataRequest<R, Params, RawData> {
      * Delivery data
      * @param data
      */
-    private void deliveryResult(R data) {
+    protected void deliveryResult(R data) {
+        mData = data;
         if ( mCallback != null ) {
             mCallback.onDataReady(data);
         }
-        mData = data;
     }
 
     protected abstract R parseResult(RawData data) throws AbstractDataRequestException;
@@ -62,5 +69,4 @@ public abstract class AbstractDataRequest<R, Params, RawData> {
     public R getResult() {
         return mData;
     }
-
 }
