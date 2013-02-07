@@ -216,11 +216,8 @@ extends Service {
 	private Notification showNotification(File file, int id, int pendingRequestCode, String action) {
 		final String text = String.format(getString(R.string.v2andlib_uploading_file), 
 				file.getName());
-		final Notification.Builder builder = new Notification.Builder(this)
-		.setContentTitle(getString(R.string.v2andlib_dropbox_operation))
-		.setContentText(text)
-		.setSmallIcon(R.drawable.icon);
-		final Notification notification = builder.getNotification();
+//		.setContentTitle(getString(R.string.v2andlib_dropbox_operation))
+		final Notification notification = new Notification(R.drawable.icon, text, System.currentTimeMillis());
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
 		notification.contentView = new RemoteViews(getApplication().getPackageName(), 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ public abstract class BaseApplication<S extends BaseApplicationSettings> extends
 
     @Override
     public void onCreate() {
-        super.onCreate();
         super.onCreate();
         mFontManager = new FontManager(this);
         onCreateSettings(createApplicationSettings());

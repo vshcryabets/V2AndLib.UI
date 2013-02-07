@@ -15,15 +15,15 @@
  */
 package com.v2soft.AndLib.ui.fragments;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Stack;
 
 import com.v2soft.AndLib.ui.activities.BaseActivity.IBackStack;
-
-import android.app.Fragment;
-import android.content.Context;
-import android.os.Bundle;
 
 /**
  * Specially organized back stack for fragment tabs
@@ -40,7 +40,6 @@ implements IBackStack {
     private static final String KEY_CURRENT_TAB = "currentTab";
     private static final String KEY_TABSTACK_STATE = "tabStackState";
     private static final String KEY_TAB_NAMES = "tabNames";
-    private static final String KEY_FRAGMENT_CLASS = "fragmentClass";
     private static final String KEY_CLASS_NAMES = "classNames";
     private static final String KEY_ARGUMENTS = "arguments";
     private Context mContext;
