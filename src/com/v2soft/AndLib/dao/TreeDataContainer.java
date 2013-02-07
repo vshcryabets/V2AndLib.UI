@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.List;
 public abstract class TreeDataContainer<T extends ITreeData> implements ITreeData<T> {
     protected boolean isExpanded;
     protected List<T> mChilds;
-    
+
     public TreeDataContainer() {
         isExpanded = false;
         mChilds = null;
@@ -43,4 +43,21 @@ public abstract class TreeDataContainer<T extends ITreeData> implements ITreeDat
         isExpanded = value;
     }
 
+    @Override
+    public int getChildsCount() {
+        if ( mChilds != null ) {
+            return mChilds.size();
+        } else {
+            return 0;
+        }
+    }
+    
+    @Override
+    public List<T> getChilds() {
+        return mChilds;
+    }
+    
+    protected void setChilds(List<T> childs) {
+        mChilds = childs;
+    }
 }

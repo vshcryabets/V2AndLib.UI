@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package com.v2soft.AndLib.dataproviders.tasks;
 
+import java.io.Serializable;
+
 import com.v2soft.AndLib.dataproviders.ITask;
 
 /**
@@ -22,10 +24,11 @@ import com.v2soft.AndLib.dataproviders.ITask;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public abstract class DummyTask implements ITask {
+public abstract class DummyTask implements ITask, Serializable {
+    private static final long serialVersionUID = 1L;
     private int mId;
     private int mTag;
-    private Object mTagObj;
+    transient private Object mTagObj;
     protected boolean isCanceled;
     // ===========================================================
     // Getters
