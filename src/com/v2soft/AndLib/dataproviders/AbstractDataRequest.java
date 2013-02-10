@@ -31,7 +31,6 @@ public abstract class AbstractDataRequest<R, Params, RawData> implements Seriali
 
     transient protected AbstractDataRequestCallback<R> mCallback;
     protected R mData;
-    protected Params mParams;
 
     public AbstractDataRequest() {
 
@@ -45,8 +44,8 @@ public abstract class AbstractDataRequest<R, Params, RawData> implements Seriali
      * @throws AbstractDataRequestException 
      */
     public void execute() throws AbstractDataRequestException {
-        mParams = prepareParameters();
-        final RawData rawData = sendRequest(mParams);
+        final Params params = prepareParameters();
+        final RawData rawData = sendRequest(params);
         final R res = parseResult(rawData);
         deliveryResult(res);
     }

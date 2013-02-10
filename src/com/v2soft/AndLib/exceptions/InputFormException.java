@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,11 @@ public class InputFormException extends Exception {
 
     public static void assertFalse(boolean value, int resource) throws InputFormException {
         if (value) {
+            throw new InputFormException(resource);
+        }
+    }
+    public static void assertTrue(boolean value, int resource) throws InputFormException {
+        if (!value) {
             throw new InputFormException(resource);
         }
     }
