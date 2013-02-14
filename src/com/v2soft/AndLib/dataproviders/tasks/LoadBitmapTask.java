@@ -29,7 +29,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  */
 public class LoadBitmapTask extends DummyTask {
     protected String mFilePath;
-    protected Bitmap mBitmap;
+    transient protected Bitmap mBitmap;
     protected int mMaxWidth, mMaxHeight;
     protected boolean useMinimalFactor = true;
 
