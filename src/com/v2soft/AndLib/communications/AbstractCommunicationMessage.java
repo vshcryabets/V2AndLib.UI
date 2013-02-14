@@ -1,5 +1,7 @@
 package com.v2soft.AndLib.communications;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author vshcryabets@gmail.com
@@ -7,44 +9,46 @@ package com.v2soft.AndLib.communications;
  * @param <U> communication user data type
  * @param <ID> message ID
  */
-public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>, ID> {
+public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>, ID> 
+    implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected ID mId;
     protected U mSender;
     protected U mRecepient;
     /**
      * @return the mId
      */
-    public ID getmId() {
+    public ID getId() {
         return mId;
     }
     /**
      * @return the mSender
      */
-    public U getmSender() {
+    public U getSender() {
         return mSender;
     }
     /**
      * @return the mRecepient
      */
-    public U getmRecepient() {
+    public U getRecepient() {
         return mRecepient;
     }
     /**
      * @param mId the mId to set
      */
-    public void setmId(ID mId) {
+    public void setId(ID mId) {
         this.mId = mId;
     }
     /**
      * @param mSender the mSender to set
      */
-    public void setmSender(U mSender) {
+    public void setSender(U mSender) {
         this.mSender = mSender;
     }
     /**
      * @param mRecepient the mRecepient to set
      */
-    public void setmRecepient(U mRecepient) {
+    public void setRecepient(U mRecepient) {
         this.mRecepient = mRecepient;
     }
 }
