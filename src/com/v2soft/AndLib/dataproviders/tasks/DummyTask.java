@@ -28,7 +28,7 @@ public abstract class DummyTask implements ITask, Serializable {
     private static final long serialVersionUID = 1L;
     private int mId;
     private int mTag;
-    transient private Object mTagObj;
+    private Serializable mTagObj;
     protected boolean isCanceled;
     // ===========================================================
     // Getters
@@ -42,7 +42,7 @@ public abstract class DummyTask implements ITask, Serializable {
         return mTag;
     }
     @Override
-    public Object getTaskTagObject() {
+    public Serializable getTaskTagObject() {
         return mTagObj;
     }
     // ===========================================================
@@ -58,7 +58,7 @@ public abstract class DummyTask implements ITask, Serializable {
         return this;
     }
     @Override
-    public ITask setTaskTagObject(Object tag) {
+    public ITask setTaskTagObject(Serializable tag) {
         mTagObj = tag;
         return this;
     }

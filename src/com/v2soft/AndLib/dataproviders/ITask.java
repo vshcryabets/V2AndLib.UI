@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package com.v2soft.AndLib.dataproviders;
 
+import java.io.Serializable;
+
 /**
  * Task interface.
  * @author V.Shcriyabets (vshcryabets@gmail.com)
@@ -29,7 +31,7 @@ public interface ITask {
     // Task tags - extra piece of information
     public ITask setTaskTag(int id);
     public int getTaskTag();
-    public ITask setTaskTagObject(Object tag);
-    public Object getTaskTagObject();
+    public ITask setTaskTagObject(Serializable tag);
+    public Serializable getTaskTagObject();
     public void cancelTask();
 }
