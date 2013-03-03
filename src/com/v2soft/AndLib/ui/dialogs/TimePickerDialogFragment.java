@@ -3,16 +3,16 @@ package com.v2soft.AndLib.ui.dialogs;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.v2soft.AndLib.ui.fragments.BaseFragment;
-
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.v2soft.AndLib.ui.fragments.BaseFragment;
 
 /**
  * Класс для установки времени через TimePicker.

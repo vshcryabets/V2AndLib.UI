@@ -1,9 +1,9 @@
 package com.v2soft.AndLib.dataproviders;
 
+import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.AsyncTaskLoader;
 
 /**
  * 

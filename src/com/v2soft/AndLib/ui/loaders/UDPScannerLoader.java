@@ -19,7 +19,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.support.v4.content.Loader;
+import android.content.Loader;
 import android.util.Log;
 
 import java.net.SocketException;

@@ -15,13 +15,15 @@
  */
 package com.v2soft.AndLib.ui.fragments;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Loader;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +32,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.List;
-
-import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
+import com.v2soft.AndLib.ui.R;
 import com.v2soft.AndLib.ui.Adapters.CustomViewAdapter;
 import com.v2soft.AndLib.ui.loaders.BluetoothScannerLoader;
 import com.v2soft.AndLib.ui.views.IDataView;
