@@ -51,39 +51,6 @@ public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>
     public void setRecepient(U mRecepient) {
         this.mRecepient = mRecepient;
     }
-}
-eturn mId;
-    }
-    /**
-     * @return the mSender
-     */
-    public U getSender() {
-        return mSender;
-    }
-    /**
-     * @return the mRecepient
-     */
-    public U getRecepient() {
-        return mRecepient;
-    }
-    /**
-     * @param mId the mId to set
-     */
-    public void setId(ID mId) {
-        this.mId = mId;
-    }
-    /**
-     * @param mSender the mSender to set
-     */
-    public void setSender(U mSender) {
-        this.mSender = mSender;
-    }
-    /**
-     * @param mRecepient the mRecepient to set
-     */
-    public void setRecepient(U mRecepient) {
-        this.mRecepient = mRecepient;
-    }
     
     @Override
     public int hashCode() {
