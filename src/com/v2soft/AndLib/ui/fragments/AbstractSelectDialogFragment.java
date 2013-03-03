@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,16 +33,13 @@ import com.v2soft.AndLib.ui.R;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public abstract class AbstractSelectDialogFragment 
+public abstract class AbstractSelectDialogFragment<T> 
 extends DialogFragment implements OnItemClickListener  {
-    // =========================================================
-    // Constants
-    // =========================================================
     // =========================================================
     // Class fields
     // =========================================================
     protected BaseAdapter mAdapter;
-    protected Object mSelectedItem = null;
+    protected T mSelectedItem = null;
     protected ListView mListView;
     // =========================================================
     // Constructors
@@ -51,7 +48,7 @@ extends DialogFragment implements OnItemClickListener  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.v2andlib_fragment_list, null);
-        getDialog().setTitle(getDialogTitile());
+        getDialog().setTitle(getDialogTitle());
         mListView = (ListView) view.findViewById(android.R.id.list);
         mAdapter = prepareAdapter(getActivity());
         mListView.setAdapter(mAdapter);
@@ -60,7 +57,7 @@ extends DialogFragment implements OnItemClickListener  {
     }
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        mSelectedItem = mListView.getItemAtPosition(arg2);
+        mSelectedItem = (T) mListView.getItemAtPosition(arg2);
         getDialog().dismiss();
     }
     /**
@@ -77,7 +74,7 @@ extends DialogFragment implements OnItemClickListener  {
      * 
      * @return dialog title string
      */
-    protected abstract CharSequence getDialogTitile();
+    protected abstract CharSequence getDialogTitle();
     /**
      * 
      * @param context current activity context

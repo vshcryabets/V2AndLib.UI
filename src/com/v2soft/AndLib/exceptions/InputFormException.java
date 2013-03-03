@@ -15,6 +15,9 @@
  */
 package com.v2soft.AndLib.exceptions;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.widget.EditText;
 
 /**
@@ -25,6 +28,8 @@ import android.widget.EditText;
 public class InputFormException extends Exception {
     private static final long serialVersionUID = 1L;
     private int mMessageResource;
+    public static final Pattern EMAIL_PATTERN = Pattern
+            .compile("^[A-Za-z0-9.%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,4}");
 
     public InputFormException(int resource) {
         setMessageResource(resource);
@@ -40,7 +45,16 @@ public class InputFormException extends Exception {
             throw new InputFormException(resource);
         }
     }
-    
+    public static void assertEmailValid(String value, int resource) throws InputFormException {
+        final Matcher matcher = EMAIL_PATTERN.matcher(value);
+        if (!matcher.find()) {
+            throw new InputFormException(resource);
+        }
+    }
+    public static void assertEmailValid(EditText value, int resource) throws InputFormException {
+        assertEmailValid(value.getEditableText().toString(), resource);
+    }
+
     public static void assertBlankEditText(EditText edit, int resource) throws InputFormException {
         final String text = edit.getEditableText().toString().trim();
         if ( text.length() == 0 ) {
