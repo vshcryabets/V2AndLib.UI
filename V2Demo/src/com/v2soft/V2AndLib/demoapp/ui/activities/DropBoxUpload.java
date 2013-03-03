@@ -15,8 +15,8 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -28,8 +28,7 @@ import com.v2soft.V2AndLib.demoapp.R;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class DropBoxUpload 
-extends FragmentActivity implements OnClickListener {
+public class DropBoxUpload extends Activity implements OnClickListener {
     ///////////////////////////////////////////////////////////////////////////
     //                      Your app-specific settings.                      //
     ///////////////////////////////////////////////////////////////////////////
@@ -57,7 +56,7 @@ extends FragmentActivity implements OnClickListener {
             frag = DropboxUploadFragment.newInstance(this, "/sdcard/res1.wav", "cloc",
                     APP_KEY, APP_SECRET,
                     ACTION_DROPBOX_UPLOAD);
-            frag.show(getSupportFragmentManager(), "dialog");
+            frag.show(getFragmentManager(), "dialog");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
