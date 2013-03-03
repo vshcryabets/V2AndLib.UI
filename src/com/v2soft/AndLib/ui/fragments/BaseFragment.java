@@ -29,6 +29,7 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
 /**
  * Base fragment class
  * @author diacht
+ * @author V.Shcryabets<vshcryabets@gmail.com>
  * @param <T> application class
  * @param <S> settings class
  */
@@ -88,7 +89,15 @@ implements OnClickListener {
             ft.addToBackStack(stackTag);
         }
         ft.commit();
-    }    
+    }
+    /**
+     * Handle result that was returned from sub-fragment
+     * @param data
+     * @param requestCode
+     */
+    public void onFragmentResult(Object data, int requestCode) {
+        
+    }
     // =================================================================
     // UI routines
     // =================================================================
