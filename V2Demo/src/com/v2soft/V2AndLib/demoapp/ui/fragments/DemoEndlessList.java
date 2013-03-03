@@ -22,6 +22,9 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -33,6 +36,7 @@ import com.v2soft.AndLib.ui.views.IDataView;
 import com.v2soft.AndLib.ui.views.LoadingView;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
+import com.v2soft.V2AndLib.demoapp.R;
 
 /**
  * 
@@ -48,6 +52,11 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         final View view = inflater.inflate(com.v2soft.AndLib.ui.R.layout.v2andlib_fragment_list, null);
@@ -57,6 +66,24 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_endless, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case R.id.menu_refresh:
+            mAdapter.clear();
+            mAdapter.tryToLoadMore();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    
     @Override
     public void onClick(View v) {
     }
