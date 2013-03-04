@@ -38,7 +38,7 @@ import com.v2soft.V2AndLib.demoapp.tasks.StartStopSampleTask;
  *
  */
 public class TaskStartStopActivity 
-    extends BaseActivity<DemoApplication, DemoAppSettings> 
+    extends DemoBaseActivity 
     implements ITaskListener, OnClickListener {
     private static final String LOG_TAG = TaskStartStopActivity.class.getSimpleName()
             ;
@@ -63,24 +63,6 @@ public class TaskStartStopActivity
 
     public static String getSampleName() {
         return "Task start stop sample";
-    }
-
-    @Override
-    public void showError(String message) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void setLoadingProcess(boolean value, Object tag) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void setBlockingProcess(boolean value, Object tag) {
-        // TODO Auto-generated method stub
-        
     }
     // ==========================================================
     // Task listener
