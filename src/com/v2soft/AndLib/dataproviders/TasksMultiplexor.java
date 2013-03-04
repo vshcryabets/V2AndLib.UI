@@ -66,7 +66,11 @@ public class TasksMultiplexor implements ITaskHub {
             return mLastId;
         }
     }
-
+    
+    public void stopTasksMultiplexor(){
+        mExecutor.stopQueueProcessing();
+    }
+    
     public void handleFinished(final ITask task) {
         final ITaskListener listener = mListeners.get(task.getTaskId());
         if ( listener != null ) {
