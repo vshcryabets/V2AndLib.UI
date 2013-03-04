@@ -15,18 +15,18 @@
  */
 package com.v2soft.AndLib.ui.loaders;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.content.IntentFilter;
-import android.content.Loader;
-import android.util.Log;
-
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.support.v4.content.Loader;
+import android.util.Log;
 
 import com.v2soft.AndLib.networking.UDPBroadcastDiscovery;
 import com.v2soft.AndLib.networking.UDPBroadcastDiscovery.UDPBroadcastListener;

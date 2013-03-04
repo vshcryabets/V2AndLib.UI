@@ -15,13 +15,13 @@
  */
 package com.v2soft.AndLib.ui.fragments;
 
-import android.app.Fragment;
-import android.content.Context;
-import android.os.Bundle;
-
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Stack;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.v2soft.AndLib.ui.activities.BaseActivity.IBackStack;
 
