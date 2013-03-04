@@ -18,20 +18,16 @@ package com.v2soft.V2AndLib.demoapp.ui.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import com.actionbarsherlock.view.MenuItem;
 
-import com.v2soft.AndLib.ui.activities.BaseActivity;
-import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
-import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoDialogs;
 
 /**
- * 
+ * Demonstration for library dialogs
  * @author vshcryabets@gmail.com
  *
  */
-public class DialogsActivity extends BaseActivity<DemoApplication, DemoAppSettings> {
+public class DialogsActivity extends DemoBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +39,6 @@ public class DialogsActivity extends BaseActivity<DemoApplication, DemoAppSettin
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
         }
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     /**
      * Return sample display name
@@ -51,17 +46,6 @@ public class DialogsActivity extends BaseActivity<DemoApplication, DemoAppSettin
      */
     public static String getSampleName() {
         return "Custom fragment dialogs demo";
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case android.R.id.home:
-            finish();
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
     }
     @Override
     public void showError(String message) {

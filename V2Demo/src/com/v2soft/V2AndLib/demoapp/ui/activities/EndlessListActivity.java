@@ -20,10 +20,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
 
-import com.actionbarsherlock.view.MenuItem;
-import com.v2soft.AndLib.ui.activities.BaseActivity;
-import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
-import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoEndlessList;
 
@@ -32,12 +28,12 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoEndlessList;
  * @author vshcryabets@gmail.com
  *
  */
-public class EndlessListActivity extends BaseActivity<DemoApplication, DemoAppSettings> {
+public class EndlessListActivity extends DemoBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
             Fragment fragment = DemoEndlessList.newInstance();
@@ -45,7 +41,6 @@ public class EndlessListActivity extends BaseActivity<DemoApplication, DemoAppSe
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
         }
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
     /**
      * Return sample display name
@@ -55,16 +50,6 @@ public class EndlessListActivity extends BaseActivity<DemoApplication, DemoAppSe
         return "Endless list demo";
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-//        case android.R.id.home:
-//            finish();
-//            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
     @Override
     public void showError(String message) {
         // TODO Auto-generated method stub

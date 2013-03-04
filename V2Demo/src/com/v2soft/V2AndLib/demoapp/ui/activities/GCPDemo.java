@@ -17,14 +17,13 @@ package com.v2soft.V2AndLib.demoapp.ui.activities;
 
 import java.io.File;
 
-import com.v2soft.V2AndLib.demoapp.R;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.v2soft.V2AndLib.demoapp.R;
 
 /**
  * Google Cloud printing sample
@@ -32,7 +31,7 @@ import android.view.View.OnClickListener;
  *
  */
 public class GCPDemo 
-extends Activity implements OnClickListener {
+extends DemoBaseActivity implements OnClickListener {
     private static final String TAG = GCPDemo.class.getSimpleName();
 
     @Override

@@ -15,9 +15,7 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -29,7 +27,7 @@ import com.v2soft.V2AndLib.demoapp.R;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class DropBoxUpload extends FragmentActivity implements OnClickListener {
+public class DropBoxUpload extends DemoBaseActivity implements OnClickListener {
     ///////////////////////////////////////////////////////////////////////////
     //                      Your app-specific settings.                      //
     ///////////////////////////////////////////////////////////////////////////

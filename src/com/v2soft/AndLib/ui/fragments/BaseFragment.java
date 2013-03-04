@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.ui.activities.BaseActivity;
@@ -34,7 +35,7 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  * @param <S> settings class
  */
 public abstract class BaseFragment<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
-extends Fragment 
+extends SherlockFragment 
 implements OnClickListener {
     protected T mApp;
     protected S mSettings;
