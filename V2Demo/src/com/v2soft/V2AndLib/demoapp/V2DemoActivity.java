@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
+import com.v2soft.V2AndLib.demoapp.ui.activities.DialogsActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
 import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
@@ -50,7 +51,8 @@ implements OnItemClickListener {
         OpenSLSample.class,
         GCPDemo.class,
         EndlessListActivity.class,
-        TaskStartStopActivity.class
+        TaskStartStopActivity.class,
+        DialogsActivity.class
     };
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
 

@@ -41,6 +41,7 @@
         <activity android:name=".ui.activities.GCPDemo" />
         <activity android:name=".ui.activities.PrintDialogActivity" />
         <activity android:name=".ui.activities.TaskStartStopActivity" />
+        <activity android:name=".ui.activities.DialogsActivity" />
         <!-- DropBox authentication activity -->
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"

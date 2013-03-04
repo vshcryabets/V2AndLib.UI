@@ -16,7 +16,6 @@
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothDevice;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,10 +46,9 @@ extends BluetoothDeviceList<DemoApplication, DemoAppSettings>  {
     public void onItemClick(AdapterView<?> parent, View view, int position,
             long id) {
         BluetoothDevice device = (BluetoothDevice) mAdapter.getItem(position);
-        Fragment fragment = DemoBluetoothTerminal.newInstance(device);
-        FragmentTransaction trans = getFragmentManager().beginTransaction();
-        trans.replace(R.id.v2andLibFragment, fragment);
-        trans.addToBackStack(DemoBluetoothDeviceList.class.getSimpleName());
-        trans.commit();
+        startFragment(R.id.v2andLibFragment, 
+                DemoBluetoothTerminal.newInstance(device), true, 
+                DemoBluetoothDeviceList.class.getSimpleName(), 
+                -1, -1, -1, -1);
     }
 }

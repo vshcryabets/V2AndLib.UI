@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  *
  */
 public class DownloadAndDecodeImage extends LoadBitmapTask {
+    private static final long serialVersionUID = 1L;
     private URL mURL;
     private File mCacheDir;
     protected String mCustomHashString;
@@ -50,5 +51,7 @@ public class DownloadAndDecodeImage extends LoadBitmapTask {
         mFilePath = new File(mCacheDir, cache.getLocalPath()).getAbsolutePath();
         super.execute(hub);
     }
-    
+    public URL getURL() {
+        return mURL;
+    }
 }
