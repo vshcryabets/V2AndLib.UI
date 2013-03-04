@@ -1,8 +1,10 @@
 package com.v2soft.AndLib.ui.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
@@ -74,6 +76,11 @@ extends FragmentActivity {
      */
     public ITaskHub getExecutor() {
         return mBackgroundExecutor;
+    }
+    
+    @SuppressLint("Override")
+    public FragmentManager getFragmentManager() {
+        return getSupportFragmentManager();
     }
     // =================================================================
     // UI routines
