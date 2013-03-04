@@ -1,3 +1,6 @@
 [submodule "contrib/HoloEverywhere"]
 	path = contrib/HoloEverywhere
 	url = git://github.com/ChristopheVersieux/HoloEverywhere.git
+[submodule "contrib/ABS"]
+	path = contrib/ABS
+	url = git://github.com/JakeWharton/ActionBarSherlock.git

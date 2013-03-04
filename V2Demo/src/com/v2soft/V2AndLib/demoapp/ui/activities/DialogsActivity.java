@@ -15,13 +15,14 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem;
 
+import com.v2soft.AndLib.ui.activities.BaseActivity;
+import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
+import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoDialogs;
 
@@ -30,7 +31,7 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoDialogs;
  * @author vshcryabets@gmail.com
  *
  */
-public class DialogsActivity extends FragmentActivity {
+public class DialogsActivity extends BaseActivity<DemoApplication, DemoAppSettings> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class DialogsActivity extends FragmentActivity {
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
         }
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     /**
      * Return sample display name
@@ -55,11 +56,26 @@ public class DialogsActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//        case android.R.id.home:
-//            finish();
-//            return true;
+        case android.R.id.home:
+            finish();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+    @Override
+    public void showError(String message) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setLoadingProcess(boolean value, Object tag) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setBlockingProcess(boolean value, Object tag) {
+        // TODO Auto-generated method stub
+        
     }
 }

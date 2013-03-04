@@ -15,14 +15,15 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.MenuItem;
 import android.view.Window;
 
+import com.actionbarsherlock.view.MenuItem;
+import com.v2soft.AndLib.ui.activities.BaseActivity;
+import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
+import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoEndlessList;
 
@@ -31,7 +32,7 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoEndlessList;
  * @author vshcryabets@gmail.com
  *
  */
-public class EndlessListActivity extends FragmentActivity {
+public class EndlessListActivity extends BaseActivity<DemoApplication, DemoAppSettings> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,5 +64,20 @@ public class EndlessListActivity extends FragmentActivity {
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+    @Override
+    public void showError(String message) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setLoadingProcess(boolean value, Object tag) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setBlockingProcess(boolean value, Object tag) {
+        // TODO Auto-generated method stub
+        
     }
 }

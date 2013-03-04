@@ -1,11 +1,9 @@
 package com.v2soft.AndLib.ui.activities;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.dataproviders.ITaskHub;
@@ -19,7 +17,7 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  * @param <S> settings class
  */
 public abstract class BaseActivity<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
-extends FragmentActivity {
+extends SherlockFragmentActivity {
     // =================================================================
     // Interfaces
     // =================================================================
@@ -77,11 +75,7 @@ extends FragmentActivity {
     public ITaskHub getExecutor() {
         return mBackgroundExecutor;
     }
-    
-    @SuppressLint("Override")
-    public FragmentManager getFragmentManager() {
-        return getSupportFragmentManager();
-    }
+
     // =================================================================
     // UI routines
     // =================================================================
