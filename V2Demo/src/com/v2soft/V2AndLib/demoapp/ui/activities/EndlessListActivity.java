@@ -15,7 +15,6 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -30,7 +29,7 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoEndlessList;
  * @author vshcryabets@gmail.com
  *
  */
-public class EndlessListActivity extends Activity {
+public class EndlessListActivity extends DemoBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

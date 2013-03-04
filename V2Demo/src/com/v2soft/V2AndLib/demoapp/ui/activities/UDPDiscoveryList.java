@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -28,7 +27,7 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoUDPDiscoveryList;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class UDPDiscoveryList extends Activity {
+public class UDPDiscoveryList extends DemoBaseActivity {
     /**
      * Return sample display name
      * @return

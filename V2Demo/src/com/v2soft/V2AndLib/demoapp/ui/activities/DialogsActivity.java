@@ -15,7 +15,6 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -25,11 +24,11 @@ import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoDialogs;
 
 /**
- * 
+ * Demonstration for library dialogs
  * @author vshcryabets@gmail.com
  *
  */
-public class DialogsActivity extends Activity {
+public class DialogsActivity extends DemoBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

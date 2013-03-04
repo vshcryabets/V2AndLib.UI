@@ -15,7 +15,6 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -28,7 +27,7 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoBluetoothDeviceList;
  * @author vshcryabets@gmail.com
  *
  */
-public class BluetoothList extends Activity {
+public class BluetoothList extends DemoBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
