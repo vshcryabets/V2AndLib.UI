@@ -1,5 +1,6 @@
 March 2013
 - TimePickerDialogFragment
+- MessageDateFormatter - allows you to convert a date to a readable string (eg "20 minutes ago", "3 hours ago", etc.) 
 
 January 2013
 - BackLoadingAdapter inheritors now can use custom load indicator
