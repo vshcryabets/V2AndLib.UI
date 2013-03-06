@@ -6,4 +6,8 @@
     <string name="v2andlib_file_size">Размер файла %s</string>
     <string name="v2andlib_loading">Пожалуйста подождите, идет загрузка&#8230;</string>
 
+        <string name="v2andlib_date_format_just_now">СЕЙЧАС</string>
+    <string name="v2andlib_date_format_minutes">%d МИНУТ НАЗАД</string>
+    <string name="v2andlib_date_format_one_hour">ЧАС НАЗАД</string>
+    <string name="v2andlib_date_format_hours">%d ЧАСА(ОВ) НАЗАД</string>
 </resources>
