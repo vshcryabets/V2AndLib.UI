@@ -35,6 +35,7 @@ import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
 import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
 import com.v2soft.V2AndLib.demoapp.ui.activities.TaskStartStopActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
+import com.v2soft.V2AndLib.demoapp.ui.activities.WiFiList;
 
 /**
  * Demo start activity
@@ -52,7 +53,8 @@ implements OnItemClickListener {
         GCPDemo.class,
         EndlessListActivity.class,
         TaskStartStopActivity.class,
-        DialogsActivity.class
+        DialogsActivity.class,
+        WiFiList.class
     };
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
 
