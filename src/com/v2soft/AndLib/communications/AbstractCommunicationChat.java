@@ -17,7 +17,7 @@ public class AbstractCommunicationChat<M extends AbstractCommunicationMessage<?,
         void onChatChanged();
     }
     protected List<M> mMessages;
-    protected L mListener;
+    transient protected L mListener;
     
     public AbstractCommunicationChat() {
         mMessages = new ArrayList<M>();
