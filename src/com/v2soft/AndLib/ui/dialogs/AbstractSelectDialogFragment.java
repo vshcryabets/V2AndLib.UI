@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.v2soft.AndLib.ui.fragments;
+package com.v2soft.AndLib.ui.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
