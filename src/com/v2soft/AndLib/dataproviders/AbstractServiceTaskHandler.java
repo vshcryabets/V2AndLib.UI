@@ -15,12 +15,12 @@
  */
 package com.v2soft.AndLib.dataproviders;
 
-import android.content.Context;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
-import com.v2soft.AndLib.dataproviders.AbstractServiceRequest;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /***
@@ -28,15 +28,15 @@ import android.util.Log;
  * @author V.Shcryabets<vshcryabets@gmail.com>
  * 
  */
-public class AbstractServiceTaskHandler extends Handler {
+public abstract class AbstractServiceTaskHandler extends Handler {
     private static final String LOG_TAG = AbstractServiceTaskHandler.class.getSimpleName();
-    protected Context mContext;
+    protected Service mService;
     protected String mHandledAction;
     protected String mErrorAction;
 
-    public AbstractServiceTaskHandler(Looper looper, Context context, String handledAction, String errorAction) {
+    public AbstractServiceTaskHandler(Looper looper, Service context, String handledAction, String errorAction) {
         super(looper);
-        mContext = context;
+        mService = context;
         mHandledAction = handledAction;
         mErrorAction = errorAction;
     }
@@ -51,7 +51,7 @@ public class AbstractServiceTaskHandler extends Handler {
         if (mHandledAction.equals(intent.getAction())) {
             final AbstractServiceRequest<?,?,?> task = 
                     (AbstractServiceRequest<?,?,?>) intent.getSerializableExtra(AbstractServiceRequest.EXTRA_TASK);
-            task.setContext(mContext);
+            task.setContext(mService);
             try {
                 task.execute(null);
                 sendResult(task);
@@ -61,8 +61,15 @@ public class AbstractServiceTaskHandler extends Handler {
             }
         }
         super.handleMessage(msg);
+        if ( shouldStop() ) {
+            mService.stopSelf(msg.arg1);
+        }
     }
 
+    /**
+     * Sends result of a request execution
+     * @param task
+     */
     protected void sendResult(AbstractServiceRequest<?, ?, ?> task) {
         final String action = task.getResultAction();
         if ( action == null ) {
@@ -70,13 +77,24 @@ public class AbstractServiceTaskHandler extends Handler {
         }
         final Intent intent = new Intent(action);
         intent.putExtra(AbstractServiceRequest.EXTRA_TASK, task);
-        mContext.sendOrderedBroadcast(intent, null);
+        LocalBroadcastManager.getInstance(mService).sendBroadcast(intent);
     }
 
+    /**
+     * Send exception
+     * @param task
+     * @param e
+     */
     protected void sendErrorMessage(AbstractServiceRequest<?,?,?> task, Exception e){
         final Intent intent = new Intent(mErrorAction);
         intent.putExtra(AbstractServiceRequest.EXTRA_TASK, task);
         intent.putExtra(AbstractServiceRequest.EXTRA_EXCEPTION, e.toString());
-        mContext.sendOrderedBroadcast(intent, null);
+        LocalBroadcastManager.getInstance(mService).sendBroadcast(intent);
     }
+
+    /**
+     * Stop service after intent processing
+     * @return
+     */
+    protected abstract boolean shouldStop();
 }
