@@ -24,5 +24,4 @@ public class AbstractCommunicationContactsList<U extends AbstractCommunicationUs
     public U findContactById(ID id) {
         return mContactsMap.get(id);
     }
-
 }
