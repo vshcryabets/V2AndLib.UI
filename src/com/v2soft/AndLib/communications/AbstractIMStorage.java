@@ -89,7 +89,7 @@ public class AbstractIMStorage<
     public boolean deleteMessage(M message) {
         boolean res = false;
         final C recipientChat = mChatsMap.get(message.getRecepient());
-        final C senderChat = mChatsMap.get(message.getRecepient());
+        final C senderChat = mChatsMap.get(message.getSender());
         if ( recipientChat != null ) {
             recipientChat.removeMessage(message);
             res = true;
