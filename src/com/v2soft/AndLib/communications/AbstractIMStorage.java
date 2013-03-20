@@ -8,36 +8,36 @@ import java.util.Map;
 /**
  * Instant messenger storage template.
  * @author V.Shcryabets<vshcryabets@gmail.com>
- * @param UID user id class
- * @param U user class
- * @param MID message id class
- * @param M message class
- * @param L chat listener class
- * @param C chat class
+ * @param <UID> user id class
+ * @param <U> user class
+ * @param <MID> message id class
+ * @param <M> message class
+ * @param <CID> chat id class
+ * @param <C> chat class
  */
 public class AbstractIMStorage<
     UID,
     U extends AbstractCommunicationUser<UID>,
     MID,
     M extends AbstractCommunicationMessage<U, MID>,
-    L extends AbstractCommunicationChat.AbstractCommunicationChatListener,
-    C extends AbstractCommunicationChat<M, MID, L>> {
+    CID,
+    C extends AbstractCommunicationChat<M, MID, CID>> {
     
-    public interface ChatFactory<U, C> {
-        public C newInstance(U user);
+    public interface ChatFactory<CID, C> {
+        public C newInstance(CID id);
     }
     // ==================================================================
     // CLass fields
     // ==================================================================
-    private ChatFactory<U, C> mChatFactory;
-    private Map<U, C> mChatsMap;
+    private ChatFactory<CID, C> mChatFactory;
+    private Map<CID, C> mChatsMap;
     private Map<MID, M> mMessagesMap;
     private AbstractCommunicationContactsList<U, UID> mContacts;
     
-    public AbstractIMStorage(ChatFactory<U, C> chatFactory) {
+    public AbstractIMStorage(ChatFactory<CID, C> chatFactory) {
         mContacts = new AbstractCommunicationContactsList<U, UID>();
         mMessagesMap = new HashMap<MID, M>();
-        mChatsMap = new HashMap<U, C>();
+        mChatsMap = new HashMap<CID, C>();
         setChatFactory(chatFactory);
     }
     /**
@@ -56,23 +56,23 @@ public class AbstractIMStorage<
     /**
      * Return chat for specified user. If chat doesn't exist, the new one will be created.
      */
-    public C getChatByUser(U user) {
-        if ( mChatsMap.containsKey(user)) {
-            return mChatsMap.get(user);
+    public C getChatById(CID id) {
+        if ( mChatsMap.containsKey(id)) {
+            return mChatsMap.get(id);
         } else {
             if ( mChatFactory == null ) {
                 throw new NullPointerException("Chat factory is null");
             }
-            final C chat = mChatFactory.newInstance(user);
-            mChatsMap.put(user, chat);
+            final C chat = mChatFactory.newInstance(id);
+            mChatsMap.put(id, chat);
             return chat;
         }
     }
     /**
      * Adds message to chat with spefied user
      */
-    public boolean addMessage(U user, M message) {
-        final C chat = getChatByUser(user);
+    public boolean addMessage(CID chatId, M message) {
+        final C chat = getChatById(chatId);
         mMessagesMap.put(message.getId(), message);
         return chat.addMessage(message);
     }
@@ -117,7 +117,7 @@ public class AbstractIMStorage<
     /**
      * Set chat factory
      */
-    public void setChatFactory(ChatFactory<U, C> factory) {
+    public void setChatFactory(ChatFactory<CID, C> factory) {
         mChatFactory = factory;
     }
     /**
