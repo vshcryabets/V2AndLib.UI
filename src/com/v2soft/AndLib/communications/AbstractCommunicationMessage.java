@@ -9,16 +9,16 @@ import java.io.Serializable;
  * @param <U> communication user data type
  * @param <ID> message ID
  */
-public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>, ID> 
+public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>, MID> 
     implements Serializable {
     private static final long serialVersionUID = 1L;
-    protected ID mId;
+    protected MID mId;
     protected U mSender;
     protected U mRecepient;
     /**
      * @return the mId
      */
-    public ID getId() {
+    public MID getId() {
         return mId;
     }
     /**
@@ -36,7 +36,7 @@ public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>
     /**
      * @param mId the mId to set
      */
-    public void setId(ID mId) {
+    public void setId(MID mId) {
         this.mId = mId;
     }
     /**

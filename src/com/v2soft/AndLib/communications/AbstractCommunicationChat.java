@@ -7,17 +7,20 @@ import java.util.List;
 /**
  * 
  * @author vshcryabets@gmail.com
+ * @param <M> message type type
+ * @param <MID> message id type
+ * @param <CID> chat id type
  *
  */
-public class AbstractCommunicationChat<M extends AbstractCommunicationMessage<?, ID>, ID,
-    L extends AbstractCommunicationChat.AbstractCommunicationChatListener> 
+public class AbstractCommunicationChat<M extends AbstractCommunicationMessage<?, MID>, MID, CID> 
     implements Serializable {
     private static final long serialVersionUID = 1L;
     public interface AbstractCommunicationChatListener {
         void onChatChanged();
     }
     protected List<M> mMessages;
-    transient protected L mListener;
+    protected CID mChatId;
+    transient protected AbstractCommunicationChatListener mListener;
     
     public AbstractCommunicationChat() {
         mMessages = new ArrayList<M>();
@@ -59,6 +62,18 @@ public class AbstractCommunicationChat<M extends AbstractCommunicationMessage<?,
     public int indexOf(M message) {
         return mMessages.indexOf(message);
     }
-    public L getListener() {return mListener;}
-    public void setListener(L listener) {mListener = listener;}
+    public AbstractCommunicationChatListener getListener() {return mListener;}
+    public void setListener(AbstractCommunicationChatListener listener) {mListener = listener;}
+    /**
+     * Get this chat id
+     */
+    public CID getId() {
+        return mChatId;
+    }
+    /**
+     * Set chat id
+     */
+    public void setId(CID id) {
+        mChatId = id;
+    }
 }
