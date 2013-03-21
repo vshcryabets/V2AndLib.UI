@@ -2,6 +2,11 @@ package com.v2soft.AndLib.ui.activities;
 
 import com.v2soft.AndLib.ui.fonts.FontManager;
 
+/**
+ * Base interface for activites.
+ * @author Vladimir Shcryabets <vshcryabets@gmail.com>
+ *
+ */
 public interface IBaseActivity {
     /**
      * @return application custom font manager

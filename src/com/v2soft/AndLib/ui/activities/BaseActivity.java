@@ -17,7 +17,7 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  * @param <S> settings class
  */
 public abstract class BaseActivity<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
-extends Activity {
+extends Activity implements IBaseActivity {
     // =================================================================
     // Interfaces
     // =================================================================
@@ -75,6 +75,7 @@ extends Activity {
     public ITaskHub getExecutor() {
         return mBackgroundExecutor;
     }
+
     // =================================================================
     // UI routines
     // =================================================================

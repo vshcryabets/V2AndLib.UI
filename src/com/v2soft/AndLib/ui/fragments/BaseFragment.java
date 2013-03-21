@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import android.view.View.OnClickListener;
 
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
-import com.v2soft.AndLib.ui.activities.BaseActivity;
+import com.v2soft.AndLib.ui.activities.IBaseActivity;
 import com.v2soft.AndLib.ui.fonts.FontManager;
 
 /**
@@ -112,8 +112,8 @@ implements OnClickListener {
      * @param message
      */
     public void showError(String message) {
-        if ( getActivity() instanceof BaseActivity<?, ?>) {
-            final BaseActivity<?, ?> activity = (BaseActivity<?, ?>) getActivity();
+        if ( getActivity() instanceof IBaseActivity ) {
+            final IBaseActivity activity = (IBaseActivity) getActivity();
             activity.showError(message);
         }
     }
@@ -129,8 +129,8 @@ implements OnClickListener {
      * @param value
      */
     public void setLoadingProcess(boolean value, Object tag) {
-        if ( getActivity() instanceof BaseActivity<?, ?>) {
-            final BaseActivity<?, ?> activity = (BaseActivity<?, ?>) getActivity();
+        if ( getActivity() instanceof IBaseActivity) {
+            final IBaseActivity activity = (IBaseActivity) getActivity();
             activity.setLoadingProcess(value, tag);
         }
     }
@@ -139,8 +139,8 @@ implements OnClickListener {
      * @param value
      */
     public void setBlockingProcess(boolean value, Object tag) {
-        if ( getActivity() instanceof BaseActivity<?, ?>) {
-            final BaseActivity<?, ?> activity = (BaseActivity<?, ?>) getActivity();
+        if ( getActivity() instanceof IBaseActivity) {
+            final IBaseActivity activity = (IBaseActivity) getActivity();
             activity.setBlockingProcess(value, tag);
         }
     }
