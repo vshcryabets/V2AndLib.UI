@@ -11,10 +11,15 @@ import java.io.Serializable;
  */
 public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>, MID> 
     implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     protected MID mId;
     protected U mSender;
     protected U mRecepient;
+    protected boolean isRead;
+    
+    public AbstractCommunicationMessage() {
+        isRead = false;
+    }
     /**
      * @return the mId
      */
@@ -51,6 +56,20 @@ public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>
     public void setRecepient(U mRecepient) {
         this.mRecepient = mRecepient;
     }
+    /**
+     * 
+     * @return true if this message marked as read
+     */
+    public boolean isRead() {
+        return isRead;
+    }
+    /**
+     * 
+     * @param isRead should be true if this message marked as read
+     */
+    protected void setRead(boolean isRead) {
+        this.isRead = isRead;
+    };
     
     @Override
     public int hashCode() {
@@ -66,5 +85,6 @@ public class AbstractCommunicationMessage<U extends AbstractCommunicationUser<?>
             return mId.equals(msg.mId);
         }
         return false;
-    };
+    }
+
 }

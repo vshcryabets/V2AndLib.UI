@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>V2DemoActivity</name>
+	<name>V2AndLibTests</name>
 	<comment></comment>
 	<projects>
+		<project>V2DemoActivity</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

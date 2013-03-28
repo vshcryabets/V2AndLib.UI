@@ -13,7 +13,7 @@ import java.util.List;
  *
  */
 public class AbstractCommunicationChat<M extends AbstractCommunicationMessage<?, MID>, MID, CID> 
-    implements Serializable {
+implements Serializable {
     private static final long serialVersionUID = 1L;
     public interface AbstractCommunicationChatListener {
         void onChatChanged();
@@ -21,39 +21,73 @@ public class AbstractCommunicationChat<M extends AbstractCommunicationMessage<?,
     protected List<M> mMessages;
     protected CID mChatId;
     transient protected AbstractCommunicationChatListener mListener;
-    
+    protected int mUnreadCount;
+
     public AbstractCommunicationChat() {
         mMessages = new ArrayList<M>();
+        mUnreadCount = 0;
     }
 
     public List<M> getMessages() {
         return mMessages;
     }
 
-    public void setMessages(List<M> mMessages) {
-        this.mMessages = mMessages;
+    /**
+     * Set messages list for this chat
+     * @param messages
+     */
+    public void setMessages(List<M> messages) {
+        if (messages == null ) {
+            throw new NullPointerException();
+        }
+        synchronized (mMessages) {
+            mMessages = messages;
+            synchronized (mMessages) {
+                mUnreadCount = 0;
+                for (M m : mMessages) {
+                    if ( !m.isRead()) {
+                        mUnreadCount++;
+                    }
+                }
+            }
+        }
     }
     /**
      * Add message to the chat. If message with same id was already in a list, false will be returned.
      * @param message true if message was added successfully
      */
     public boolean addMessage(M message) {
-        if ( mMessages.contains(message)) {
-            return false;
+        synchronized (mMessages) {
+            if ( mMessages.contains(message)) {
+                return false;
+            }
+            boolean res = mMessages.add(message);
+            if ( res && !message.isRead() ) {
+                mUnreadCount++;
+            }
+            if ( res && mListener != null ) {
+                mListener.onChatChanged();
+            }
+            return res;
         }
-        boolean res = mMessages.add(message);
-        if ( res && mListener != null ) {
-            mListener.onChatChanged();
-        }
-        return res;
     }
 
     public boolean removeMessage(M message) {
-        boolean res = mMessages.remove(message);
-        if ( res && mListener != null ) {
-            mListener.onChatChanged();
+        synchronized (mMessages) {
+            int idx = mMessages.indexOf(message);
+            if ( idx < 0 ) {
+                return false;
+            }
+            message = mMessages.get(idx);
+            if ( !message.isRead() ) {
+                mUnreadCount--;
+            }
+            mMessages.remove(idx);
+            if ( mListener != null ) {
+                mListener.onChatChanged();
+            }
+            return true;
         }
-        return res;
     }
     /**
      * Find and return the index in this chat of the the specified message, or -1 if this chat does not contain this message.
@@ -75,5 +109,28 @@ public class AbstractCommunicationChat<M extends AbstractCommunicationMessage<?,
      */
     public void setId(CID id) {
         mChatId = id;
+    }
+    /**
+     * @return number of unread messages
+     */
+    public int getUnreadMessageCount() {
+        return mUnreadCount;
+    }
+    /**
+     * Mark specified message as read
+     * @param message
+     * @return true is message marked
+     */
+    public boolean setMessageRead(M message) {
+        synchronized (mMessages) {
+            int idx = mMessages.indexOf(message);
+            if ( idx < 0 ) {
+                return false;
+            }
+            message = mMessages.get(idx);
+            message.setRead(true);
+            mUnreadCount--;
+            return true;
+        }
     }
 }
