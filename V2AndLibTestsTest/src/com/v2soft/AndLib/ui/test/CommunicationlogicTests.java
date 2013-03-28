@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import android.os.Message;
 import android.test.AndroidTestCase;
 
 import com.v2soft.AndLib.communications.AbstractCommunicationChat;
@@ -94,6 +93,6 @@ public class CommunicationlogicTests extends AndroidTestCase {
                 unreadMessageCount++;
             }
         }
-        //assertEquals(unreadMessageCount, storage.getUnreadMessageCount());
+        assertEquals(unreadMessageCount, storage.getUnreadMessageCount());
     }
 }

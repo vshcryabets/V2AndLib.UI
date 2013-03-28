@@ -126,4 +126,14 @@ public class AbstractIMStorage<
     public List<C> getChats() {
         return new ArrayList<C>(mChatsMap.values());
     }
+    /**
+     * @return number of unread messages
+     */
+    public int getUnreadMessageCount() {
+        int res = 0;
+        for (C chat : mChatsMap.values()) {
+            res += chat.getUnreadMessageCount();
+        }
+        return res;
+    }
 }
