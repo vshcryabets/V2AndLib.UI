@@ -2,6 +2,7 @@ package com.v2soft.AndLib.ui.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import android.os.Message;
@@ -78,5 +79,21 @@ public class CommunicationlogicTests extends AndroidTestCase {
         chat.removeMessage(m3);
         chat.removeMessage(m4);
         assertEquals(2, chat.getUnreadMessageCount());
+    }
+    
+    public void testUnreadmessageCounterInIMStorage() {
+        TestStorage storage = new TestStorage();
+        int unreadMessageCount = 0;
+        Random rnd = new Random();
+        for (int i = 0; i < 5 + rnd.nextInt(5); i++ ) {
+            UUID chatId = UUID.randomUUID();
+            TestChat chat = storage.getChatById(chatId);
+            for ( int j = 0; j < 5+rnd.nextInt(20); j++) {
+                TestMessage msg = new TestMessage(UUID.randomUUID());
+                storage.addMessage(chatId, msg);
+                unreadMessageCount++;
+            }
+        }
+        //assertEquals(unreadMessageCount, storage.getUnreadMessageCount());
     }
 }
