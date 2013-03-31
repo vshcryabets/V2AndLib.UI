@@ -26,9 +26,12 @@ public class AbstractDataRequestException extends Exception {
 	public AbstractDataRequestException(String message) {
 		super(message);
 	}
-	
 	public AbstractDataRequestException(Throwable e) {
 		super(e);
+	}
+	@Override
+	public String toString() {
+	    return getMessage();
 	}
 }
 
