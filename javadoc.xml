@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" 
+        classpath="/home/mrco/work/sdk/android-sdk/platforms/android-10/android.jar:libs/acra-4.2.3.jar:libs/httpmime-4.0.3.jar:/home/mrco/work/sdk/android-sdk/tools/support/annotations.jar:libs/json_simple-1.1.jar:libs/android-support-v4.jar:libs/dropbox-android-sdk-1.3.1.jar" 
+    	destdir="docs" 
+    	nodeprecated="false" 
+    	nodeprecatedlist="false" 
+    	noindex="false" nonavbar="false" notree="false" 
+    	packagenames="com.v2soft.AndLib.application,com.v2soft.AndLib.communications,com.v2soft.AndLib.dao,com.v2soft.AndLib.dataproviders,
+    	com.v2soft.AndLib.dataproviders.tasks,
+    	com.v2soft.AndLib.exceptions,
+    	com.v2soft.AndLib.media,
+    	com.v2soft.AndLib.networking,
+    	com.v2soft.AndLib.receivers,
+    	com.v2soft.AndLib.services,
+    	com.v2soft.AndLib.text,
+    	com.v2soft.AndLib.Timers,
+    	com.v2soft.AndLib.ui.activities,
+    	com.v2soft.AndLib.ui.animation,
+    	com.v2soft.AndLib.ui.bitmaps,
+    	com.v2soft.AndLib.ui.dialogs,
+    	com.v2soft.AndLib.ui.fonts,
+    	com.v2soft.AndLib.ui.fragments,
+    	com.v2soft.AndLib.ui.loaders,
+    	com.v2soft.AndLib.ui.views" 
+        source="1.6" sourcepath="src:gen" splitindex="true" use="true" version="true"
+        charset="utf-8">
+            <link href="file:/home/mrco/work/android-sdk/docs/reference"/>
+        </javadoc>
+    </target>
+</project>
