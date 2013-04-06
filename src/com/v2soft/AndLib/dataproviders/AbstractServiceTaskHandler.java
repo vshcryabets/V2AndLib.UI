@@ -34,6 +34,13 @@ public abstract class AbstractServiceTaskHandler extends Handler {
     protected String mHandledAction;
     protected String mErrorAction;
 
+    /**
+     * 
+     * @param looper
+     * @param context service object
+     * @param handledAction 
+     * @param errorAction action that used to notify about error in task
+     */
     public AbstractServiceTaskHandler(Looper looper, Service context, String handledAction, String errorAction) {
         super(looper);
         mService = context;
