@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Распределитель фоновых задач
+ * 
  * @author V.Shcriyabets (vshcryabets@gmail.com)
+ * @deprecated Please don't use this class. 
  *
  */
 public class TasksMultiplexor implements ITaskHub {
@@ -50,6 +51,9 @@ public class TasksMultiplexor implements ITaskHub {
      * @return new task id
      */
     public int addTask(ITask task, ITaskListener listener) {
+        if ( listener == null ) {
+            throw new NullPointerException();
+        }
         synchronized (mLock) {
             mLastId++;
             task.setTaskId(mLastId);
@@ -85,10 +89,15 @@ public class TasksMultiplexor implements ITaskHub {
     }
 
     private void removeTask(ITask task, ITaskListener listener) {
+        // remove task
         mListeners.remove(task.getTaskId());
         if ( mTasksByListener.containsKey(listener)) {
             final List<ITask> tasks = mTasksByListener.get(listener);
             tasks.remove(task);
+            if (tasks.size() < 1 ) {
+                // no task left, we can remove listener
+                mTasksByListener.remove(listener);
+            }
         }
     }
 
@@ -163,5 +172,12 @@ public class TasksMultiplexor implements ITaskHub {
             mTasksByListener.remove(listener);
         }
         return;
+    }
+    
+    /**
+     * Ensure that specified task listener are already in map
+     */
+    public boolean hasTaskListener(ITaskListener listener) {
+        return mTasksByListener.containsKey(listener);
     }
 }
