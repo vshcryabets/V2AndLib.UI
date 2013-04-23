@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.v2soft.AndLib.ui.views.IDataView;
@@ -50,6 +51,7 @@ implements Callback {
     protected static final int MSG_DATASET_ADD = 3;
     protected static final int MSG_DATASET_REMOVE = 4;
     protected static final int MSG_DATASET_ADD_LIST = 5;
+    protected static final int MSG_DATASET_CHANGED_COLLECTION = 6;
     //---------------------------------------------------------------------------
     // Class fields
     //---------------------------------------------------------------------------
@@ -74,8 +76,8 @@ implements Callback {
     }
 
     /**
-     * Set adapter data
-     * @param data
+     * Set adapter data.
+     * @param data list
      */
     public void setData(List<T> data) {
         if ( data == null ) throw new NullPointerException("Data is null");
@@ -84,7 +86,17 @@ implements Callback {
         message.obj = data;
         mHandler.sendMessage(message);
     }
-
+    /**
+     * Set adapter data.
+     * @param data collection.
+     */
+    public void setData(Collection<T> data) {
+        if ( data == null ) throw new NullPointerException("Data is null");
+        final Message message = new Message();
+        message.what = MSG_DATASET_CHANGED;
+        message.obj = null;
+        mHandler.sendMessage(message);
+    }
     @Override
     public int getCount() {
         return mItems.size();
@@ -112,7 +124,7 @@ implements Callback {
 
     /**
      * Add item to the list
-     * @param item
+     * @param item data item
      */
     public void addItem(final T item) {
         Message msg = new Message();
@@ -123,7 +135,7 @@ implements Callback {
 
     /**
      * Remove specified item from the list
-     * @param item
+     * @param item data item
      */
     public void removeItem(final T item) {
         final Message msg = new Message();
@@ -133,13 +145,13 @@ implements Callback {
     }
 
     /**
-     * Remove all items from list
+     * Remove all items from adapter.
      */
     public void clear() {
         mHandler.sendEmptyMessage(MSG_DATASET_CLEAR);
     }
     /**
-     * Get copy of items list
+     * Get copy of items.
      * @return
      */
     public List<T> getData() {
@@ -155,6 +167,13 @@ implements Callback {
             mItems.clear();
             if ( msg.obj != null ) {
                 mItems.addAll((List<T>)msg.obj);
+            }
+            notifyDataSetChanged();
+            break;
+        case MSG_DATASET_CHANGED_COLLECTION:
+            mItems.clear();
+            if ( msg.obj != null ) {
+                mItems.addAll((Collection<T>)msg.obj);
             }
             notifyDataSetChanged();
             break;
