@@ -23,7 +23,7 @@ import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
 import com.v2soft.AndLib.ui.R;
-import com.v2soft.AndLib.ui.activities.BaseActivity;
+import com.v2soft.AndLib.ui.activities.IBaseActivity;
 import com.v2soft.AndLib.ui.fonts.FontManager;
 
 /**
@@ -45,17 +45,17 @@ public class TextViewWithFont extends TextView {
     public TextViewWithFont(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         Context subcontext = context;
-        BaseActivity<?, ?> activity = null;
-        if ( subcontext instanceof BaseActivity ) {
+        IBaseActivity activity = null;
+        if ( subcontext instanceof IBaseActivity ) {
             // may be this is dialog?
-            activity = (BaseActivity<?, ?>) subcontext;
+            activity = (IBaseActivity) subcontext;
         } else {
             if ( context instanceof ContextThemeWrapper ) {
                 subcontext = ((ContextThemeWrapper)context).getBaseContext();
             }
-            if ( subcontext instanceof BaseActivity ) {
+            if ( subcontext instanceof IBaseActivity ) {
                 // may be this is dialog?
-                activity = (BaseActivity<?, ?>) subcontext;
+                activity = (IBaseActivity) subcontext;
             }
         }
         if ( activity != null ) {
@@ -72,7 +72,6 @@ public class TextViewWithFont extends TextView {
                 }
             }
             arr.recycle();
-
         }
     }
 }

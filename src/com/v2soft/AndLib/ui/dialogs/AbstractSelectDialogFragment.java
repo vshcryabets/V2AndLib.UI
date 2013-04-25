@@ -15,9 +15,9 @@
  */
 package com.v2soft.AndLib.ui.dialogs;
 
-import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +56,8 @@ extends DialogFragment implements OnItemClickListener  {
         return view;
     }
     @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        mSelectedItem = (T) mListView.getItemAtPosition(arg2);
+    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+        mSelectedItem = (T) mListView.getItemAtPosition(position);
         getDialog().dismiss();
     }
     /**
