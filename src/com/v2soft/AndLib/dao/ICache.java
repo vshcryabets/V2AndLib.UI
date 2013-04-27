@@ -31,7 +31,7 @@ public interface ICache<ID,T> {
      * @return get item by specified id
      */
     public T getItemById(ID id);
-    public void onUpdateFailed(AbstractDataRequestException ex);
+    public void onUpdateFailed(Exception ex);
     /**
      * 
      * @return all items from cache

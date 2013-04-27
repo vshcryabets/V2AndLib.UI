@@ -93,7 +93,7 @@ public abstract class AbstractServiceRequest<R, Params, RawData> extends Abstrac
     }
 
     @Override
-    public void execute(ITaskSimpleListener handler) throws Exception {
+    public void execute(ITaskSimpleListener handler) throws AbstractDataRequestException {
         execute();
     }
 

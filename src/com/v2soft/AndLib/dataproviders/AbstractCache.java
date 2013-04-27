@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public abstract class AbstractCache<ID, T> implements ICache<ID, T>{
                         try {
                             getUpdateTask().execute(null);
                         } catch (Exception e) {
-                            onUpdateFailed(new AbstractDataRequestException(e));
+                            onUpdateFailed(e);
                         }
                     }
                 }, this.getClass().getName());
