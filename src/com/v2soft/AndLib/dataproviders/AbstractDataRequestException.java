@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
  */
 package com.v2soft.AndLib.dataproviders;
 
+import java.io.Serializable;
+
 /**
  * Data request exception
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public class AbstractDataRequestException extends Exception {
+public abstract class AbstractDataRequestException extends Exception implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public AbstractDataRequestException(String message) {

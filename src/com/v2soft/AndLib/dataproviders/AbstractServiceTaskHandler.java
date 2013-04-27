@@ -62,7 +62,7 @@ public abstract class AbstractServiceTaskHandler extends Handler {
             try {
                 task.execute(null);
                 sendResult(task);
-            } catch (Exception e) {
+            } catch (AbstractDataRequestException e) {
                 Log.e(LOG_TAG, e.toString(), e);
                 sendErrorMessage(task, e);
             }
@@ -92,10 +92,10 @@ public abstract class AbstractServiceTaskHandler extends Handler {
      * @param task
      * @param e
      */
-    protected void sendErrorMessage(AbstractServiceRequest<?,?,?> task, Exception e){
+    protected void sendErrorMessage(AbstractServiceRequest<?,?,?> task, AbstractDataRequestException e){
         final Intent intent = new Intent(mErrorAction);
         intent.putExtra(AbstractServiceRequest.EXTRA_TASK, task);
-        intent.putExtra(AbstractServiceRequest.EXTRA_EXCEPTION, e.toString());
+        intent.putExtra(AbstractServiceRequest.EXTRA_EXCEPTION, e);
         LocalBroadcastManager.getInstance(mService).sendBroadcast(intent);
     }
 
