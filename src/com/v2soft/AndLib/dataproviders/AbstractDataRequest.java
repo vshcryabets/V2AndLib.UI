@@ -43,11 +43,12 @@ public abstract class AbstractDataRequest<R, Params, RawData> implements Seriali
      * Execute request
      * @throws AbstractDataRequestException 
      */
-    public void execute() throws AbstractDataRequestException {
+    public AbstractDataRequest<R, Params, RawData> execute() throws AbstractDataRequestException {
         final Params params = prepareParameters();
         final RawData rawData = sendRequest(params);
         final R res = parseResult(rawData);
         deliveryResult(res);
+        return this;
     }
 
     /**
