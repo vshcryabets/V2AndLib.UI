@@ -40,14 +40,15 @@ public abstract class AbstractDataRequest<R, Params, RawData> implements Seriali
     }
 
     /**
-     * Execute request
-     * @throws AbstractDataRequestException 
+     * Execute request.
+     * @throws AbstractDataRequestException
      */
-    public void execute() throws AbstractDataRequestException {
+    public AbstractDataRequest<R, Params, RawData> execute() throws AbstractDataRequestException {
         final Params params = prepareParameters();
         final RawData rawData = sendRequest(params);
         final R res = parseResult(rawData);
         deliveryResult(res);
+        return this;
     }
 
     /**
@@ -64,7 +65,10 @@ public abstract class AbstractDataRequest<R, Params, RawData> implements Seriali
     protected abstract R parseResult(RawData data) throws AbstractDataRequestException;
     protected abstract RawData sendRequest(Params p) throws AbstractDataRequestException;
     protected abstract Params prepareParameters() throws AbstractDataRequestException;
-
+    /**
+     * Get result of the data request.
+     * @return result of the data request.
+     */
     public R getResult() {
         return mData;
     }
