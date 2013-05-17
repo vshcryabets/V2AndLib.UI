@@ -93,8 +93,8 @@ implements Callback {
     public void setData(Collection<T> data) {
         if ( data == null ) throw new NullPointerException("Data is null");
         final Message message = new Message();
-        message.what = MSG_DATASET_CHANGED;
-        message.obj = null;
+        message.what = MSG_DATASET_CHANGED_COLLECTION;
+        message.obj = data;
         mHandler.sendMessage(message);
     }
     @Override
