@@ -1,5 +1,6 @@
 package com.v2soft.AndLib.ui.activities;
 
+import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.ui.fonts.FontManager;
 
 /**
@@ -7,7 +8,7 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  *
  */
-public interface IBaseActivity {
+public interface IBaseActivity<APP extends BaseApplication<?>> {
     /**
      * @return application custom font manager
      */
@@ -32,4 +33,8 @@ public interface IBaseActivity {
      * @param value
      */
     public void setBlockingProcess(boolean value, Object tag);
+    /**
+     * Get casted applcation.
+     */
+    public APP getApplicationObject();
 }

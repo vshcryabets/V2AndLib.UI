@@ -49,7 +49,7 @@ extends SherlockFragmentActivity implements IBaseActivity {
             throw new NullPointerException("Settings is null");
         }
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -57,7 +57,7 @@ extends SherlockFragmentActivity implements IBaseActivity {
             mCustomStack.onSaveInstanceState(outState);
         }
     }
-    
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if ( mCustomStack != null ) {
@@ -65,7 +65,7 @@ extends SherlockFragmentActivity implements IBaseActivity {
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
-    
+
     public IBackStack getBackStack() {
         return mCustomStack;
     }
@@ -107,4 +107,10 @@ extends SherlockFragmentActivity implements IBaseActivity {
      * @param value
      */
     public abstract void setBlockingProcess(boolean value, Object tag);
+    /**
+     * Get casted applcation.
+     */
+    public T getApplicationObject() {
+        return mApp;
+    }
 }

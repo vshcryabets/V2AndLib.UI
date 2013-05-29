@@ -33,7 +33,11 @@ public abstract class AbstractDataRequestException extends Exception implements 
 	}
 	@Override
 	public String toString() {
-	    return getMessage();
+		if ( getMessage().length() > 0 ) {
+			return getMessage();
+		} else {
+			return super.toString();
+		}
 	}
 }
 
