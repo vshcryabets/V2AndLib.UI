@@ -19,6 +19,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.v2soft.AndLib.ui.R;
 
@@ -55,5 +58,32 @@ public class ErrorDialogFragment extends DialogFragment {
         .setTitle(getArguments().getString(EXTRA_TITLE))
         .setPositiveButton(R.string.v2andlib_btn_ok, null);
         return alertDialogBuilder.create();
+    }
+    
+    /**
+     * Set dialog title.
+     * @author Vladimir Shcryabets <vshcryabets@gmail.com>
+     */
+    public void setTitle(String title) {
+        getArguments().putString(EXTRA_TITLE, title);
+    }
+    /**
+     * Set dialog message text.
+     * @author Vladimir Shcryabets <vshcryabets@gmail.com>
+     */
+    public void setMessage(String message) {
+        getArguments().putString(EXTRA_MESSAGE, message);
+    }
+    /**
+     * Show error dialog.
+     */
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        final Fragment prev = manager.findFragmentByTag(tag);
+        if (prev != null) {
+            final FragmentTransaction transaction = manager.beginTransaction();
+            transaction.remove(prev).commit();
+        }
+        super.show(manager, tag);
     }
 }
