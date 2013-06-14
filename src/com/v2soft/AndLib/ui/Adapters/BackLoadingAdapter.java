@@ -33,6 +33,13 @@ import com.v2soft.AndLib.ui.views.IDataView;
 public abstract class BackLoadingAdapter<T> 
 extends CustomViewAdapter<T> {
     //---------------------------------------------------------------------------
+    // Interfaces
+    //---------------------------------------------------------------------------
+    public interface BackLoadingAdapterListener {
+        public void onLoadStarted(boolean first);
+        public void onLoadFinished();
+    }
+    //---------------------------------------------------------------------------
     // Constants
     //---------------------------------------------------------------------------
     protected static final String LOG_TAG = BackLoadingAdapter.class.getSimpleName();
