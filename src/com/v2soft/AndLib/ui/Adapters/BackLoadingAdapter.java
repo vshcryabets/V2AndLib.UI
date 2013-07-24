@@ -68,7 +68,6 @@ extends CustomViewAdapter<T> {
             int partSize) {
         super(context, factory);
         mWantToLoadMore = true;
-        //        mLoadingView = new LoadingView(context);
         mPartSize = partSize;
         isLoading = false;
     }
@@ -111,12 +110,6 @@ extends CustomViewAdapter<T> {
     }    
 
     private void loadNextPart(boolean first) {
-//        Log.d(LOG_TAG, "================================================");
-//        StackTraceElement items[] = Thread.currentThread().getStackTrace();
-//        for (StackTraceElement stackTraceElement : items) {
-//            Log.d(LOG_TAG, stackTraceElement.toString());
-//        }
-//        Log.d(LOG_TAG, "================================================");
         isLoading = true;
         Thread back = new Thread(new Runnable() {
             @Override
@@ -164,6 +157,9 @@ extends CustomViewAdapter<T> {
     protected void hideLoaderAtBottom() {
         showLoaderAtBottom(null);
     }
+    /**
+     * Adapter will try to load more items.
+     */
     public void tryToLoadMore() {
         mWantToLoadMore = true;
     }
