@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.v2soft.AndLib.ui.views.IDataView;
  *
  */
 public abstract class TreeAdapter extends CustomViewAdapter<ITreeData> {
-    private static final String LOG_TAG = TreeAdapter.class.getSimpleName();    
+    private static final String LOG_TAG = TreeAdapter.class.getSimpleName();
     private ITreeData<?> mRoot;
 
     public TreeAdapter(Context context, ITreeData<?> root, 
@@ -58,13 +58,6 @@ public abstract class TreeAdapter extends CustomViewAdapter<ITreeData> {
         final int level = ((ITreeData)getItem(position)).getNodeLevel();
         return level;
     }
-
-    //    @Override
-    //    public final View getView(int position, View convertView, ViewGroup parent) {
-    //        final TLNodeView result =  (TLNodeView) convertView;
-    //        final ITreeData<?> item = mFlatVisibleList.get(position);
-    //        return getView(item, result);
-    //    }
 
     public void onItemClicked(int position, ITreeData<?> node) {
         if ( node.isExpanded() ) {
@@ -100,11 +93,11 @@ public abstract class TreeAdapter extends CustomViewAdapter<ITreeData> {
     private void buildFlatList(ITreeData node) {
         if ( !node.isExpanded() ) return;
         // inititalize list
-        if ( mRoot.getChildsCount() > 0 ) {
-            final List<ITreeData> chidls = node.getChilds();
-            int count = chidls.size();
+        final int count = node.getChildsCount();
+        if ( count > 0 ) {
+            final List<ITreeData<?>> subnodes = node.getSubnodes();
             for ( int i = 0; i < count; i++ ) {
-                ITreeData<?> subnode = chidls.get(i);
+                final ITreeData<?> subnode = subnodes.get(i);
                 mItems.add(subnode);
                 if ( subnode.isExpanded() ) {
                     buildFlatList(subnode);

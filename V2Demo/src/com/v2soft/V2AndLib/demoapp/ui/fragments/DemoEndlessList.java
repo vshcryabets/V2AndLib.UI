@@ -122,11 +122,6 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
 
         @Override
         protected List<Integer> getData(int start, int count) {
-//            Log.d(LOG_TAG, String.format("from %d count %d", start, count));
-//            StackTraceElement items[] = Thread.currentThread().getStackTrace();
-//            for (StackTraceElement stackTraceElement : items) {
-//                Log.d(LOG_TAG, stackTraceElement.toString());
-//            }
             List<Integer> result = new LinkedList<Integer>();
             for ( int i = 0; i< count; i++ ) {
                 if ( start+i > 500 ) {

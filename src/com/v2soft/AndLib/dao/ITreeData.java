@@ -28,6 +28,6 @@ public interface ITreeData<T extends ITreeData> {
     public boolean isExpandable();
     public boolean isExpanded();
     public int getChildsCount();
-    public List<T> getChilds();
+    public List<T> getSubnodes();
     public void setExpanded(boolean value);
 }

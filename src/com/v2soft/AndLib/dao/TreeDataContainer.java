@@ -53,7 +53,7 @@ public abstract class TreeDataContainer<T extends ITreeData> implements ITreeDat
     }
     
     @Override
-    public List<T> getChilds() {
+    public List<T> getSubnodes() {
         return mChilds;
     }
     
