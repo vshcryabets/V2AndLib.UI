@@ -27,12 +27,12 @@ import com.v2soft.AndLib.ui.views.IDataView;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public abstract class TreeAdapter extends CustomViewAdapter<ITreeData> {
+public abstract class TreeAdapter extends CustomViewAdapter<ITreeData<?>> {
     private static final String LOG_TAG = TreeAdapter.class.getSimpleName();
     private ITreeData<?> mRoot;
 
     public TreeAdapter(Context context, ITreeData<?> root, 
-            CustomViewAdapterFactory<ITreeData, IDataView<ITreeData>> viewFactory) {
+            CustomViewAdapterFactory<ITreeData<?>, IDataView<ITreeData<?>>> viewFactory) {
         super(context, viewFactory);
         setRootNode(root);
     }
@@ -55,7 +55,7 @@ public abstract class TreeAdapter extends CustomViewAdapter<ITreeData> {
     }
     @Override
     public int getItemViewType(int position) {
-        final int level = ((ITreeData)getItem(position)).getNodeLevel();
+        final int level = ((ITreeData<?>)getItem(position)).getNodeLevel();
         return level;
     }
 

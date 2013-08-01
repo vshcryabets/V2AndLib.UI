@@ -22,7 +22,6 @@ import java.util.List;
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-@SuppressWarnings("rawtypes")
 public interface ITreeData<T extends ITreeData> {
     public int getNodeLevel();
     public boolean isExpandable();
