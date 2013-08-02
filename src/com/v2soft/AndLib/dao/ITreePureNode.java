@@ -15,16 +15,13 @@
  */
 package com.v2soft.AndLib.dao;
 
-import java.util.List;
 
 /**
- * Tree node data interface
+ * Pure tree node data interface.
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public interface ITreeData<T extends ITreePureNode> extends ITreePureNode {
-    public boolean isExpanded();
-    public int getChildsCount();
-    public List<T> getSubnodes();
-    public void setExpanded(boolean value);
+public interface ITreePureNode {
+    public int getNodeLevel();
+    public boolean isExpandable();
 }

@@ -20,6 +20,7 @@ import java.util.List;
 import android.content.Context;
 
 import com.v2soft.AndLib.dao.ITreeData;
+import com.v2soft.AndLib.dao.ITreePureNode;
 import com.v2soft.AndLib.ui.views.IDataView;
 
 /**
@@ -27,12 +28,12 @@ import com.v2soft.AndLib.ui.views.IDataView;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public abstract class TreeAdapter extends CustomViewAdapter<ITreeData<?>> {
+public abstract class TreeAdapter extends CustomViewAdapter<ITreePureNode> {
     private static final String LOG_TAG = TreeAdapter.class.getSimpleName();
     private ITreeData<?> mRoot;
 
     public TreeAdapter(Context context, ITreeData<?> root, 
-            CustomViewAdapterFactory<ITreeData<?>, IDataView<ITreeData<?>>> viewFactory) {
+            CustomViewAdapterFactory<ITreePureNode, IDataView<ITreePureNode>> viewFactory) {
         super(context, viewFactory);
         setRootNode(root);
     }
@@ -55,15 +56,24 @@ public abstract class TreeAdapter extends CustomViewAdapter<ITreeData<?>> {
     }
     @Override
     public int getItemViewType(int position) {
-        final int level = ((ITreeData<?>)getItem(position)).getNodeLevel();
+        final int level = ((ITreePureNode)getItem(position)).getNodeLevel();
         return level;
     }
 
-    public void onItemClicked(int position, ITreeData<?> node) {
-        if ( node.isExpanded() ) {
-            collapse(position, node);
+    /**
+     * Handle click on tree item.
+     * @param position
+     * @param node
+     */
+    public void onItemClicked(int position, ITreePureNode node) {
+        if ( !node.isExpandable() ) {
+            return;
+        }
+        ITreeData<?> expandableNode = (ITreeData<?>) node;
+        if ( expandableNode.isExpanded() ) {
+            collapse(position, expandableNode);
         } else {
-            expand(position, node);
+            expand(position, expandableNode);
         }
     }
 
@@ -95,12 +105,14 @@ public abstract class TreeAdapter extends CustomViewAdapter<ITreeData<?>> {
         // inititalize list
         final int count = node.getChildsCount();
         if ( count > 0 ) {
-            final List<ITreeData<?>> subnodes = node.getSubnodes();
+            final List<ITreePureNode> subnodes = node.getSubnodes();
             for ( int i = 0; i < count; i++ ) {
-                final ITreeData<?> subnode = subnodes.get(i);
+                final ITreePureNode subnode = subnodes.get(i);
                 mItems.add(subnode);
-                if ( subnode.isExpanded() ) {
-                    buildFlatList(subnode);
+                if ( subnode.isExpandable() ) {
+                    if ( ((ITreeData<?>)subnode).isExpanded() ) {
+                        buildFlatList((ITreeData<?>)subnode);
+                    }
                 }
             }
         }

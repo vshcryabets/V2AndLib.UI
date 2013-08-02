@@ -18,13 +18,12 @@ package com.v2soft.AndLib.dao;
 import java.util.List;
 
 /**
- * Base tree data class
+ * Base tree data class.
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  * @param <T>
  */
-@SuppressWarnings("rawtypes")
-public abstract class TreeDataContainer<T extends ITreeData> implements ITreeData<T> {
+public abstract class TreeDataContainer<T extends ITreePureNode> implements ITreeData<T> {
     protected boolean isExpanded;
     protected List<T> mChilds;
 
