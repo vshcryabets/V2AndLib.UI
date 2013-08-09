@@ -13,4 +13,7 @@
     <!-- Dialogs sample -->
     <string name="btnPickTime">Change time</string>
 
+    <!-- Tricks -->
+    <string name="labelData">Enable data access over Mobile Network</string>
+    
 </resources>

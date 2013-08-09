@@ -1,3 +1,6 @@
+August 2013
+- System tricks class. Method to enable/disable data connection over Mobile network.
+
 March 2013
 - TimePickerDialogFragment
 - MessageDateFormatter - allows you to convert a date to a readable string (eg "20 minutes ago", "3 hours ago", etc.) 

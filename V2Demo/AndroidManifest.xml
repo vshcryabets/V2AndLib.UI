@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
         android:name=".DemoApplication"
@@ -44,6 +45,7 @@
         <activity android:name=".ui.activities.TaskStartStopActivity" />
         <activity android:name=".ui.activities.DialogsActivity" />
         <activity android:name=".ui.activities.WiFiList" />
+        <activity android:name=".ui.activities.TricksActivity" />
         <!-- DropBox authentication activity -->
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"

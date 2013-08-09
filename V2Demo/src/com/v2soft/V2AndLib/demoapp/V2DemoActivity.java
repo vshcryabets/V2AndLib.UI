@@ -34,6 +34,7 @@ import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
 import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
 import com.v2soft.V2AndLib.demoapp.ui.activities.TaskStartStopActivity;
+import com.v2soft.V2AndLib.demoapp.ui.activities.TricksActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
 import com.v2soft.V2AndLib.demoapp.ui.activities.WiFiList;
 
@@ -54,7 +55,8 @@ implements OnItemClickListener {
         EndlessListActivity.class,
         TaskStartStopActivity.class,
         DialogsActivity.class,
-        WiFiList.class
+        WiFiList.class,
+        TricksActivity.class
     };
     private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
 
