@@ -114,7 +114,7 @@ implements OnClickListener {
      */
     public void showError(String message) {
         if ( getActivity() instanceof IBaseActivity ) {
-            final IBaseActivity activity = (IBaseActivity) getActivity();
+            final IBaseActivity<?> activity = (IBaseActivity<?>) getActivity();
             activity.showError(message);
         }
     }
@@ -131,7 +131,7 @@ implements OnClickListener {
      */
     public void setLoadingProcess(boolean value, Object tag) {
         if ( getActivity() instanceof IBaseActivity) {
-            final IBaseActivity activity = (IBaseActivity) getActivity();
+            final IBaseActivity<?> activity = (IBaseActivity<?>) getActivity();
             activity.setLoadingProcess(value, tag);
         }
     }
@@ -141,7 +141,7 @@ implements OnClickListener {
      */
     public void setBlockingProcess(boolean value, Object tag) {
         if ( getActivity() instanceof IBaseActivity) {
-            final IBaseActivity activity = (IBaseActivity) getActivity();
+            final IBaseActivity<?> activity = (IBaseActivity<?>) getActivity();
             activity.setBlockingProcess(value, tag);
         }
     }

@@ -35,7 +35,7 @@ public class DataView<T> extends LinearLayout implements IDataView<T>{
     protected T mData;
     private TextView mTextViews[];
     // TODO may be it formatters field should be static fields of data class?
-    private static final HashMap<Class, Format[]> sFormatters = new HashMap<Class, Format[]>();
+    private static final HashMap<Class<?>, Format[]> sFormatters = new HashMap<Class<?>, Format[]>();
 
     public DataView(Context context) {
         super(context);
