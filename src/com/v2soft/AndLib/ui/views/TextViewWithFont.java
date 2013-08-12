@@ -45,17 +45,17 @@ public class TextViewWithFont extends TextView {
     public TextViewWithFont(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         Context subcontext = context;
-        IBaseActivity activity = null;
+        IBaseActivity<?> activity = null;
         if ( subcontext instanceof IBaseActivity ) {
             // may be this is dialog?
-            activity = (IBaseActivity) subcontext;
+            activity = (IBaseActivity<?>) subcontext;
         } else {
             if ( context instanceof ContextThemeWrapper ) {
                 subcontext = ((ContextThemeWrapper)context).getBaseContext();
             }
             if ( subcontext instanceof IBaseActivity ) {
                 // may be this is dialog?
-                activity = (IBaseActivity) subcontext;
+                activity = (IBaseActivity<?>) subcontext;
             }
         }
         if ( activity != null ) {
