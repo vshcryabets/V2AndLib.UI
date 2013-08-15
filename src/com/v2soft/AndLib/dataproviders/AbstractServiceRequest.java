@@ -28,11 +28,13 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  * 
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
- * @param <R> result datat type
+ * @param <ResultType> result datat type
  * @param <Params> parameters data type
  * @param <RawData>
  */
-public abstract class AbstractServiceRequest<R, Params, RawData> extends AbstractDataRequest<R, Params, RawData> implements ITask{
+public abstract class AbstractServiceRequest<ResultType, Params, RawData> 
+    extends AbstractDataRequest<ResultType, Params, RawData> 
+    implements ITask{
     private static final long serialVersionUID = 1L;
     public static final String EXTRA_TASK = "com.v2soft.AndLib.dataproviders.TASK";
     public static final String EXTRA_EXCEPTION = "com.v2soft.AndLib.dataproviders.EXCEPTION";
