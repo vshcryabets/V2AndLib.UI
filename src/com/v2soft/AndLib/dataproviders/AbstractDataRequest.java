@@ -22,20 +22,20 @@ import java.io.Serializable;
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public abstract class AbstractDataRequest<R, Params, RawData> implements Serializable {
+public abstract class AbstractDataRequest<ResultType, Params, RawData> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public interface AbstractDataRequestCallback<R> {
         void onDataReady(R result);
     }
 
-    transient protected AbstractDataRequestCallback<R> mCallback;
-    protected R mData;
+    transient protected AbstractDataRequestCallback<ResultType> mCallback;
+    protected ResultType mData;
 
     public AbstractDataRequest() {
 
     }
-    public AbstractDataRequest(AbstractDataRequestCallback<R> callback) {
+    public AbstractDataRequest(AbstractDataRequestCallback<ResultType> callback) {
         mCallback = callback;
     }
 
@@ -43,10 +43,10 @@ public abstract class AbstractDataRequest<R, Params, RawData> implements Seriali
      * Execute request.
      * @throws AbstractDataRequestException
      */
-    public AbstractDataRequest<R, Params, RawData> execute() throws AbstractDataRequestException {
+    public AbstractDataRequest<ResultType, Params, RawData> execute() throws AbstractDataRequestException {
         final Params params = prepareParameters();
         final RawData rawData = sendRequest(params);
-        final R res = parseResult(rawData);
+        final ResultType res = parseResult(rawData);
         deliveryResult(res);
         return this;
     }
@@ -55,21 +55,21 @@ public abstract class AbstractDataRequest<R, Params, RawData> implements Seriali
      * Delivery data
      * @param data
      */
-    protected void deliveryResult(R data) {
+    protected void deliveryResult(ResultType data) {
         mData = data;
         if ( mCallback != null ) {
             mCallback.onDataReady(data);
         }
     }
 
-    protected abstract R parseResult(RawData data) throws AbstractDataRequestException;
+    protected abstract ResultType parseResult(RawData data) throws AbstractDataRequestException;
     protected abstract RawData sendRequest(Params p) throws AbstractDataRequestException;
     protected abstract Params prepareParameters() throws AbstractDataRequestException;
     /**
      * Get result of the data request.
      * @return result of the data request.
      */
-    public R getResult() {
+    public ResultType getResult() {
         return mData;
     }
 }
