@@ -1,2 +1,2 @@
-include ':contrib:ABS:actionbarsherlock'
+include ':V2AndLibrary'
 include ':V2Demo'
