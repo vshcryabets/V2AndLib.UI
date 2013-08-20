@@ -14,6 +14,7 @@ apply plugin: 'android'
 dependencies {
     compile files('libs/acra-4.2.3')
     compile project(":V2AndLibrary")
+    compile files('libs/native-libs.jar')
 }
 
 android {
@@ -39,19 +40,18 @@ task ndkBuild(type: Exec) {
     commandLine 'ndk-build', '-j', Runtime.runtime.availableProcessors()
 }
 
-task copyNativeLibs(type: Copy) {
-    from(new File(project(':V2Demo').getProjectDir(), 'libs/armeabi'))  { include '**/*.so' } into new File(buildDir, 'native-libs/armeabi')
-    from(new File(project(':V2Demo').getProjectDir(), 'libs/x86'))  { include '**/*.so' } into new File(buildDir, 'native-libs/x86')
-    from(new File(project(':V2Demo').getProjectDir(), 'libs/armeabi-v7a'))  { include '**/*.so' } into new File(buildDir, 'native-libs/armeabi-v7a')
+task nativeLibsToJar(
+    type: Zip,
+    description: 'create a jar archive of the native libs') {
+    destinationDir file("libs")
+    baseName 'native-libs'
+    extension 'jar'
+    from fileTree(dir: 'libs', include: '**/*.so') into 'lib/'
 }
 
 // Make copyNativeLibs depend on ndkBuild since we must build the libraries
 // before we can copy them.
-copyNativeLibs.dependsOn 'ndkBuild'
-tasks.withType(Compile) { compileTask -> compileTask.dependsOn copyNativeLibs }
+nativeLibsToJar.dependsOn 'ndkBuild'
 
-clean.dependsOn 'cleanCopyNativeLibs'
+tasks.withType(Compile) { compileTask -> compileTask.dependsOn nativeLibsToJar }
 
-tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->
-    pkgTask.jniDir new File('build/native-libs')
-}
