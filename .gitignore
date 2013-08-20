@@ -4,3 +4,5 @@ target
 .settings
 local.properties
 libs
+build
+.gradle/
