@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="V2AndLib.UI" default="help" basedir="../" >
+<project name="V2AndLib.UI" default="help" >
 
     <loadproperties srcFile="local.properties" />
 
@@ -23,7 +23,7 @@
          application and should be checked into Version Control Systems.
 
          -->
-    <property file="scripts/ant.properties" />
+    <property file="ant.properties" />
 
     <!-- The project.properties file is created and updated by the 'android'
          tool, as well as ADT.
