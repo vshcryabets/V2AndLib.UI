@@ -1,3 +1,6 @@
-include 'contrib:ABS:actionbarsherlock'
 include 'V2AndLibrary'
 include 'V2Demo'
+
+include 'actionbarsherlock'
+project(':actionbarsherlock').projectDir = new File('contrib/ABS/actionbarsherlock')
+
