@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,14 @@
  */
 package com.v2soft.AndLib.dao;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.v2soft.AndLib.dao.JSONSerializable;
+import java.io.Serializable;
 
 /**
  * Abstract profile class
  * @author V.Shcriyabets (vshcryabets@gmail.com)
- *
+ * @param T id data type
  */
-public abstract class AbstractProfile extends JSONSerializable {
+public abstract class AbstractProfile<T> implements Serializable {
     //----------------------------------------------------------------
     // Constants
     //----------------------------------------------------------------
@@ -34,43 +31,31 @@ public abstract class AbstractProfile extends JSONSerializable {
     // Private fields
     //----------------------------------------------------------------
     protected String mName;
+    protected T mId;
     //----------------------------------------------------------------
     // Constructors
     //----------------------------------------------------------------
     public AbstractProfile() {
-        this("");
     }
-    public AbstractProfile(String name) {
+    public AbstractProfile(T id, String name) {
         super();
+        mId = id;
         mName = name;
     }
-    public AbstractProfile(JSONObject in) throws JSONException {
-        super(in);
-        mName = in.getString(KEY_NAME);
-    }
-    
     @Override
     public boolean equals(Object o) {
         if ( !(o instanceof AbstractProfile)) return false;
-        final AbstractProfile object = (AbstractProfile) o;
-        return mName.equals(object.getName());
+        final AbstractProfile<?> object = (AbstractProfile<?>) o;
+        return mName.equals(object.mName) && mId.equals(object.mId);
     }
-    public abstract void updateFrom(AbstractProfile profile);
     //----------------------------------------------------------------
     // Setetrs
     //----------------------------------------------------------------
     public void setName(String value) {mName=value;}
+    public void setId(T id){mId=id;}
     //----------------------------------------------------------------
     // Getters
     //----------------------------------------------------------------
     public String getName(){return mName;}
-    //----------------------------------------------------------------
-    // JSON methods
-    //----------------------------------------------------------------
-    @Override
-    public JSONObject toJSON() throws JSONException {
-        JSONObject result = new JSONObject();
-        result.put(KEY_NAME, mName);
-        return result;
-    }
+    public T getId() {return mId;}
 }
