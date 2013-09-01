@@ -39,7 +39,7 @@ import com.v2soft.AndLib.dao.Storage;
  *
  * @param <T>
  */
-public class ProfileStorage<T extends AbstractProfile>
+public class ProfileStorage<UID, T extends AbstractProfile<UID>>
 extends Storage
 implements Collection<T> {
     public interface ProfileStorageListener<T> {
@@ -161,27 +161,27 @@ implements Collection<T> {
 
     @Override
     public void save(OutputStream out) throws JSONException, UnsupportedEncodingException, IOException {
-        JSONArray profiles = new JSONArray();
-        for (T profile : this) {
-            profiles.put(profile.toJSON());
-        }
-        out.write(profiles.toString().getBytes("utf-8"));
+//        JSONArray profiles = new JSONArray();
+//        for (T profile : this) {
+//            profiles.put(profile.toJSON());
+//        }
+//        out.write(profiles.toString().getBytes("utf-8"));
     }
-
-    public boolean update(T profile) {
-        for (T destprofile : this) {
-            if ( destprofile.equals(profile)) {
-                destprofile.updateFrom(profile);
-                // notify listeners
-                // notify listeners
-                for (ProfileStorageListener<T> listener : mEventListeners) {
-                    listener.onProfileAfterUpdated(destprofile);
-                }
-                return true;
-            }
-        }
-        return false;
-    }
+//
+//    public boolean update(T profile) {
+//        for (T destprofile : this) {
+//            if ( destprofile.equals(profile)) {
+//                destprofile.updateFrom(profile);
+//                // notify listeners
+//                // notify listeners
+//                for (ProfileStorageListener<T> listener : mEventListeners) {
+//                    listener.onProfileAfterUpdated(destprofile);
+//                }
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
     //-----------------------------------------------------------------------------------------------------
     // Listener methods
     //-----------------------------------------------------------------------------------------------------
