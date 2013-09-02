@@ -44,7 +44,7 @@ import com.v2soft.AndLib.ui.views.IDataView;
  * @author vshcryabets@gmail.com
  *
  */
-public abstract class WiFiNetworksList<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
+public abstract class WiFiNetworksList<T extends BaseApplication<S>, S extends BaseApplicationSettings<?>> 
 extends BaseFragment<T, S> 
 implements LoaderCallbacks<List<WifiConfiguration>>, 
     OnItemClickListener{

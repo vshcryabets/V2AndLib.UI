@@ -12,7 +12,7 @@ apply plugin: 'android'
 
 
 dependencies {
-    compile files('libs/acra-4.2.3')
+    compile files('libs/acra-4.2.3.jar')
     compile project(":V2AndLibrary")
     compile files('libs/native-libs-4.4.0.jar')
 }

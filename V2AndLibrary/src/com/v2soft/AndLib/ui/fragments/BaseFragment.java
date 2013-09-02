@@ -34,7 +34,7 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  * @param <T> application class
  * @param <S> settings class
  */
-public abstract class BaseFragment<T extends BaseApplication<S>, S extends BaseApplicationSettings> 
+public abstract class BaseFragment<T extends BaseApplication<S>, S extends BaseApplicationSettings<?>> 
 extends SherlockFragment 
 implements OnClickListener {
     protected T mApp;
