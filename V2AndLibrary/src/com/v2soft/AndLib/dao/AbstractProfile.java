@@ -23,6 +23,7 @@ import java.io.Serializable;
  * @param T id data type
  */
 public abstract class AbstractProfile<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
     //----------------------------------------------------------------
     // Constants
     //----------------------------------------------------------------

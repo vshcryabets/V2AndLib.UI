@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,14 @@ import android.preference.PreferenceManager;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public abstract class BaseApplicationSettings {
+public abstract class BaseApplicationSettings<U> {
     //-----------------------------------------------------------------------
     // Private fields
     //-----------------------------------------------------------------------
     protected SharedPreferences mSettings;
     protected Context mContext;
     protected HashMap<String, String> mStringSettings;
+    protected U mUserProfile;
 
     public BaseApplicationSettings(Context context) {
         if ( context == null ) {
@@ -101,5 +102,25 @@ public abstract class BaseApplicationSettings {
      */
     public boolean isKeyStored(String key) {
         return mStringSettings.containsKey(key);
+    }
+    /**
+     * Remove all user specified data.
+     * @author V.Shcryabets<vshcryabets@gmail.com>
+     */
+    public void clearUserData() {
+    }
+    /**
+     * Get user profile
+     * @author V.Shcryabets<vshcryabets@gmail.com>
+     */
+    public U getUserProfile() {
+        return mUserProfile;
+    }
+    /**
+     * Set user profile.
+     * @author V.Shcryabets<vshcryabets@gmail.com>
+     */
+    public void setUserProfile(U profile) {
+        mUserProfile = profile;
     }
 }

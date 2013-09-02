@@ -1,30 +1,18 @@
 package com.v2soft.AndLib.communications;
 
-import java.io.Serializable;
+import com.v2soft.AndLib.dao.AbstractProfile;
 
 /**
  * 
  * @author vshcryabets@gmail.com
  *
  */
-public class AbstractCommunicationUser<ID> implements Serializable {
+public class AbstractCommunicationUser<ID> extends AbstractProfile<ID> {
     private static final long serialVersionUID = 1L;
-    protected ID mId;
-    protected String mUserName;
-
-    public ID getId() {
-        return mId;
+    public AbstractCommunicationUser() {
+        super();
     }
-    public String getUserName() {
-        return mUserName;
-    }
-
-
-    public void setUserName(String mUserName) {
-        this.mUserName = mUserName;
-    }
-
-    public void setId(ID mId) {
-        this.mId = mId;
+    public AbstractCommunicationUser(ID id, String name) {
+        super(id, name);
     }
 }
