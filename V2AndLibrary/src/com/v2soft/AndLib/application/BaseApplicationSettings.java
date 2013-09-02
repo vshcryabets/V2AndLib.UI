@@ -17,6 +17,8 @@ package com.v2soft.AndLib.application;
 
 import java.util.HashMap;
 
+import com.v2soft.AndLib.dao.AbstractProfile;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -27,7 +29,7 @@ import android.preference.PreferenceManager;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public abstract class BaseApplicationSettings<U> {
+public abstract class BaseApplicationSettings<U extends AbstractProfile<?>> {
     //-----------------------------------------------------------------------
     // Private fields
     //-----------------------------------------------------------------------
@@ -108,6 +110,9 @@ public abstract class BaseApplicationSettings<U> {
      * @author V.Shcryabets<vshcryabets@gmail.com>
      */
     public void clearUserData() {
+        if ( mUserProfile != null ) {
+            mUserProfile.invalidateProfile();
+        }
     }
     /**
      * Get user profile
@@ -123,4 +128,12 @@ public abstract class BaseApplicationSettings<U> {
     public void setUserProfile(U profile) {
         mUserProfile = profile;
     }
+    /**
+     * Get shared settings object.
+     * @author V.Shcryabets<vshcryabets@gmail.com>
+     */
+    public SharedPreferences getSharedPreferences() {
+        return mSettings;
+    }
+    
 }
