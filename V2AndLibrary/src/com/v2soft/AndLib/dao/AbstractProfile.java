@@ -18,7 +18,7 @@ package com.v2soft.AndLib.dao;
 import java.io.Serializable;
 
 /**
- * Abstract profile class
+ * Abstract user profile class.
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  * @param T id data type
  */
@@ -33,6 +33,7 @@ public abstract class AbstractProfile<T> implements Serializable {
     //----------------------------------------------------------------
     protected String mName;
     protected T mId;
+    protected boolean isValid;
     //----------------------------------------------------------------
     // Constructors
     //----------------------------------------------------------------
@@ -42,6 +43,7 @@ public abstract class AbstractProfile<T> implements Serializable {
         super();
         mId = id;
         mName = name;
+        isValid = true;
     }
     @Override
     public boolean equals(Object o) {
@@ -54,9 +56,29 @@ public abstract class AbstractProfile<T> implements Serializable {
     //----------------------------------------------------------------
     public void setName(String value) {mName=value;}
     public void setId(T id){mId=id;}
+    /**
+     * Mark profile's data as invalidated.
+     */
+    public synchronized void invalidateProfile() {
+        isValid = false;
+    }
+    /**
+     * Set profile data validity.
+     * @return
+     */
+    public synchronized void setProfileValid(boolean value) {
+        isValid = value;
+    }
     //----------------------------------------------------------------
     // Getters
     //----------------------------------------------------------------
     public String getName(){return mName;}
     public T getId() {return mId;}
+    /**
+     * Returns true if profile data is valid.
+     * @return true if profile data is valid.
+     */
+    public synchronized boolean isValid() {
+        return isValid;
+    }
 }

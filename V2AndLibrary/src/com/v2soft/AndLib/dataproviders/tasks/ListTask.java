@@ -29,6 +29,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  *
  */
 public class ListTask extends DummyTask implements Collection<ITask> {
+    private static final long serialVersionUID = 1L;
     private List<ITask> mSubTasks;
     
     public ListTask() {

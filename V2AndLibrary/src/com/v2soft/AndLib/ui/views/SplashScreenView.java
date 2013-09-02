@@ -51,8 +51,8 @@ public class SplashScreenView extends FrameLayout
     public SplashScreenView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mImage = new ImageView(getContext());
-        LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, 
-                LayoutParams.FILL_PARENT);
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, 
+                LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
         this.addView(mImage, params);
         mImage.setScaleType(ScaleType.FIT_XY);
@@ -62,7 +62,6 @@ public class SplashScreenView extends FrameLayout
         setImageResource(arr.getDrawable(R.styleable.SplashScreenView_src),
                 arr.getInt(R.styleable.SplashScreenView_delay, 1000));
         arr.recycle();
-
     }
     //-----------------------------------------------------------------------------------------------
     // Getters&Setters

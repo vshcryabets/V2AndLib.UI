@@ -40,6 +40,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  *
  */
 public class CacheHTTPFile extends DummyTask {
+    private static final long serialVersionUID = 1L;
     public static final int MSG_CONTENT_LENGTH = 1;
     public static final int MSG_RECEIVED_LENGTH = 2;
     private URL mFileAddress;

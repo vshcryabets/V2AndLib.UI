@@ -28,8 +28,10 @@ import com.v2soft.AndLib.dataproviders.AbstractDataRequest;
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
+@Deprecated
 public abstract class HttpAsbtractDataRequest<R,Params,RawData> 
 extends AbstractDataRequest<R, Params, RawData> {
+    private static final long serialVersionUID = 1L;
     // -----------------------------------------------------------------------
     // Class fields
     // -----------------------------------------------------------------------

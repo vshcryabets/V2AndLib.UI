@@ -28,6 +28,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  *
  */
 public class LoadBitmapTask extends DummyTask {
+    private static final long serialVersionUID = 1L;
     protected String mFilePath;
     transient protected Bitmap mBitmap;
     protected int mMaxWidth, mMaxHeight;
