@@ -27,7 +27,7 @@ import android.os.StrictMode;
  * @author vshcryabets@gmail.com
  *
  */
-public abstract class BaseApplication<S extends BaseApplicationSettings> extends Application {
+public abstract class BaseApplication<S extends BaseApplicationSettings<?>> extends Application {
     //-----------------------------------------------------------------------
     // Constants
     //-----------------------------------------------------------------------

@@ -17,7 +17,6 @@ package com.v2soft.AndLib.media;
 
 import java.io.Closeable;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 

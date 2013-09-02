@@ -29,8 +29,7 @@ import com.v2soft.AndLib.ui.R;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class RepeatButton 
-extends Button  {
+public class RepeatButton extends Button  {
     //-------------------------------------------------------------------------------
     // Constants
     //-------------------------------------------------------------------------------

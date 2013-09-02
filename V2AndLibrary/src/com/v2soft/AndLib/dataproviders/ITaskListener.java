@@ -15,7 +15,6 @@
  */
 package com.v2soft.AndLib.dataproviders;
 
-import android.os.Message;
 
 /**
  * Task listener iterface

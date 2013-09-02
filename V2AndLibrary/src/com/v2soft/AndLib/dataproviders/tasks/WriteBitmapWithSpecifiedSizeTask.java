@@ -28,6 +28,8 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  *
  */
 public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
+    private static final long serialVersionUID = 1L;
+
     public enum RegressionMode {
         DIVIDE2, DECREMENT
     }
