@@ -15,13 +15,19 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
+import java.util.UUID;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
+import com.v2soft.AndLib.ui.views.CameraView;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
@@ -33,19 +39,43 @@ import com.v2soft.V2AndLib.demoapp.R;
  */
 public class DemoCamera 
 extends BaseFragment<DemoApplication, DemoAppSettings>  {
+    private CameraView mCameraView;
     
     public static Fragment newInstance() {
         return new DemoCamera();
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+    
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_camera, null);
+        mCameraView = (CameraView) view;
         return view;
     }
     
     @Override
     public void onClick(View v) {
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_camera, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if ( item.getItemId() == R.id.menu_take_video ) {
+            mCameraView.startVideoRecording(getActivity().getExternalCacheDir()+UUID.randomUUID().toString());
+        } else if ( item.getItemId() == R.id.menu_take_photo ) {
+            //mCameraView.takePicture(path, portrait, flash_disable);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
