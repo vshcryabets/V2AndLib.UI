@@ -14,6 +14,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:name=".DemoApplication"
@@ -42,7 +45,7 @@
         <activity android:name=".ui.activities.OpenSLSample" />
         <activity android:name=".ui.activities.GCPDemo" />
         <activity android:name=".ui.activities.PrintDialogActivity" />
-        <activity android:name=".ui.activities.TaskStartStopActivity" />
+        <activity android:name=".ui.activities.CameraActivity" />
         <activity android:name=".ui.activities.DialogsActivity" />
         <activity android:name=".ui.activities.WiFiList" />
         <activity android:name=".ui.activities.TricksActivity" />
