@@ -28,12 +28,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
+import com.v2soft.V2AndLib.demoapp.ui.activities.CameraActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DialogsActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
 import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
 import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
-import com.v2soft.V2AndLib.demoapp.ui.activities.TaskStartStopActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.TricksActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
 import com.v2soft.V2AndLib.demoapp.ui.activities.WiFiList;
@@ -48,17 +48,16 @@ extends ListActivity
 implements OnItemClickListener {
     private final static Class<?>[] sActivities = new Class[]{
         BluetoothList.class,
+        CameraActivity.class,
         UDPDiscoveryList.class,
         DropBoxUpload.class,
         OpenSLSample.class,
         GCPDemo.class,
         EndlessListActivity.class,
-        TaskStartStopActivity.class,
         DialogsActivity.class,
         WiFiList.class,
         TricksActivity.class
     };
-    private static final String LOG_TAG = V2DemoActivity.class.getSimpleName();
 
     private ArrayAdapter<String> mAdapter;
 
