@@ -24,6 +24,7 @@ import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PictureCallback;
+import android.media.MediaRecorder;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
@@ -157,5 +158,33 @@ public class CameraView extends SurfaceView implements PictureCallback
     public String getFileName() 
     {
         return out_file_name;
+    }
+    
+    /**
+     * Start video recording.
+     * 
+     */
+    public void startVideoRecording(String outputFilePath) {
+        if ( mCamera == null ) {
+            throw new IllegalStateException("Camera wasn't initialized");
+        }
+        mCamera.unlock();
+        MediaRecorder mRecorder = new MediaRecorder();
+        mRecorder.setCamera(mCamera);
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+        mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+        /**
+         *     
+         *     Set the video output format and encoding. For Android 2.2 (API Level 8) and higher, use the MediaRecorder.setProfile method, and get a profile instance using CamcorderProfile.get(). For versions of Android prior to 2.2, you must set the video output format and encoding parameters:
+        setOutputFormat() - Set the output format, specify the default setting or MediaRecorder.OutputFormat.MPEG_4.
+        setAudioEncoder() - Set the sound encoding type, specify the default setting or MediaRecorder.AudioEncoder.AMR_NB.
+        setVideoEncoder() - Set the video encoding type, specify the default setting or MediaRecorder.VideoEncoder.MPEG_4_SP.
+    setOutputFile() - Set the output file, use getOutputMediaFile(MEDIA_TYPE_VIDEO).toString() from the example method in the Saving Media Files section.
+    setPreviewDisplay() - Specify the SurfaceView preview layout element for your application. Use the same object you specified for Connect Preview.
+
+Caution: You must call these MediaRecorder configuration methods in this order, otherwise your application will encounter errors and the recording will fail.
+Prepare MediaRecorder - Prepare the MediaRecorder with provided configuration settings by calling MediaRecorder.prepare().
+Start MediaRecorder - Start recording video by calling MediaRecorder.start().
+         */
     }
 }

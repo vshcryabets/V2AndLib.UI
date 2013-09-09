@@ -18,7 +18,6 @@ package com.v2soft.V2AndLib.demoapp.ui.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Window;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.v2soft.V2AndLib.demoapp.R;
@@ -34,7 +33,6 @@ public class CameraActivity extends DemoBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
             Fragment fragment = DemoCamera.newInstance();
@@ -42,7 +40,6 @@ public class CameraActivity extends DemoBaseActivity {
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
         }
-        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
     /**
      * Return sample display name

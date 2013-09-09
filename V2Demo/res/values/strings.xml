@@ -9,11 +9,15 @@
     <string name="btnStartTaskB">Start Task B</string>
     <string name="btnStopTaskA">Stop Task A</string>
     <string name="btnStopTaskB">Stop Task B</string>
-    
+
     <!-- Dialogs sample -->
     <string name="btnPickTime">Change time</string>
 
     <!-- Tricks -->
     <string name="labelData">Enable data access over Mobile Network</string>
-    
+
+    <!-- Camera -->
+    <string name="menu_take_photo">PHOTO</string>
+    <string name="menu_take_video">VIDEO</string>
+
 </resources>
