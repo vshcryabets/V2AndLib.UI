@@ -15,8 +15,10 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
+import java.io.File;
 import java.util.UUID;
 
+import android.media.CameraProfile;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -72,7 +74,17 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if ( item.getItemId() == R.id.menu_take_video ) {
-            mCameraView.startVideoRecording(getActivity().getExternalCacheDir()+UUID.randomUUID().toString());
+            try {
+                if ( mCameraView.isRecording() ) {
+                    mCameraView.stopRecording();
+                } else {
+                    mCameraView.startVideoRecording(getActivity().getExternalCacheDir()+File.separator+
+                            UUID.randomUUID().toString(), CameraProfile.QUALITY_HIGH);
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         } else if ( item.getItemId() == R.id.menu_take_photo ) {
             //mCameraView.takePicture(path, portrait, flash_disable);
         }
