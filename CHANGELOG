@@ -1,3 +1,7 @@
+September 2013
+- updated CameraView - now it is support video recording.
+- update BaseSettings - new field for user profile.
+
 August 2013
 - System tricks class. Method to enable/disable data connection over Mobile network.
 

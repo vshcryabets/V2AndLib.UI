@@ -15,6 +15,7 @@
 
     <!-- Tricks -->
     <string name="labelData">Enable data access over Mobile Network</string>
+    <string name="btn_dump_statistics">Dump traffic statistics to logcat</string>
 
     <!-- Camera -->
     <string name="menu_take_photo">PHOTO</string>

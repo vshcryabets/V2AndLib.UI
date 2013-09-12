@@ -16,6 +16,7 @@
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
 import android.app.Fragment;
+import android.net.TrafficStats;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +50,7 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
         final View view = inflater.inflate(R.layout.fragment_tricks, null);
         mEnableMobileData = (CheckBox) view.findViewById(R.id.chkEnableData);
         mEnableMobileData.setOnClickListener(this);
+        view.findViewById(R.id.btnDumpStatistics).setOnClickListener(this);
         return view;
     }
 
@@ -63,9 +65,21 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
                 Log.e(LOG_TAG, e.toString(), e);
             }
             break;
-
+        case R.id.btnDumpStatistics:
+            dumpTrafficStatistics();
+            break;
         default:
             break;
         }
     }
+
+    private void dumpTrafficStatistics() {
+        Log.d(LOG_TAG, "getMobileRxBytes()="+TrafficStats.getMobileRxBytes());
+        Log.d(LOG_TAG, "getMobileRxPackets()="+TrafficStats.getMobileRxPackets());
+        Log.d(LOG_TAG, "getMobileTxBytes()="+TrafficStats.getMobileTxBytes());
+        Log.d(LOG_TAG, "getMobileTxPackets()="+TrafficStats.getMobileTxPackets());
+        Log.d(LOG_TAG, "getMobileRxBytes()="+TrafficStats.getMobileRxBytes());
+
+    }
+
 }

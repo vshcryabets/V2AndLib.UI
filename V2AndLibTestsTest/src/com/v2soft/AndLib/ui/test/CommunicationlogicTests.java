@@ -42,7 +42,6 @@ public class CommunicationlogicTests extends AndroidTestCase {
                 }
             });
         }
-        private static final long serialVersionUID = 1L;
     }
     @Override
     protected void setUp() throws Exception {
@@ -86,7 +85,7 @@ public class CommunicationlogicTests extends AndroidTestCase {
         Random rnd = new Random();
         for (int i = 0; i < 5 + rnd.nextInt(5); i++ ) {
             UUID chatId = UUID.randomUUID();
-            TestChat chat = storage.getChatById(chatId);
+//            TestChat chat = storage.getChatById(chatId);
             for ( int j = 0; j < 5+rnd.nextInt(20); j++) {
                 TestMessage msg = new TestMessage(UUID.randomUUID());
                 storage.addMessage(chatId, msg);
