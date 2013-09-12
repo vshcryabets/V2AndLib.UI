@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,25 +28,34 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.v2soft.AndLib.ui.Adapters.BackLoadingAdapter;
+import com.v2soft.AndLib.ui.Adapters.CursorPaginationAdapter;
+import com.v2soft.AndLib.ui.Adapters.CustomViewAdapter.CustomViewAdapterFactory;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.AndLib.ui.views.IDataView;
 import com.v2soft.AndLib.ui.views.LoadingView;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
+import com.v2soft.V2AndLib.demoapp.database.DemoDataItem;
+import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;
 
 /**
- * 
+ * Sample work with endless list adapters.
  * @author vshcryabets@gmail.com
  *
  */
 public class DemoEndlessList 
 extends BaseFragment<DemoApplication, DemoAppSettings>  {
-    private EndlessAdapter mAdapter;
+    private CursorEndlessAdapter mAdapter;
+    private static final String[] SELECT_COLUMNS = new String[]{DemoDataItem.FIELD_ID,
+        DemoDataItem.FIELD_PUBLISH_DATE,
+        DemoDataItem.FIELD_TITLE};
+
 
     public static Fragment newInstance() {
         return new DemoEndlessList();
@@ -61,8 +71,9 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
             Bundle savedInstanceState) {
         final View view = inflater.inflate(com.v2soft.AndLib.ui.R.layout.v2andlib_fragment_list, null);
         ListView list = (ListView) view.findViewById(android.R.id.list);
-        mAdapter = new EndlessAdapter(getActivity());
+        mAdapter = new CursorEndlessAdapter(getActivity());
         list.setAdapter(mAdapter);
+        mAdapter.getFilter().filter(null);
         return view;
     }
 
@@ -76,14 +87,14 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.menu_refresh:
-            mAdapter.clear();
+            //            mAdapter.clear();
             mAdapter.tryToLoadMore();
             return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
-    
+
     @Override
     public void onClick(View v) {
     }
@@ -104,7 +115,24 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
         public Integer getData() {
             return mData;
         }
+    }
 
+    private class DemoDataView extends TextView implements IDataView<Cursor> {
+        private Cursor mData;
+        public DemoDataView(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void setData(Cursor data) {
+            mData = data;
+            setText(data.getString(data.getColumnIndex(DemoDataItem.FIELD_TITLE)));
+        }
+
+        @Override
+        public Cursor getData() {
+            return mData;
+        }
     }
 
     private class EndlessAdapter extends BackLoadingAdapter<Integer> {
@@ -153,6 +181,49 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
                 getActivity().setProgressBarIndeterminateVisibility(false);
                 hideLoaderAtBottom();
             }
+        }
+    }
+
+    private class CursorEndlessAdapter extends CursorPaginationAdapter implements Filterable {
+
+        public CursorEndlessAdapter(Context context) {
+            super(context, new CustomViewAdapterFactory<Cursor, IDataView<Cursor>>(){
+                @Override
+                public IDataView<Cursor> createView(Context context, int type) {
+                    return new DemoDataView(context);
+                }
+            }, null);
+        }
+
+        @Override
+        protected void onLoadStarted(boolean first) {
+            getActivity().setProgressBarIndeterminateVisibility(true);
+        }
+
+        @Override
+        protected void onLoadFinished(boolean first) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
+        }
+
+        @Override
+        public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
+            Cursor result = mContext.getContentResolver().query(DemoListProvider.CONTENT_URI, 
+                    SELECT_COLUMNS, null, null, null);
+            return result;
+        }
+
+        @Override
+        protected boolean getNextDataPage() {
+            if ( getCount() < 100 ) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {}
+                getActivity().getContentResolver().update(DemoListProvider.CONTENT_INSERT_URI, null, null, null);
+                return true;
+            } else {
+                return false;
+            }
+
         }
     }
 }

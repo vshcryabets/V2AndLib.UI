@@ -15,8 +15,10 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:name=".DemoApplication"
@@ -68,6 +70,11 @@
         </activity>
 
         <service android:name="com.v2soft.AndLib.services.DropboxService" />
+
+        <provider
+            android:name=".providers.DemoListProvider"
+            android:authorities="com.v2soft.V2AndLib.demoapp.providers.DemoListProvider"
+            android:exported="false" />
     </application>
 
 </manifest>
