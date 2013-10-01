@@ -19,7 +19,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.ListActivity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +30,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
+import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;
+import com.v2soft.V2AndLib.demoapp.providers.DemoSyncAdapter;
+import com.v2soft.V2AndLib.demoapp.services.DemoAuthService;
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
 import com.v2soft.V2AndLib.demoapp.ui.activities.CameraActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DialogsActivity;
@@ -59,6 +65,12 @@ implements OnItemClickListener {
         TricksActivity.class
     };
 
+    // The authority for the sync adapter's content provider
+    public static final String AUTHORITY = DemoListProvider.PROVIDER_NAME;
+    // The account name
+    public static final String ACCOUNT = "dummyaccount";
+    // Instance fields
+    private Account mAccount;
     private ArrayAdapter<String> mAdapter;
 
     /** Called when the activity is first created. */
@@ -78,6 +90,44 @@ implements OnItemClickListener {
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
         setListAdapter(mAdapter);
         getListView().setOnItemClickListener(this);
+        mAccount = createAccount();
+        startSync(mAccount);
+    }
+
+    private void startSync(Account account) {
+        Bundle arg = new Bundle();
+        arg.putString(DemoSyncAdapter.EXTRA_TYPE, "manualSync");
+        ContentResolver.requestSync(
+                account,
+                AUTHORITY,
+                arg);
+    }
+
+    private Account createAccount() {
+        // Get an instance of the Android account manager
+        AccountManager accountManager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        // Create the account type and default account
+        Account newAccount = new Account(ACCOUNT, DemoAuthService.ACCOUNT_TYPE);
+        /*
+         * Add the account and account type, no password or user data
+         * If successful, return the Account object, otherwise report an error.
+         */
+        if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+         // Inform the system that this account supports sync
+            ContentResolver.setIsSyncable(newAccount, AUTHORITY, 1);
+            // Inform the system that this account is eligible for auto sync when the network is up
+            ContentResolver.setSyncAutomatically(newAccount, AUTHORITY, true);
+//            // Recommend a schedule for automatic synchronization. The system may modify this based
+//            // on other scheduled syncs and network utilization.
+//            ContentResolver.addPeriodicSync(
+//                    newAccount, AUTHORITY, new Bundle(), 60000);
+        } else {
+            /*
+             * The account exists or some other error occurred. Log this, report it,
+             * or handle it internally.
+             */
+        }
+        return newAccount;
     }
 
     @Override
