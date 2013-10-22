@@ -36,7 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.v2soft.AndLib.ui.Adapters.CustomViewAdapter;
+import com.v2soft.AndLib.ui.adapters.CustomViewAdapter;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.AndLib.ui.loaders.UDPScannerLoader;
 import com.v2soft.AndLib.ui.views.DataView;

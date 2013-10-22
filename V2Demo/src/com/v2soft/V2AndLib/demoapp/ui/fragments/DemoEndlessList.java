@@ -32,9 +32,9 @@ import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.v2soft.AndLib.ui.Adapters.BackLoadingAdapter;
-import com.v2soft.AndLib.ui.Adapters.CursorPaginationAdapter;
-import com.v2soft.AndLib.ui.Adapters.CustomViewAdapter.CustomViewAdapterFactory;
+import com.v2soft.AndLib.ui.adapters.BackLoadingAdapter;
+import com.v2soft.AndLib.ui.adapters.CursorPaginationAdapter;
+import com.v2soft.AndLib.ui.adapters.CustomViewAdapter.CustomViewAdapterFactory;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.AndLib.ui.views.IDataView;
 import com.v2soft.AndLib.ui.views.LoadingView;
