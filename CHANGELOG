@@ -1,3 +1,6 @@
+Ocotber 2013
+- code base was separeted between few sub-projects
+
 September 2013
 - updated CameraView - now it is support video recording.
 - update BaseSettings - new field for user profile.

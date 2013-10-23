@@ -12,9 +12,9 @@ apply plugin: 'android-library'
 
 
 dependencies {
+    compile project(':V2AndLib-commondata')
+    compile project(':V2AndLib-depredecated')
     compile files('libs/android-support-v4.jar')
-    compile files('libs/dropbox-android-sdk-1.3.1.jar')
-    compile project(':V2AndLib-commonandroid')
 }
 
 android {
@@ -30,7 +30,6 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
-
         instrumentTest.setRoot('tests')
     }
 } 
