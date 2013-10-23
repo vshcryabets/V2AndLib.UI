@@ -1,5 +1,6 @@
 include ':V2AndLib-commondata'
 include ':V2AndLib-depredecated'
+include ':V2AndLib-resources'
 include ':V2AndLib-commonandroid'
 include ':V2AndLib-media'
 include ':V2AndLib-networking'

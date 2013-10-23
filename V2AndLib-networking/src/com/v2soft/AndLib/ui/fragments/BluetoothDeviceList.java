@@ -37,7 +37,7 @@ import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.ui.adapters.CustomViewAdapter;
 import com.v2soft.AndLib.ui.loaders.BluetoothScannerLoader;
 import com.v2soft.AndLib.ui.views.IDataView;
-import com.v2soft.andlib.networking.R;
+import com.v2soft.AndLib.networking.R;
 
 /**
  * Fragment that shows list of discovered bluetooth devices

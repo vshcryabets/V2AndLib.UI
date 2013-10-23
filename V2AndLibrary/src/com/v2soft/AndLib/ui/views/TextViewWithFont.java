@@ -22,7 +22,7 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.other.R;
 import com.v2soft.AndLib.ui.activities.IBaseActivity;
 import com.v2soft.AndLib.ui.fonts.FontManager;
 

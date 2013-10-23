@@ -14,6 +14,8 @@ apply plugin: 'android'
 dependencies {
     compile files('libs/acra-4.2.3.jar')
     compile project(":V2AndLibrary")
+    compile project(":V2AndLib-networking")
+    compile project(":V2AndLib-media")
     compile files('libs/native-libs.jar')
 }
 

@@ -19,7 +19,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoBluetoothDeviceList;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoWiFiAPList;
 

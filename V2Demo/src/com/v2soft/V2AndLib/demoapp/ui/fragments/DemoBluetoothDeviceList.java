@@ -20,7 +20,7 @@ import android.bluetooth.BluetoothDevice;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.AndLib.ui.fragments.BluetoothDeviceList;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;

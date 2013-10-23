@@ -45,7 +45,7 @@ import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.services.DropboxService;
 import com.v2soft.AndLib.text.NumberFormatters;
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.other.R;
 
 /**
  * Dialog fragment that allows to uplaod specified file to dropbox application folder

@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
-import com.v2soft.andlib.networking.R;
+import com.v2soft.AndLib.networking.R;
 import com.v2soft.AndLib.ui.adapters.CustomViewAdapter;
 import com.v2soft.AndLib.ui.loaders.WiFiScannerLoader;
 import com.v2soft.AndLib.ui.views.IDataView;
