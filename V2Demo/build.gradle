@@ -48,6 +48,7 @@ task nativeLibsToJar(
     destinationDir file("libs")
     baseName 'native-libs'
     extension 'jar'
+    version ''
     from fileTree(dir: 'libs', include: '**/*.so') into 'lib/'
 }
 
@@ -55,5 +56,5 @@ task nativeLibsToJar(
 // before we can copy them.
 nativeLibsToJar.dependsOn 'ndkBuild'
 
-tasks.withType(Compile) { compileTask -> compileTask.dependsOn nativeLibsToJar }
+tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn nativeLibsToJar }
 
