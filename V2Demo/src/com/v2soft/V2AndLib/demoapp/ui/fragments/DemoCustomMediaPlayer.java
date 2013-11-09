@@ -25,6 +25,7 @@ import android.widget.ListView;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
+import com.v2soft.V2AndLib.demoapp.R;
 
 /**
  * 
@@ -40,7 +41,7 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        final View view = inflater.inflate(com.v2soft.AndLib.ui.R.layout.v2andlib_fragment_list, null);
+        final View view = inflater.inflate(R.layout.v2andlib_fragment_list, null);
         ListView list = (ListView) view.findViewById(android.R.id.list);
         return view;
     }

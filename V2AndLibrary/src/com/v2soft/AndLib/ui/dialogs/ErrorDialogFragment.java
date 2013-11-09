@@ -23,7 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.other.R;
 
 /**
  * Simple error dialog fragment

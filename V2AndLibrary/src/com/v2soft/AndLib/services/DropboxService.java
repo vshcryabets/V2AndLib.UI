@@ -44,7 +44,7 @@ import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.other.R;
 
 /**
  * Background DropbBox service

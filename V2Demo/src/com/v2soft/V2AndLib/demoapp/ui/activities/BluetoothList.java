@@ -19,7 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoBluetoothDeviceList;
 
 /**

@@ -22,7 +22,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.other.R;
 
 /**
  * Button view that hires onPress event periodically during it is pressed

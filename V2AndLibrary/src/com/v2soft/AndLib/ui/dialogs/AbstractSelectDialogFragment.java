@@ -25,8 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.other.R;
 
 /**
  * Abstract class that shows dialog fragment with list and allow users to choice some items

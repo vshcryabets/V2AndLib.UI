@@ -18,7 +18,7 @@ package com.v2soft.AndLib.ui.dialogs;
 import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskHub;
 import com.v2soft.AndLib.dataproviders.ITaskListener;
-import com.v2soft.AndLib.ui.R;
+import com.v2soft.AndLib.other.R;
 
 import android.app.Dialog;
 import android.content.Context;

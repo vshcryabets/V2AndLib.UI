@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dropbox-android-sdk-1.3.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/V2Demo/build/exploded-bundles/ComV2softAndLibV2AndLibrary120.aar/libs/dropbox-android-sdk-1.3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

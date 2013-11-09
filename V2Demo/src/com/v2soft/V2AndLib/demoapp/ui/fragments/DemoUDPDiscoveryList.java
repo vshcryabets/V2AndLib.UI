@@ -36,7 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.v2soft.AndLib.ui.Adapters.CustomViewAdapter;
+import com.v2soft.AndLib.ui.adapters.CustomViewAdapter;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.AndLib.ui.loaders.UDPScannerLoader;
 import com.v2soft.AndLib.ui.views.DataView;
@@ -93,7 +93,7 @@ implements LoaderCallbacks<List<DemoUDPHost>>{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(com.v2soft.AndLib.ui.R.layout.v2andlib_fragment_list, null);
+        View view = inflater.inflate(R.layout.v2andlib_fragment_list, null);
         ListView list = (ListView) view.findViewById(android.R.id.list);
         mAdapter = new BluetoothDeviceAdapter(getActivity());
         //        list.setOnItemClickListener(this);

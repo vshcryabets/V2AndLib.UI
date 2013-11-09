@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.6.1'
+    }
+}
+
+apply plugin: 'android-library'
+
+
+dependencies {
+    compile project(':V2AndLib-commondata')
+    compile project(':V2AndLib-depredecated')
+    compile files('libs/android-support-v4.jar')
+}
+
+android {
+    buildToolsVersion "17.0"
+    compileSdkVersion 17
+     sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aild.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+        instrumentTest.setRoot('tests')
+    }
+} 
