@@ -26,7 +26,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.v2soft.AndLib.other.R;
+import com.v2soft.AndLib.commonandroid.R;
+
 
 /**
  * 

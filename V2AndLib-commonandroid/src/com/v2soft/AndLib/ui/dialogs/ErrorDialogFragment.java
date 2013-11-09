@@ -15,6 +15,8 @@
  */
 package com.v2soft.AndLib.ui.dialogs;
 
+import com.v2soft.AndLib.commonandroid.R;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -23,7 +25,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
-import com.v2soft.AndLib.other.R;
 
 /**
  * Simple error dialog fragment
