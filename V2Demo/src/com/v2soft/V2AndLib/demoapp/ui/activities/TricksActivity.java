@@ -47,19 +47,4 @@ public class TricksActivity extends DemoBaseActivity {
     public static String getSampleName() {
         return "System tricks demo";
     }
-    @Override
-    public void showError(String message) {
-        // TODO Auto-generated method stub
-        
-    }
-    @Override
-    public void setLoadingProcess(boolean value, Object tag) {
-        // TODO Auto-generated method stub
-        
-    }
-    @Override
-    public void setBlockingProcess(boolean value, Object tag) {
-        // TODO Auto-generated method stub
-        
-    }
 }

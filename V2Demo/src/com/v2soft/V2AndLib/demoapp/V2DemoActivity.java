@@ -39,6 +39,7 @@ import com.v2soft.V2AndLib.demoapp.ui.activities.DialogsActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
 import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
+import com.v2soft.V2AndLib.demoapp.ui.activities.NavigationDrawerActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
 import com.v2soft.V2AndLib.demoapp.ui.activities.TricksActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.UDPDiscoveryList;
@@ -62,7 +63,8 @@ implements OnItemClickListener {
         EndlessListActivity.class,
         DialogsActivity.class,
         WiFiList.class,
-        TricksActivity.class
+        TricksActivity.class,
+        NavigationDrawerActivity.class
     };
 
     // The authority for the sync adapter's content provider
