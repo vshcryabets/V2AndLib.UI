@@ -29,8 +29,8 @@ import android.view.animation.AnimationUtils;
 
 import com.v2soft.AndLib.Timers.SpecialTimer;
 import com.v2soft.AndLib.Timers.SpecialTimerListener;
+import com.v2soft.AndLib.commonandroid.R;
 import com.v2soft.AndLib.ui.animation.DeleteAnimationListener;
-import com.v2soft.AndLib.other.R;
 
 /**
  * View extender that hides it content after specified time

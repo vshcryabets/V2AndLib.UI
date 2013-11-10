@@ -19,7 +19,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import com.v2soft.AndLib.other.R;
+import com.v2soft.AndLib.commonandroid.R;
+
 
 public class LoadingView extends LinearLayout {
 
