@@ -56,6 +56,7 @@
         <activity android:name=".ui.activities.DialogsActivity" />
         <activity android:name=".ui.activities.WiFiList" />
         <activity android:name=".ui.activities.TricksActivity" />
+        <activity android:name=".ui.activities.NavigationDrawerActivity" />
         <!-- DropBox authentication activity -->
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
