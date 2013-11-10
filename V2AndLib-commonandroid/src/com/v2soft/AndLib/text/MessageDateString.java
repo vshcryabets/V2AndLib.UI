@@ -18,7 +18,7 @@ package com.v2soft.AndLib.text;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.v2soft.AndLib.other.R;
+import com.v2soft.AndLib.commonandroid.R;
 
 import android.content.Context;
 

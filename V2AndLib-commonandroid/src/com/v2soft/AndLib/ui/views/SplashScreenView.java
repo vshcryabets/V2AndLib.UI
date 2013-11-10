@@ -25,7 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.v2soft.AndLib.other.R;
+import com.v2soft.AndLib.commonandroid.R;
 
 /**
  * View that show some image after start and hide it in few moments
