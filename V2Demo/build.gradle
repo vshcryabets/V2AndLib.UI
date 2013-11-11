@@ -18,6 +18,7 @@ dependencies {
     compile project(":V2AndLib-media")
     compile project(":V2AndLib-other")
     compile files('libs/native-libs.jar')
+    compile "com.android.support:appcompat-v7:18.0.+"
 }
 
 android {

@@ -19,9 +19,9 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.view.MenuItem;
 import android.view.View;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.v2soft.V2AndLib.demoapp.R;
 
 /**
@@ -38,8 +38,8 @@ public class NavigationDrawerActivity extends DemoBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
@@ -50,12 +50,12 @@ public class NavigationDrawerActivity extends DemoBaseActivity {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle("Title 1");
+            	getSupportActionBar().setTitle("Title 1");
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle("Drawer title");
+            	getSupportActionBar().setTitle("Drawer title");
             }
         };
         
@@ -85,9 +85,6 @@ public class NavigationDrawerActivity extends DemoBaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-          return true;
-        }
         // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
