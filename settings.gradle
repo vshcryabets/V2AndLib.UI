@@ -1,5 +1,5 @@
-include 'actionbarsherlock'
-project(':actionbarsherlock').projectDir = new File('contrib/ABS/actionbarsherlock')
+//include 'actionbarsherlock'
+//project(':actionbarsherlock').projectDir = new File('contrib/ABS/actionbarsherlock')
 
 include ':V2AndLib-commondata'
 include ':V2AndLib-depredecated'
