@@ -42,6 +42,7 @@ public class CameraView extends SurfaceView implements PictureCallback
     private boolean isPreviewRunning = false;
     private OnClickListener listener = null;
     private MediaRecorder mRecorder;
+    private int mCameraId = Integer.MIN_VALUE;
 
     public CameraView(Context context) {
         this(context,null);
@@ -71,45 +72,64 @@ public class CameraView extends SurfaceView implements PictureCallback
         this.listener = listener;
     }
 
-    SurfaceHolder.Callback mSurfaceHolderListener = new SurfaceHolder.Callback() {
-        public void surfaceCreated(SurfaceHolder holder) {
-            try {
-                mCamera = Camera.open();
-                mCamera.setPreviewDisplay(mPreviewHolder);
-            } catch (Exception e) {
-                Log.e(LOG_TAG, e.toString(), e);
-            }           
-        }
+    SurfaceHolder.Callback mSurfaceHolderListener;
 
-        public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                int height)	{
-            try	{
-                if ( isPreviewRunning ) {
-                    mCamera.stopPreview();
+    {
+        mSurfaceHolderListener = new SurfaceHolder.Callback() {
+            public void surfaceCreated(SurfaceHolder holder) {
+                try {
+                    if (mCameraId < 0) {
+                        // lookup for Back Facing camera
+                        mCameraId = getCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
+                    }
+                    mCamera = Camera.open(mCameraId);
+                    mCamera.setPreviewDisplay(mPreviewHolder);
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, e.toString(), e);
                 }
-                Parameters params = mCamera.getParameters();
-                params.setPreviewSize(width, height);
-                params.setPictureFormat(ImageFormat.JPEG);
-
-                mCamera.setParameters(params);
-                mCamera.setPreviewDisplay(mPreviewHolder);
-                mCamera.startPreview();
-                isPreviewRunning = true;
             }
-            catch (Exception e) {
-                Log.e(LOG_TAG, e.toString(), e);
-            }			
-        }
 
-        public void surfaceDestroyed(SurfaceHolder arg0) {
-            if ( mCamera != null ) {
-                mCamera.stopPreview();
-                mCamera.release();
-                mCamera = null;
+            public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                                       int height) {
+                try {
+                    if (isPreviewRunning) {
+                        mCamera.stopPreview();
+                    }
+                    Parameters params = mCamera.getParameters();
+                    params.setPreviewSize(width, height);
+                    params.setPictureFormat(ImageFormat.JPEG);
+
+                    mCamera.setParameters(params);
+                    mCamera.setPreviewDisplay(mPreviewHolder);
+                    mCamera.startPreview();
+                    isPreviewRunning = true;
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, e.toString(), e);
+                }
             }
-            isPreviewRunning = false;
+
+            public void surfaceDestroyed(SurfaceHolder arg0) {
+                if (mCamera != null) {
+                    mCamera.stopPreview();
+                    mCamera.release();
+                    mCamera = null;
+                }
+                isPreviewRunning = false;
+            }
+        };
+    }
+
+    private int getCameraId(int cameraType) {
+        int numberOfCameras = mCamera.getNumberOfCameras();
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        for (int i = 0; i < numberOfCameras; i++) {
+            mCamera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == cameraType) {
+                return i;
+            }
         }
-    };
+        return Integer.MIN_VALUE;
+    }
 
     public void takePicture(String path, boolean portrait, boolean flash_disable ) {
         if ( mCamera == null ) {
@@ -188,7 +208,7 @@ public class CameraView extends SurfaceView implements PictureCallback
          *     Prepare MediaRecorder - Prepare the MediaRecorder with provided configuration settings by calling MediaRecorder.prepare().
          *     Start MediaRecorder - Start recording video by calling MediaRecorder.start().
          */
-        mRecorder.setProfile(CamcorderProfile.get(quality));
+        mRecorder.setProfile(CamcorderProfile.get(mCameraId, quality));
         mRecorder.setOutputFile(outputFilePath);
         mRecorder.setPreviewDisplay(mPreviewHolder.getSurface());
         mRecorder.prepare();
@@ -203,7 +223,9 @@ public class CameraView extends SurfaceView implements PictureCallback
             throw new IllegalStateException("Recording wasn't started.");
         }
         mRecorder.stop();
+        mRecorder.release();
         mRecorder = null;
+        mCamera.lock();
     }
     
     /**
@@ -211,5 +233,9 @@ public class CameraView extends SurfaceView implements PictureCallback
      */
     public synchronized boolean isRecording() {
         return mRecorder != null;
+    }
+
+    public void getSupportedVideoProfiles() {
+//        mCamera.
     }
 }

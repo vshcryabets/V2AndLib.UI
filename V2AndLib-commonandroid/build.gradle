@@ -1,13 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.6.1'
-    }
-}
-
 apply plugin: 'android-library'
 
 
@@ -16,7 +6,7 @@ dependencies {
     compile project(':V2AndLib-depredecated')
     compile project(':V2AndLib-resources')
     compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    compile 'com.android.support:support-v4:18.0.+'
+    compile 'com.android.support:support-v4:19.0.0'
 }
 
 android {
