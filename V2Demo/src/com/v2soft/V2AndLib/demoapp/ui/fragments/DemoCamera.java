@@ -78,8 +78,10 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
                 if ( mCameraView.isRecording() ) {
                     mCameraView.stopRecording();
                 } else {
-                    mCameraView.startVideoRecording(getActivity().getExternalCacheDir()+File.separator+
-                            UUID.randomUUID().toString(), CameraProfile.QUALITY_HIGH);
+                    mCameraView.getSupportedVideoProfiles();
+                    mCameraView.startVideoRecording(
+                            getActivity().getExternalCacheDir()+File.separator+UUID.randomUUID().toString()+".mp4",
+                            CameraProfile.QUALITY_LOW);
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block

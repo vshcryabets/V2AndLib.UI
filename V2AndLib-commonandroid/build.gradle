@@ -14,7 +14,7 @@ apply plugin: 'android-library'
 dependencies {
     compile project(':V2AndLib-commondata')
     compile project(':V2AndLib-depredecated')
-    compile files('libs/android-support-v4.jar')
+    compile 'com.android.support:support-v4:19.0.0'
 }
 
 android {

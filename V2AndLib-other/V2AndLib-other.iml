@@ -15,7 +15,7 @@
     </facet>
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
-        <option name="GRADLE_PROJECT_PATH" value=":V2AndLib-depredecated" />
+        <option name="GRADLE_PROJECT_PATH" value=":V2AndLib-other" />
       </configuration>
     </facet>
   </component>
@@ -52,6 +52,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/res" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/resources" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/.settings" />
       <excludeFolder url="file://$MODULE_DIR$/build/apk" />
       <excludeFolder url="file://$MODULE_DIR$/build/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/bundles" />
@@ -65,8 +66,10 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 17 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="module" module-name="V2AndLib-commondata" exported="" />
-    <orderEntry type="module" module-name="V2AndLib-resources" exported="" />
+    <orderEntry type="module" module-name="V2AndLib-commonandroid" exported="" />
+    <orderEntry type="library" exported="" name="dropbox-android-sdk-1.3.1" level="project" />
   </component>
 </module>
 
