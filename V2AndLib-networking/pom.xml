@@ -10,8 +10,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>other</artifactId>
-  <name>V2AndLib-other</name>
+  <artifactId>networking</artifactId>
+  <name>V2AndLib-networking</name>
   <version>1.2.1</version>
   <packaging>apklib</packaging>
 
@@ -32,7 +32,7 @@
         </configuration>
       </plugin>
 
-<!--      <plugin>
+      <plugin>
         <groupId>com.google.code.maven-replacer-plugin</groupId>
         <artifactId>maven-replacer-plugin</artifactId>
         <executions>
@@ -45,13 +45,13 @@
         </executions>
         <configuration>
           <ignoreMissingFile>false</ignoreMissingFile>
-          <file>target/generated-sources/r/com/v2soft/AndLib/other/R.java</file>
-          <outputFile>target/generated-sources/r/com/v2soft/AndLib/other/R.java</outputFile>
+          <file>target/generated-sources/r/com/v2soft/AndLib/networking/R.java</file>
+          <outputFile>target/generated-sources/r/com/v2soft/AndLib/networking/R.java</outputFile>
           <regex>false</regex>
           <token>static final int</token>
           <value>static int</value>
         </configuration>
-      </plugin> -->
+      </plugin>
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

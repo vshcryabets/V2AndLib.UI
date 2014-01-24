@@ -1,0 +1,3 @@
+[submodule "V2AndLib-mvnrepo"]
+	path = V2AndLib-mvnrepo
+	url = https://github.com/vshcryabets/V2AndLib-mvnrepo.git

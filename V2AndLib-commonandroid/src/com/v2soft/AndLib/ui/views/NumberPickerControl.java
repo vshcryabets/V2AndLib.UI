@@ -28,7 +28,6 @@ import android.widget.LinearLayout;
 
 import com.v2soft.AndLib.commonandroid.R;
 
-
 /**
  * 
  * @author V.Shcriyabets (vshcryabets@gmail.com)

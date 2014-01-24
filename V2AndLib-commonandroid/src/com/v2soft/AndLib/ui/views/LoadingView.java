@@ -21,7 +21,10 @@ import android.widget.LinearLayout;
 
 import com.v2soft.AndLib.commonandroid.R;
 
-
+/**
+ * View that indicates ongoing load process.
+ * @author V.Shcryabets<vshcryabets@gmail.com>
+ */
 public class LoadingView extends LinearLayout {
 
     public LoadingView(Context context, AttributeSet attrs) {

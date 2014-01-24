@@ -3,7 +3,6 @@ apply plugin: 'android'
 
 dependencies {
     compile files('libs/acra-4.2.3.jar')
-    compile project(":V2AndLib-resources")
     compile project(":V2AndLib-networking")
     compile project(":V2AndLib-media")
     compile project(":V2AndLib-other")
