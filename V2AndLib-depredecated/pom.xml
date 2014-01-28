@@ -10,8 +10,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>other</artifactId>
-  <name>V2AndLib-other</name>
+  <artifactId>depredecated</artifactId>
+  <name>V2AndLib-depredecated</name>
   <version>1.2.1</version>
   <packaging>apklib</packaging>
 
@@ -32,7 +32,7 @@
         </configuration>
       </plugin>
 
-<!--      <plugin>
+      <plugin>
         <groupId>com.google.code.maven-replacer-plugin</groupId>
         <artifactId>maven-replacer-plugin</artifactId>
         <executions>
@@ -45,13 +45,13 @@
         </executions>
         <configuration>
           <ignoreMissingFile>false</ignoreMissingFile>
-          <file>target/generated-sources/r/com/v2soft/AndLib/other/R.java</file>
-          <outputFile>target/generated-sources/r/com/v2soft/AndLib/other/R.java</outputFile>
+          <file>target/generated-sources/r/com/v2soft/AndLib/depredecated/R.java</file>
+          <outputFile>target/generated-sources/r/com/v2soft/AndLib/depredecated/R.java</outputFile>
           <regex>false</regex>
           <token>static final int</token>
           <value>static int</value>
         </configuration>
-      </plugin> -->
+      </plugin>
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -87,5 +87,4 @@
       <url>file://${basedir}/../V2AndLib-mvnrepo/</url>
     </repository>
   </distributionManagement>
-
 </project>
