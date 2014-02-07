@@ -3,4 +3,5 @@
     android:accountType="com.v2soft.V2AndLib.demoapp.services.DemoAuthService"
     android:icon="@drawable/ic_launcher"
     android:label="@string/app_name"
-    android:smallIcon="@drawable/ic_launcher" />
+    android:smallIcon="@drawable/ic_launcher"
+    android:accountPreferences="@xml/account_preferences" />

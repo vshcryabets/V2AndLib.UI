@@ -1,9 +1,9 @@
 apply plugin: 'android-library'
 apply plugin: 'maven'
- 
+
 uploadArchives {
     repositories.mavenDeployer {
-	repository(url: "file://../maven-repository/")
+        repository(url: "file://../maven-repository/")
     }
 }
 
@@ -15,9 +15,9 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "17.0"
-    compileSdkVersion 17
-     sourceSets {
+    buildToolsVersion "19.0"
+    compileSdkVersion 19
+    sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
@@ -29,8 +29,8 @@ android {
         }
         instrumentTest.setRoot('tests')
     }
-  lintOptions {
-    abortOnError false
-  }
 
-} 
+    lintOptions {
+        abortOnError false
+    }
+}

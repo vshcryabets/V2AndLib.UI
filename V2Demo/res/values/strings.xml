@@ -20,5 +20,16 @@
     <!-- Camera -->
     <string name="menu_take_photo">PHOTO</string>
     <string name="menu_take_video">VIDEO</string>
+    <string name="sync_register_account">REGISTER</string>
+    <string name="sync_delete_account">DELETE ACCOUNT</string>
+    <string name="sync_start">START SYNC</string>
+    <string name="sync_cancel">CANCEL SYNC</string>
+    <string name="account_key_name">Account Name</string>
+    <string name="account_key_name_email">Type your e-mail here</string>
+    <string name="title_fmt">V2 Demo accounts</string>
+    <string name="sync_start60">SYNC 60 Sec</string>
+    <string name="sync_start40">SYNC 40 Sec</string>
+    <string name="sync_auto">AUTO SYNC</string>
+    <string name="sync_now">SYNC NOW</string>
 
 </resources>
