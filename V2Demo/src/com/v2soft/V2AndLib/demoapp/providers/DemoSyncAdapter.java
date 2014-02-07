@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
+import java.util.Date;
 
 /**
  * This class demonstrates work of the sync adapter.
@@ -24,15 +27,10 @@ public class DemoSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
             ContentProviderClient provider, SyncResult syncResult) {
         String type = extras.getString(EXTRA_TYPE);
-        for ( int i = 0 ;i < 50; i++ ) {
-            Log.d(LOG_TAG, i+" "+type);
-        }
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		String message = "DemoSyncAdapter "+type+" for account "+account.name+"/"+
+				account.type+" auth: "+authority;
+//		Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+		Log.d(LOG_TAG, new Date().toString());
     }
     
     @Override

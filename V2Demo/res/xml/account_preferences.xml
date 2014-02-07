@@ -1,0 +1,12 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/title_fmt" />
+    <PreferenceScreen
+        android:key="key1"
+        android:title="@string/account_key_name"
+        android:summary="@string/account_key_name_email">
+        <intent
+            android:action="key1.ACTION"
+            android:targetPackage="key1.package"
+            android:targetClass="key1.class" />
+    </PreferenceScreen>
+</PreferenceScreen>

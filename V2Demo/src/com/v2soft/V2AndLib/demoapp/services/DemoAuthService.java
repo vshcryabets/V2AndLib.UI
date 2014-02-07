@@ -6,6 +6,10 @@ import android.os.IBinder;
 
 import com.v2soft.V2AndLib.demoapp.providers.DemoAccountAuthenticator;
 
+/**
+ * Demonstration auth server.
+ * @author Vladimir Shcryabets <vshcryabets@gmail.com>
+ */
 public class DemoAuthService extends Service {
     public static final String ACCOUNT_TYPE="com.v2soft.V2AndLib.demoapp.services.DemoAuthService";
     // Instance field that stores the authenticator object
