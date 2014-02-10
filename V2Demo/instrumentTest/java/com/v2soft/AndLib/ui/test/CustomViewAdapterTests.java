@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
 
-import com.v2soft.AndLib.ui.Adapters.CustomViewAdapter;
+import com.v2soft.AndLib.ui.adapters.CustomViewAdapter;
 import com.v2soft.V2AndLib.demoapp.V2DemoActivity;
 
 import android.content.Context;

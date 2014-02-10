@@ -22,8 +22,9 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
-
-        instrumentTest.setRoot('tests')
+        instrumentTest {
+            java.srcDirs = ['instrumentTest/java']
+        }
     }
 
     lintOptions {
@@ -49,7 +50,7 @@ task nativeLibsToJar(
 
 // Make copyNativeLibs depend on ndkBuild since we must build the libraries
 // before we can copy them.
-nativeLibsToJar.dependsOn 'ndkBuild'
+//nativeLibsToJar.dependsOn 'ndkBuild'
 
 tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn nativeLibsToJar }
 
