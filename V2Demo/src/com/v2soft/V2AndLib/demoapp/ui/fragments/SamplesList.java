@@ -66,7 +66,8 @@ public class SamplesList
 			WiFiList.class,
 			TricksActivity.class,
 			NavigationDrawerActivity.class,
-			SynchronizationFragment.class
+			SynchronizationFragment.class,
+			OpenHelpersFragment.class
 	};
 	private static final String TAG = SamplesList.class.getSimpleName();
 
@@ -106,8 +107,13 @@ public class SamplesList
 		if ( Activity.class.equals(clazz) ) {
 			startActivity(new Intent(getActivity(), sActivities[arg2]));
 		} else {
-			startFragment(R.id.content, SynchronizationFragment.newInstance(),
-					true, TAG, 0, 0, 0, 0);
+			if ( clazz.equals(SynchronizationFragment.class)) {
+				startFragment(R.id.content, SynchronizationFragment.newInstance(),
+						true, TAG, 0, 0, 0, 0);
+			} else if ( clazz.equals(OpenHelpersFragment.class)) {
+				startFragment(R.id.content, OpenHelpersFragment.newInstance(),
+						true, TAG, 0, 0, 0, 0);
+			}
 		}
 	}
 }

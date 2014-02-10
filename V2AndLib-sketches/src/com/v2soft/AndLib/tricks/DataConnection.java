@@ -1,11 +1,26 @@
+/*
+ * Copyright (C) 2013 V.Shcryabets (vshcryabets@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.v2soft.AndLib.tricks;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
 
 /**
  * System tricks class.
@@ -27,7 +42,7 @@ public class DataConnection {
      * @throws IllegalArgumentException
      * @throws IllegalAccessException
      * @throws NoSuchMethodException
-     * @throws InvocationTargetException
+     * @throws java.lang.reflect.InvocationTargetException
      */
     public static void setMobileDataEnabled(Context context, boolean enabled) 
             throws ClassNotFoundException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, 

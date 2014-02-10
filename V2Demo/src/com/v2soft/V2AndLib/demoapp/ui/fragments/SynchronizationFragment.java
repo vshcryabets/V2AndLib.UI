@@ -122,37 +122,6 @@ public class SynchronizationFragment
 				arg);
 	}
 
-//	private Account createAccount() {
-//		Account account = mHelper.getPrimaryAccount();
-//		if ( account != null ) {
-//			return account;
-//		}
-//		// Create the account type and default account
-//		Account newAccount = new Account(ACCOUNT_NAME, DemoAuthService.ACCOUNT_TYPE);
-//        /*
-//         * Add the account and account type, no password or user data
-//         * If successful, return the Account object, otherwise report an error.
-//         */
-//		if (mAccountManager.addAccountExplicitly(newAccount, null, null)) {
-//			// Inform the system that this account supports sync
-//			ContentResolver.setIsSyncable(newAccount, AUTHORITY, 1);
-//			// Inform the system that this account is eligible for auto sync when the network is up
-//			ContentResolver.setSyncAutomatically(newAccount, AUTHORITY, true);
-////            // Recommend a schedule for automatic synchronization. The system may modify this based
-////            // on other scheduled syncs and network utilization.
-////            ContentResolver.addPeriodicSync(
-////                    newAccount, AUTHORITY, new Bundle(), 60000);
-//			showInfo("Account created.");
-//		} else {
-//			showInfo("Can't create account");
-//            /*
-//             * The account exists or some other error occurred. Log this, report it,
-//             * or handle it internally.
-//             */
-//		}
-//		return newAccount;
-//	}
-
 	/**
 	 * Return sample display name
 	 * @return
