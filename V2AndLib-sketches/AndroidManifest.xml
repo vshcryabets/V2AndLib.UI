@@ -17,7 +17,7 @@
     package="com.v2soft.AndLib.sketches" >
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="10"
         android:targetSdkVersion="18" />
 
     <application/>

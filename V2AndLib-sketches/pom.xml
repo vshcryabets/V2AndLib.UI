@@ -12,7 +12,7 @@
 
   <artifactId>sketches</artifactId>
   <name>V2AndLib-sketches</name>
-  <version>1.2.2</version>
+  <version>1.2.2-api10</version>
   <packaging>apklib</packaging>
 
   <build>

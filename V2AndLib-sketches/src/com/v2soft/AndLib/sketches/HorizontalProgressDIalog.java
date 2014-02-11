@@ -17,6 +17,7 @@ package com.v2soft.AndLib.sketches;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 
 /**
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
@@ -35,7 +36,9 @@ public class HorizontalProgressDialog extends ProgressDialog {
 			setIndeterminate(false);
 		} else {
 			setIndeterminate(true);
-			setProgressPercentFormat(null);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				setProgressPercentFormat(null);
+			}
 		}
 		if (showAfterCreate) {
 			show();
