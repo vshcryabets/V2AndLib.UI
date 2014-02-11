@@ -18,7 +18,9 @@ package com.v2soft.V2AndLib.demoapp.ui.fragments;
 import android.accounts.Account;
 import android.accounts.AccountManagerFuture;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ import android.widget.TextView;
 
 import com.v2soft.AndLib.services.AndroidAccountHelper;
 import com.v2soft.AndLib.sketches.CopyURL2URL;
+import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
 import com.v2soft.AndLib.sketches.OpenHelpers;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
@@ -50,6 +53,7 @@ import java.net.URL;
  */
 public class OpenHelpersFragment
 		extends BaseFragment<DemoApplication, DemoAppSettings> {
+	private HorizontalProgressDialog mProgressDlg;
 
 	public static Fragment newInstance() {
 		return new OpenHelpersFragment();
@@ -59,6 +63,8 @@ public class OpenHelpersFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = View.inflate(getActivity(), R.layout.fragment_open_helpers, null);
 		registerOnClickListener(new int[]{R.id.openRemotePDF, R.id.openLocalPDF}, view);
+		mProgressDlg = new HorizontalProgressDialog(getActivity(), 0,
+				R.string.title_downloading_document, R.string.v2andlib_loading, 0, false);
 		return view;
 	}
 
@@ -70,15 +76,24 @@ public class OpenHelpersFragment
 //						Uri.parse("http://www.w3.org/Protocols/HTTP/1.1/rfc2616.pdf"),//"https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf"),
 //						R.string.title_select_PDF_application,
 //						R.string.error_cant_open);
+				mProgressDlg.setMessage(getString(R.string.v2andlib_loading));
+				mProgressDlg.show();
 				final File outputFileRemote = new File(getActivity().getExternalCacheDir(), "sample.pdf");
 				try {
-					CopyURL2URL copyTask = new CopyURL2URL(getActivity(),
+					final CopyURL2URL copyTask = new CopyURL2URL(getActivity(),
 							new URL("https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf"),
 							new URL(Uri.fromFile(outputFileRemote).toString())
 					){
 						@Override
+						protected void onProgressUpdate(Long... values) {
+							super.onProgressUpdate(values);
+							mProgressDlg.setMessage(getString(R.string.v2andlib_downloaded_kb, (int) (values[0] / 1024)));
+						}
+
+						@Override
 						protected void onPostExecute(Boolean aBoolean) {
 							super.onPostExecute(aBoolean);
+							mProgressDlg.dismiss();
 							if ( aBoolean ) {
 								OpenHelpers.openLocalPDFFile(getActivity(),
 										Uri.fromFile(outputFileRemote),
@@ -88,6 +103,12 @@ public class OpenHelpersFragment
 						}
 					};
 					copyTask.execute(new Void[0]);
+					mProgressDlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							copyTask.cancel();
+						}
+					});
 				} catch (MalformedURLException e) {
 					throw new RuntimeException(e);
 				}				break;

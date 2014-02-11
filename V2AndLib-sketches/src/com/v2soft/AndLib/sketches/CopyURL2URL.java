@@ -20,6 +20,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.v2soft.AndLib.dataproviders.Cancelable;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,13 +38,15 @@ import java.net.URL;
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  *
  */
-public class CopyURL2URL extends AsyncTask<Void, Integer, Boolean>{
+public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cancelable{
 	private static final String FILE_SCHEME = "file";
 	private static final String TAG = CopyURL2URL.class.getSimpleName();
 	private static final String ANDROID_ASSETS = "/android_asset/";
+	private static final long UPDATE_MEASURE = 1024 * 10;
 	private URL mSource;
 	private URL mTarget;
 	private Context mContext;
+	private boolean isCanceled;
 
 	public CopyURL2URL(Context context, URL source, URL target) {
 		if ( !target.getProtocol().equalsIgnoreCase(FILE_SCHEME)) {
@@ -55,6 +59,7 @@ public class CopyURL2URL extends AsyncTask<Void, Integer, Boolean>{
 	@Override
 	protected Boolean doInBackground(Void... params) {
 		try {
+			isCanceled = false;
 			InputStream input = null;
 			String path = mSource.getPath();
 			if ( path.startsWith(ANDROID_ASSETS)) {
@@ -64,20 +69,45 @@ public class CopyURL2URL extends AsyncTask<Void, Integer, Boolean>{
 			}
 			FileOutputStream output = new FileOutputStream(mTarget.getPath());
 			byte [] buffer = new byte[8192];
-			int read = 0;
+			int read;
 			long total = 0;
-			while ( (read = input.read(buffer)) > 0 ) {
+			long prevTotal = 0;
+			long updateMeasure = getUpdateMeasure();
+			while ( (read = input.read(buffer)) > 0 && !isCanceled ) {
 				output.write(buffer, 0, read);
 				total += read;
+				if ( total-prevTotal > updateMeasure ) {
+					prevTotal = total;
+					publishProgress(new Long[]{total});
+				}
 			}
 			input.close();
 			output.close();
-			return true;
+			return !isCanceled;
 		} catch (MalformedURLException e) {
 		} catch (IOException e) {
 			Log.e(TAG, e.toString(), e);
 
 		}
 		return false;
+	}
+
+	protected long getUpdateMeasure() {
+		return UPDATE_MEASURE;
+	}
+
+	@Override
+	public void cancel() {
+		isCanceled = true;
+	}
+
+	@Override
+	public boolean canBeCanceled() {
+		return true;
+	}
+
+	@Override
+	public boolean isCanceled() {
+		return isCanceled;
 	}
 }

@@ -35,5 +35,6 @@
     <string name="title_select_PDF_application">Choose PDF viewer application</string>
     <string name="error_cant_open">Can\'t find application for that file</string>
     <string name="button_open_local_pdf">Open local PDF</string>
+    <string name="title_downloading_document">Downloading...</string>
 
 </resources>

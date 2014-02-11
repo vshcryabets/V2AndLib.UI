@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">V2AndLib-commonandroid</string>
     <string name="v2andlib_dropbox_operation">Dropbox operation</string>
     <string name="v2andlib_uploading_file">Uploading file %s</string>
     <string name="v2andlib_file_size">File size %s</string>
