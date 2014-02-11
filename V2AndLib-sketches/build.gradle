@@ -1,13 +1,20 @@
 apply plugin: 'android-library'
 
+repositories {
+    maven {
+        url "http://mente.github.io/facebook-api-android-aar"
+    }
+    mavenCentral()
+}
 
 dependencies {
     compile project(':V2AndLib-commonandroid')
+    compile 'com.facebook:facebook-android-sdk:3.5.2@aar'
 }
 
 android {
-    buildToolsVersion "17.0"
-    compileSdkVersion 17
+    buildToolsVersion "19.0"
+    compileSdkVersion 19
      sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

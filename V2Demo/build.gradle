@@ -1,8 +1,15 @@
 apply plugin: 'android'
 
+repositories {
+    maven {
+        url "http://mente.github.io/facebook-api-android-aar"
+    }
+    mavenCentral()
+}
 
 dependencies {
     compile 'ch.acra:acra:4.5.0'
+    compile 'com.facebook:facebook-android-sdk:3.5.2@aar'
     compile project(":V2AndLib-networking")
     compile project(":V2AndLib-media")
     compile project(":V2AndLib-other")
