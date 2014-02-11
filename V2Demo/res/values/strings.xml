@@ -31,5 +31,10 @@
     <string name="sync_start40">SYNC 40 Sec</string>
     <string name="sync_auto">AUTO SYNC</string>
     <string name="sync_now">SYNC NOW</string>
+    <string name="button_open_remote_pdf">Open remote PDF</string>
+    <string name="title_select_PDF_application">Choose PDF viewer application</string>
+    <string name="error_cant_open">Can\'t find application for that file</string>
+    <string name="button_open_local_pdf">Open local PDF</string>
+    <string name="title_downloading_document">Downloading...</string>
 
 </resources>

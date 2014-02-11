@@ -20,6 +20,7 @@
     <module>V2AndLib-media</module>
     <module>V2AndLib-networking</module>
     <module>V2AndLib-other</module>
+    <module>V2AndLib-sketches</module>
   </modules>
 
 <!--  <scm>
