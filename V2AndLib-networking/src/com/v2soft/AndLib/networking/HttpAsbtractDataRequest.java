@@ -23,13 +23,15 @@ import org.apache.http.params.HttpProtocolParams;
 
 import com.v2soft.AndLib.dataproviders.AbstractDataRequest;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
 @Deprecated
-public abstract class HttpAsbtractDataRequest<R,Params,RawData> 
+public abstract class HttpAsbtractDataRequest<R extends Serializable,Params,RawData>
 extends AbstractDataRequest<R, Params, RawData> {
     private static final long serialVersionUID = 1L;
     // -----------------------------------------------------------------------
@@ -37,8 +39,8 @@ extends AbstractDataRequest<R, Params, RawData> {
     // -----------------------------------------------------------------------
     protected DefaultHttpClient mHttpClient = null;
 
-    public HttpAsbtractDataRequest(AbstractDataRequestCallback<R> callback) {
-        super(callback);
+    public HttpAsbtractDataRequest() {
+        super();
         final HttpParams httpParams = new BasicHttpParams();
         HttpProtocolParams.setVersion(httpParams, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setContentCharset(httpParams, "UTF-8");

@@ -95,7 +95,7 @@ public class RunnableQueueExecutor extends Thread {
         // check does this task are executing right now
         if ( task.equals(mCurrentTask)) {
             if ( stopIfRunning ) {
-                mCurrentTask.cancelTask();
+                mCurrentTask.cancel();
                 this.interrupt();
                 return true;
             } else {

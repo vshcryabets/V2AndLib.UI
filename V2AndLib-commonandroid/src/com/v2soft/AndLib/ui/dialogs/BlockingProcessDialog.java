@@ -17,7 +17,6 @@ package com.v2soft.AndLib.ui.dialogs;
 
 import com.v2soft.AndLib.commonandroid.R;
 import com.v2soft.AndLib.dataproviders.ITask;
-import com.v2soft.AndLib.dataproviders.ITaskHub;
 import com.v2soft.AndLib.dataproviders.ITaskListener;
 
 import android.app.Dialog;
@@ -28,7 +27,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.content.DialogInterface.OnCancelListener;;;
+import android.content.DialogInterface.OnCancelListener;
 
 /**
  * Dialog that show intermediate or normal progress and cancel button
@@ -39,15 +38,13 @@ public class BlockingProcessDialog
 extends Dialog 
 implements android.view.View.OnClickListener, OnCancelListener {
     private ITask mAssociatedTask;
-    private ITaskHub mTaskHub;
     private ITaskListener mListener;
     private Button mBtnCancel;
     private TextView mTxtMessage;
     private ProgressBar mProgress, mIndeterminateProgress;
 
-    public BlockingProcessDialog(Context context, ITaskListener listener, ITaskHub hub, ITask task) {
+    public BlockingProcessDialog(Context context, ITaskListener listener, ITask task) {
         super(context);
-        mTaskHub = hub;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.v2andlib_dialog_progress);
         mProgress = (ProgressBar) findViewById(R.id.v2andlib_progress);
@@ -102,7 +99,7 @@ implements android.view.View.OnClickListener, OnCancelListener {
     @Override
     public void onCancel(DialogInterface dialog) {
         if ( mAssociatedTask != null ) {
-            mTaskHub.cancelTask(mListener, mAssociatedTask, true);
+			mAssociatedTask.cancel();
         }
     }
 

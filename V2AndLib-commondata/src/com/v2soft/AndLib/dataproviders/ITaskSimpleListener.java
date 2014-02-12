@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package com.v2soft.AndLib.dataproviders;
 
-import android.os.Message;
-
 /**
  * Simple task listener iterface
  * @author V.Shcriyabets (vshcryabets@gmail.com)
@@ -28,5 +26,5 @@ public interface ITaskSimpleListener {
      * @param task
      * @param message
      */
-    void onMessageFromTask(ITask task, Message message);
+    void onMessageFromTask(ITask task, Object message);
 }

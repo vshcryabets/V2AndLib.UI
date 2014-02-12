@@ -16,8 +16,13 @@
 package com.v2soft.AndLib.dataproviders.tasks;
 
 import java.io.File;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 
+import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
+import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 
 /**
@@ -44,12 +49,18 @@ public class DownloadAndDecodeImage extends LoadBitmapTask {
     }
 
     @Override
-    public void execute(ITaskSimpleListener hub) throws Exception {
+    public ITask<Serializable, Void, Void> execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
         final CacheHTTPFile cache = new CacheHTTPFile(mURL, mCacheDir, mCustomHashString);
         cache.execute(hub);
         checkCanceled();
-        mFilePath = new File(mCacheDir, cache.getLocalPath()).getAbsolutePath();
-        super.execute(hub);
+		try {
+			mFilePath = new File(mCacheDir, cache.getLocalPath()).getAbsolutePath();
+		} catch (NoSuchAlgorithmException e) {
+			throw new DummyTaskException(e.toString());
+		} catch (UnsupportedEncodingException e) {
+			throw new DummyTaskException(e.toString());
+		}
+		return super.execute(hub);
     }
     public URL getURL() {
         return mURL;

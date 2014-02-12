@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -65,7 +66,10 @@ public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cance
 			if ( path.startsWith(ANDROID_ASSETS)) {
 				input = mContext.getAssets().open(mSource.getPath().replace(ANDROID_ASSETS,""));
 			} else {
-				input = mSource.openStream();
+				HttpURLConnection connection = (HttpURLConnection) mSource.openConnection();
+				connection.getDoInput();
+				connection.connect();
+				input = connection.getInputStream();
 			}
 			FileOutputStream output = new FileOutputStream(mTarget.getPath());
 			byte [] buffer = new byte[8192];
@@ -87,7 +91,6 @@ public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cance
 		} catch (MalformedURLException e) {
 		} catch (IOException e) {
 			Log.e(TAG, e.toString(), e);
-
 		}
 		return false;
 	}

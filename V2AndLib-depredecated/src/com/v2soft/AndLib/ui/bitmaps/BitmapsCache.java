@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.HashMap;
 
 import android.graphics.Bitmap;
-import android.os.Message;
 import android.util.Log;
 
 import com.v2soft.AndLib.dataproviders.ITask;
@@ -103,7 +102,7 @@ public class BitmapsCache implements ITaskListener {
             Log.d(LOG_TAG, "Found cache bitmap for id = "+tag);
         } else {
             Log.d(LOG_TAG, "Download bitmap for id = "+tag);
-            final DownloadAndDecodeImage getThumb = 
+            final DownloadAndDecodeImage getThumb =
                     new DownloadAndDecodeImage(url, mCacheDir);
             getThumb.setTaskTag(tag);
             mTaskHub.addTask(getThumb, this);
@@ -112,7 +111,7 @@ public class BitmapsCache implements ITaskListener {
     }
 
     @Override
-    public void onMessageFromTask(ITask task, Message message) {
+    public void onMessageFromTask(ITask task, Object message) {
     }
 
     @Override

@@ -16,10 +16,15 @@
 package com.v2soft.AndLib.dataproviders.tasks;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 
 import android.graphics.Bitmap;
 
+import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
+import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 
 /**
@@ -27,7 +32,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
+public class WriteBitmapWithSpecifiedSizeTask extends DummyTask<Serializable, Void, Void> {
     private static final long serialVersionUID = 1L;
 
     public enum RegressionMode {
@@ -58,8 +63,13 @@ public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
         mRegresionParam = param;
     }
 
-    @Override
-    public void execute(ITaskSimpleListener hub) throws Exception {
+	@Override
+	public Serializable getResult() {
+		return null;
+	}
+
+	@Override
+    public ITask<Serializable, Void, Void> execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
         final LoadBitmapTask loader = new LoadBitmapTask(mInputFile, mMaxWidth, mMaxHeight);
         loader.setUseMinimalScaleFactor(useMinimalScaleFactor);
         loader.execute(hub);
@@ -69,16 +79,24 @@ public class WriteBitmapWithSpecifiedSizeTask extends DummyTask {
         int quality = 100;
         checkCanceled();
         while ( !file.exists() || file.length() > mMaxSize ) {
-            final FileOutputStream of = new FileOutputStream(file);
-            checkCanceled();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, quality, of);
-            if ( mMode == RegressionMode.DECREMENT ) {
-                quality -= mRegresionParam;
-            } else {
-                quality /= 2;
-            }
-            of.close();
-        }
+			final FileOutputStream of;
+			try {
+				of = new FileOutputStream(file);
+				checkCanceled();
+				thumbnail.compress(Bitmap.CompressFormat.JPEG, quality, of);
+				if ( mMode == RegressionMode.DECREMENT ) {
+					quality -= mRegresionParam;
+				} else {
+					quality /= 2;
+				}
+				of.close();
+			} catch (FileNotFoundException e) {
+				throw new DummyTaskException(e.toString());
+			} catch (IOException e) {
+				throw new DummyTaskException(e.toString());
+			}
+		}
         thumbnail.recycle();
+		return this;
     }
 }

@@ -16,10 +16,13 @@
 package com.v2soft.AndLib.dataproviders.tasks;
 
 import java.io.File;
+import java.io.Serializable;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
+import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 
 /**
@@ -27,7 +30,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class LoadBitmapTask extends DummyTask {
+public class LoadBitmapTask extends DummyTask<Serializable, Void, Void> {
     private static final long serialVersionUID = 1L;
     protected String mFilePath;
     transient protected Bitmap mBitmap;
@@ -51,8 +54,14 @@ public class LoadBitmapTask extends DummyTask {
         mMaxHeight = maxHeight;
         mMaxWidth = maxWidth;
     }
-    @Override
-    public void execute(ITaskSimpleListener hub) throws Exception {
+
+	@Override
+	public Serializable getResult() {
+		return null;
+	}
+
+	@Override
+    public ITask<Serializable,Void,Void> execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
         // Get the dimensions of the bitmap
         final BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
@@ -80,6 +89,7 @@ public class LoadBitmapTask extends DummyTask {
         checkCanceled();
         final Bitmap bitmap = BitmapFactory.decodeFile(mFilePath, bmOptions);
         setBitmap(bitmap);
+		return this;
     }
 
     public Bitmap getBitmap() {

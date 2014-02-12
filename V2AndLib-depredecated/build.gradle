@@ -3,6 +3,7 @@ apply plugin: 'android-library'
 
 dependencies {
     compile project(':V2AndLib-commondata')
+    compile project(':V2AndLib-commonandroid')
 }
 
 android {

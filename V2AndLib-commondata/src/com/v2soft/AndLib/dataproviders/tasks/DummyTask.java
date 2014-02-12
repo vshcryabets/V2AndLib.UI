@@ -15,16 +15,18 @@
  */
 package com.v2soft.AndLib.dataproviders.tasks;
 
-import java.io.Serializable;
-
+import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
 import com.v2soft.AndLib.dataproviders.ITask;
+
+import java.io.Serializable;
 
 /**
  * Abstract class, that handles work with task tags, id's etc.
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public abstract class DummyTask implements ITask, Serializable {
+public abstract class DummyTask<ResultType extends Serializable, Params, RawData>
+		implements ITask<ResultType, Params, RawData>, Serializable {
     private static final long serialVersionUID = 1L;
     private int mId;
     private int mTag;
@@ -65,12 +67,23 @@ public abstract class DummyTask implements ITask, Serializable {
     // ===========================================================
     // Commands
     // ===========================================================
-    public void cancelTask() {
+	@Override
+    public void cancel() {
         isCanceled = true;
     }
-    protected void checkCanceled() throws InterruptedException {
+
+	@Override
+	public boolean isCanceled() {
+		return isCanceled;
+	}
+
+	@Override
+	public boolean canBeCanceled() {
+		return true;
+	}
+	protected void checkCanceled() throws DummyTaskException {
         if ( isCanceled ) {
-            throw new InterruptedException("Task was canceled");
+            throw new DummyTaskException("Task was canceled");
         }
     }
 }

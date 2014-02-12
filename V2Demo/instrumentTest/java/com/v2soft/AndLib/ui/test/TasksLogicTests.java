@@ -19,11 +19,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.test.AndroidTestCase;
 
+import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
 import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskListener;
 import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 import com.v2soft.AndLib.dataproviders.TasksMultiplexor;
 import com.v2soft.AndLib.dataproviders.tasks.DummyTask;
+
+import java.io.Serializable;
 
 /**
  * Unit tests for background tasks classes.
@@ -31,10 +34,19 @@ import com.v2soft.AndLib.dataproviders.tasks.DummyTask;
  *
  */
 public class TasksLogicTests extends AndroidTestCase {
-    private class SimpleTask extends DummyTask {
-        @Override
-        public void execute(ITaskSimpleListener handler) throws Exception {
-            Thread.sleep(500);
+    private class SimpleTask extends DummyTask<Serializable, Void, Void> {
+		@Override
+		public Serializable getResult() {
+			return null;
+		}
+
+		@Override
+        public ITask<Serializable, Void, Void> execute(ITaskSimpleListener handler) throws AbstractDataRequestException {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+			}
+			return this;
         }
     }
     private ITaskListener mListener1;
@@ -46,7 +58,7 @@ public class TasksLogicTests extends AndroidTestCase {
         super.setUp();
         mListener1 = new ITaskListener() {
             @Override
-            public void onMessageFromTask(ITask task, Message message) {
+            public void onMessageFromTask(ITask task, Object message) {
             }
             
             @Override

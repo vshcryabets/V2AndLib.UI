@@ -17,28 +17,42 @@ package com.v2soft.V2AndLib.demoapp.tasks;
 
 import android.os.Message;
 
+import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
+import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 import com.v2soft.AndLib.dataproviders.tasks.DummyTask;
+
+import java.io.Serializable;
 
 /**
  * Sample task that sends current time stamp every second
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public class StartStopSampleTask extends DummyTask {
+public class StartStopSampleTask extends DummyTask<Serializable, Void, Void> {
     public static final int TASK_MESSAGE_NEWTIME = 1;
 
-    @Override
-    public void execute(ITaskSimpleListener handler) throws Exception {
-        Thread.sleep(500);
-        while ( true ) {
-            Thread.sleep(1000);
-            final Message msg = new Message();
-            msg.what = TASK_MESSAGE_NEWTIME;
-            msg.obj = System.currentTimeMillis();
-            if ( handler != null ) {
-                handler.onMessageFromTask(this, msg);
-            }
-        }
+	@Override
+	public Serializable getResult() {
+		return null;
+	}
+
+	@Override
+    public ITask<Serializable, Void, Void> execute(ITaskSimpleListener handler) throws AbstractDataRequestException {
+		try {
+			Thread.sleep(500);
+			while ( true ) {
+				Thread.sleep(1000);
+				final Message msg = new Message();
+				msg.what = TASK_MESSAGE_NEWTIME;
+				msg.obj = System.currentTimeMillis();
+				if ( handler != null ) {
+					handler.onMessageFromTask(this, msg);
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return this;
     }
 }

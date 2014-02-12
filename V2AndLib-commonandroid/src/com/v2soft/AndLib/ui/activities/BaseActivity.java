@@ -21,7 +21,6 @@ import android.os.Bundle;
 
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
-import com.v2soft.AndLib.dataproviders.ITaskHub;
 import com.v2soft.AndLib.ui.fonts.FontManager;
 
 /**
@@ -49,7 +48,6 @@ extends Activity implements IBaseActivity<T> {
     protected T mApp;
     protected S mSettings;
     protected IBackStack mCustomStack;
-    protected ITaskHub mBackgroundExecutor;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -84,13 +82,6 @@ extends Activity implements IBaseActivity<T> {
     public IBackStack getBackStack() {
         return mCustomStack;
     }
-    /**
-     * @return assigned background xecution thread
-     */
-    public ITaskHub getExecutor() {
-        return mBackgroundExecutor;
-    }
-
     // =================================================================
     // UI routines
     // =================================================================
@@ -107,7 +98,7 @@ extends Activity implements IBaseActivity<T> {
     public abstract void showError(String message);
     /**
      * Show error to user 
-     * @param message
+     * @param messageResource
      */
     public void showError(int messageResource) {
         showError(getString(messageResource));

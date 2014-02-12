@@ -22,10 +22,9 @@ import java.io.Serializable;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  * Please don't use task messages with "what" over 0x80000000
  */
-public interface ITask {
+public interface ITask<ResultType extends Serializable, Params, RawData> extends Cancelable {
     public int MESSAGE_TASK_FINISHED_SUCCESS = 0x80000000;
     public int MESSAGE_TASK_EXCEPTION = 0x80000001;
-    public void execute(ITaskSimpleListener handler) throws Exception;
     public void setTaskId(int id);
     public int getTaskId();
     // Task tags - extra piece of information
@@ -33,5 +32,11 @@ public interface ITask {
     public int getTaskTag();
     public ITask setTaskTagObject(Serializable tag);
     public Serializable getTaskTagObject();
-    public void cancelTask();
+	public ResultType getResult();
+	/**
+	 * Execute request.
+	 * @throws AbstractDataRequestException
+	 */
+	public ITask<ResultType, Params, RawData> execute(ITaskSimpleListener handler)
+			throws AbstractDataRequestException;
 }

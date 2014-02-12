@@ -9,7 +9,6 @@ uploadArchives {
 
 dependencies {
     compile project(':V2AndLib-commondata')
-    compile project(':V2AndLib-depredecated')
     compile 'com.android.support:support-v4:19.0.0'
 }
 
