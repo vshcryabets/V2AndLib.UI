@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public class StartStopSampleTask extends DummyTask<Serializable, Void, Void> {
+public class StartStopSampleTask extends DummyTask<Serializable> {
     public static final int TASK_MESSAGE_NEWTIME = 1;
 
 	@Override
@@ -38,7 +38,7 @@ public class StartStopSampleTask extends DummyTask<Serializable, Void, Void> {
 	}
 
 	@Override
-    public ITask<Serializable, Void, Void> execute(ITaskSimpleListener handler) throws AbstractDataRequestException {
+    public StartStopSampleTask execute(ITaskSimpleListener handler) throws AbstractDataRequestException {
 		try {
 			Thread.sleep(500);
 			while ( true ) {

@@ -22,14 +22,22 @@ import java.io.Serializable;
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public abstract class AbstractDataRequestException extends ITaskException implements Serializable {
+public abstract class ITaskException extends Exception implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public AbstractDataRequestException(String message) {
+	public ITaskException(String message) {
 		super(message);
 	}
-	public AbstractDataRequestException(Throwable e) {
+	public ITaskException(Throwable e) {
 		super(e);
+	}
+	@Override
+	public String toString() {
+		if ( getMessage() != null && getMessage().length() > 0 ) {
+			return getMessage();
+		} else {
+			return super.toString();
+		}
 	}
 }
 

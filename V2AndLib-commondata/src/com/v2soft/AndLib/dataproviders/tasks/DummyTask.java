@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,10 @@ import java.io.Serializable;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public abstract class DummyTask<ResultType extends Serializable, Params, RawData>
-		implements ITask<ResultType, Params, RawData>, Serializable {
+public abstract class DummyTask<ResultType extends Serializable>
+		implements ITask<ResultType>, Serializable {
     private static final long serialVersionUID = 1L;
     private int mId;
-    private int mTag;
     private Serializable mTagObj;
     protected boolean isCanceled;
     // ===========================================================
@@ -38,10 +37,6 @@ public abstract class DummyTask<ResultType extends Serializable, Params, RawData
     @Override
     public int getTaskId() {
         return mId;
-    }
-    @Override
-    public int getTaskTag() {
-        return mTag;
     }
     @Override
     public Serializable getTaskTagObject() {
@@ -53,11 +48,6 @@ public abstract class DummyTask<ResultType extends Serializable, Params, RawData
     @Override
     public void setTaskId(int id) {
         mId = id;
-    }
-    @Override
-    public ITask setTaskTag(int id) {
-        mTag = id;
-        return this;
     }
     @Override
     public ITask setTaskTagObject(Serializable tag) {

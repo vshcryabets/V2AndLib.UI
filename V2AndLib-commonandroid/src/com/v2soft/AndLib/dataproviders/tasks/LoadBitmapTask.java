@@ -30,7 +30,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class LoadBitmapTask extends DummyTask<Serializable, Void, Void> {
+public class LoadBitmapTask extends DummyTask<Serializable> {
     private static final long serialVersionUID = 1L;
     protected String mFilePath;
     transient protected Bitmap mBitmap;
@@ -61,7 +61,7 @@ public class LoadBitmapTask extends DummyTask<Serializable, Void, Void> {
 	}
 
 	@Override
-    public ITask<Serializable,Void,Void> execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
+    public LoadBitmapTask execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
         // Get the dimensions of the bitmap
         final BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;

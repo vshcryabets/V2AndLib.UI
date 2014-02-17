@@ -22,10 +22,10 @@ import java.io.Serializable;
  * @author V.Shcryabets<vshcryabets@gmail.com>
  */
 public abstract class AbstractDataRequest<ResultType extends Serializable, Params, RawData>
-		implements Serializable, ITask<ResultType, Params, RawData> {
+		implements Serializable, ITask<ResultType> {
     private static final long serialVersionUID = 1L;
     protected ResultType mData;
-	protected int mTaskId, mTaskTag;
+	protected int mTaskId;
 	private Serializable mTagObj;
 
 	public AbstractDataRequest() {
@@ -36,7 +36,7 @@ public abstract class AbstractDataRequest<ResultType extends Serializable, Param
      * @throws AbstractDataRequestException
      */
 	@Override
-    public ITask<ResultType, Params, RawData> execute(ITaskSimpleListener handler)
+    public AbstractDataRequest<ResultType, Params, RawData> execute(ITaskSimpleListener handler)
 			throws AbstractDataRequestException {
         final Params params = prepareParameters();
         final RawData rawData = sendRequest(params);
@@ -74,15 +74,6 @@ public abstract class AbstractDataRequest<ResultType extends Serializable, Param
 	@Override
 	public void setTaskId(int id) {
 		mTaskId = id;
-	}
-	@Override
-	public int getTaskTag() {
-		return mTaskTag;
-	}
-	@Override
-	public ITask setTaskTag(int id) {
-		mTaskTag = id;
-		return this;
 	}
 	@Override
 	public Serializable getTaskTagObject() {

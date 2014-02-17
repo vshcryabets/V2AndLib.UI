@@ -17,6 +17,7 @@ import com.v2soft.AndLib.dataproviders.tasks.DownloadAndDecodeImage;
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  *
  */
+@Deprecated
 public class BitmapsCache implements ITaskListener {
     public interface BitmapsCacheListener {
         public void onBitmapUpdated(Bitmap bitmap, int id);
@@ -81,15 +82,6 @@ public class BitmapsCache implements ITaskListener {
                 mBitmaps.remove(url);
             }
         }
-//        synchronized ( mC ) {
-//            for (URL url : mBitmaps.keySet()) {
-//                Bitmap bitmap = mBitmaps.get(url);
-//                if ( !bitmap.isRecycled() ) {
-//                    bitmap.recycle();
-//                }
-//                mBitmaps.remove(url);
-//            }
-//        }
     }
 
     public void getBitmap(URL url, BitmapsCacheListener listener, int tag) {
@@ -104,7 +96,7 @@ public class BitmapsCache implements ITaskListener {
             Log.d(LOG_TAG, "Download bitmap for id = "+tag);
             final DownloadAndDecodeImage getThumb =
                     new DownloadAndDecodeImage(url, mCacheDir);
-            getThumb.setTaskTag(tag);
+            getThumb.setTaskTagObject(tag);
             mTaskHub.addTask(getThumb, this);
             mListeners.put(tag, listener);
         }
@@ -116,7 +108,7 @@ public class BitmapsCache implements ITaskListener {
 
     @Override
     public void onTaskFinished(ITask t) {
-        int id = t.getTaskTag();
+        int id = (Integer)t.getTaskTagObject();
         Log.d(LOG_TAG, "Ready bitmap for id = "+id);
         if ( mListeners.containsKey(id)) { 
             BitmapsCacheListener listener = mListeners.get(id);

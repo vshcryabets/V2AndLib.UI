@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,21 +22,19 @@ import java.io.Serializable;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  * Please don't use task messages with "what" over 0x80000000
  */
-public interface ITask<ResultType extends Serializable, Params, RawData> extends Cancelable {
+public interface ITask<ExecutionResult extends Serializable> extends Cancelable {
     public int MESSAGE_TASK_FINISHED_SUCCESS = 0x80000000;
     public int MESSAGE_TASK_EXCEPTION = 0x80000001;
     public void setTaskId(int id);
     public int getTaskId();
     // Task tags - extra piece of information
-    public ITask setTaskTag(int id);
-    public int getTaskTag();
     public ITask setTaskTagObject(Serializable tag);
     public Serializable getTaskTagObject();
-	public ResultType getResult();
+	public ExecutionResult getResult();
 	/**
 	 * Execute request.
 	 * @throws AbstractDataRequestException
 	 */
-	public ITask<ResultType, Params, RawData> execute(ITaskSimpleListener handler)
-			throws AbstractDataRequestException;
+	public ITask<ExecutionResult> execute(ITaskSimpleListener handler)
+			throws ITaskException;
 }

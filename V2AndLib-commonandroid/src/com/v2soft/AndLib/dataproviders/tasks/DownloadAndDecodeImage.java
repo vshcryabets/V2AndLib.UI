@@ -49,7 +49,7 @@ public class DownloadAndDecodeImage extends LoadBitmapTask {
     }
 
     @Override
-    public ITask<Serializable, Void, Void> execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
+    public LoadBitmapTask execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
         final CacheHTTPFile cache = new CacheHTTPFile(mURL, mCacheDir, mCustomHashString);
         cache.execute(hub);
         checkCanceled();

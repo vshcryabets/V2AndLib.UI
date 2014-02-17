@@ -43,7 +43,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class CacheHTTPFile extends DummyTask<Boolean, Void, Void> {
+public class CacheHTTPFile extends DummyTask<Boolean> {
 	private static final long serialVersionUID = 1L;
 	public static final int MSG_CONTENT_LENGTH = 1;
 	public static final int MSG_RECEIVED_LENGTH = 2;
@@ -111,7 +111,7 @@ public class CacheHTTPFile extends DummyTask<Boolean, Void, Void> {
 	}
 
 	@Override
-	public ITask<Boolean, Void, Void> execute(ITaskSimpleListener handler)
+	public CacheHTTPFile execute(ITaskSimpleListener handler)
 			throws AbstractDataRequestException {
 		mSucccess = false;
 		try {

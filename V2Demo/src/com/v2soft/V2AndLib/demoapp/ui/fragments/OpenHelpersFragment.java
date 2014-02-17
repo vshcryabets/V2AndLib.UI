@@ -15,11 +15,7 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
-import android.accounts.Account;
-import android.accounts.AccountManagerFuture;
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,14 +23,9 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import com.v2soft.AndLib.dataproviders.AsyncTaskExecutor;
-import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.tasks.CacheHTTPFile;
-import com.v2soft.AndLib.services.AndroidAccountHelper;
 import com.v2soft.AndLib.sketches.CopyURL2URL;
 import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
 import com.v2soft.AndLib.sketches.OpenHelpers;
@@ -42,9 +33,6 @@ import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
-import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;
-import com.v2soft.V2AndLib.demoapp.providers.DemoSyncAdapter;
-import com.v2soft.V2AndLib.demoapp.services.DemoAuthService;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;

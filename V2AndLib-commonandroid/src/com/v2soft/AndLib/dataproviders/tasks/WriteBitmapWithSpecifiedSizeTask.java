@@ -32,7 +32,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public class WriteBitmapWithSpecifiedSizeTask extends DummyTask<Serializable, Void, Void> {
+public class WriteBitmapWithSpecifiedSizeTask extends DummyTask<Serializable> {
     private static final long serialVersionUID = 1L;
 
     public enum RegressionMode {
@@ -69,7 +69,7 @@ public class WriteBitmapWithSpecifiedSizeTask extends DummyTask<Serializable, Vo
 	}
 
 	@Override
-    public ITask<Serializable, Void, Void> execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
+    public WriteBitmapWithSpecifiedSizeTask execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
         final LoadBitmapTask loader = new LoadBitmapTask(mInputFile, mMaxWidth, mMaxHeight);
         loader.setUseMinimalScaleFactor(useMinimalScaleFactor);
         loader.execute(hub);
