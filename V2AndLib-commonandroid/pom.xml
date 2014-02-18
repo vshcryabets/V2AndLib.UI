@@ -12,7 +12,7 @@
 
   <artifactId>commonandroid</artifactId>
   <name>V2AndLib-commonandroid</name>
-  <version>1.2.1</version>
+  <version>1.2.4</version>
   <packaging>apklib</packaging>
 
   <build>
