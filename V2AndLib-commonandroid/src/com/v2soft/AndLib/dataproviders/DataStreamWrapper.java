@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -22,13 +23,24 @@ public class DataStreamWrapper implements Closeable {
 	private static final String CONTENT_SCHEME_URI = "content";
 	private static final String HTTP_SCHEME_URI = "http";
 	private static final String HTTPS_SCHEME_URI = "https";
-
 	private static final String ANDROID_ASSETS = "/android_asset/";
+	private static final int BUFFER_SIZE = 8192;
+	private static final long UPDATE_MEASURE = 10 * 1024; // update every 10kB
+
+	public interface StreamPositionListener {
+		public void onPositionChanged(long position, long maxPosition);
+	}
 
 	private InputStream mStream;
 	private long mAvaiableDataSize;
+	private long mUpdateMeasure = UPDATE_MEASURE;
 
 	private DataStreamWrapper() {}
+
+	public DataStreamWrapper(InputStream in, long dataSize) {
+		mStream = in;
+		mAvaiableDataSize = dataSize;
+	}
 
 	public static DataStreamWrapper getStream(Context context, URI uri) throws IOException {
 		DataStreamWrapper result = new DataStreamWrapper();
@@ -78,4 +90,36 @@ public class DataStreamWrapper implements Closeable {
 	public long getAvaiableDataSize() {
 		return mAvaiableDataSize;
 	}
+
+	/**
+	 * Copy stream to specified output stream.
+	 * @param out
+	 * @param listener
+	 * @return
+	 * @throws IOException
+	 */
+	public DataStreamWrapper copyToOutputStream(OutputStream out, StreamPositionListener listener)
+			throws IOException {
+		byte buffer[] = new byte[BUFFER_SIZE];
+		int read;
+		long total = 0, prevtotal = 0;
+		while ( (read = mStream.read(buffer)) > 0 ) {
+			out.write(buffer, 0, read);
+			total += read;
+			if ( listener != null && total - mUpdateMeasure > prevtotal ) {
+				listener.onPositionChanged(total, mAvaiableDataSize);
+			}
+		}
+		return this;
+	}
+
+	public DataStreamWrapper copyToOutputStream(OutputStream out)
+			throws IOException {
+		return copyToOutputStream(out, null);
+	}
+
+	public void setUpdateMeasure(long mUpdateMeasure) {
+		this.mUpdateMeasure = mUpdateMeasure;
+	}
+
 }

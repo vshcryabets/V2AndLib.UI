@@ -5,6 +5,8 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,7 +17,17 @@ import java.net.URISyntaxException;
 public class DataStreamsWrapperTests extends AndroidTestCase {
 	@SmallTest
 	public void testOpenFile() throws URISyntaxException, IOException {
-		DataStreamWrapper wrapper = DataStreamWrapper.getStream(getContext(), new URI(""));
+		DataStreamWrapper wrapper = DataStreamWrapper.getStream(getContext(),
+				new URI("file:///android_asset/test.mp3"));
+		File tempOutFile = File.createTempFile("tmp", "", getContext().getExternalCacheDir());
+		FileOutputStream output = new FileOutputStream(tempOutFile);
+		wrapper.copyToOutputStream(output).close();
+
+		wrapper = DataStreamWrapper.getStream(getContext(), new URI("file", "",
+				tempOutFile.getAbsolutePath(), ""));
+		assertNotNull(wrapper);
+		assertNotNull(wrapper.getInputStream());
+		assertEquals(1024, wrapper.getAvaiableDataSize());
 	}
 	@SmallTest
 	public void testOpenContent() throws URISyntaxException, IOException {
