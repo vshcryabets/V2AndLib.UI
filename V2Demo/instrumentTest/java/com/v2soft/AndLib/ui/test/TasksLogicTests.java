@@ -34,14 +34,14 @@ import java.io.Serializable;
  *
  */
 public class TasksLogicTests extends AndroidTestCase {
-    private class SimpleTask extends DummyTask<Serializable, Void, Void> {
+    private class SimpleTask extends DummyTask<Serializable> {
 		@Override
 		public Serializable getResult() {
 			return null;
 		}
 
 		@Override
-        public ITask<Serializable, Void, Void> execute(ITaskSimpleListener handler) throws AbstractDataRequestException {
+        public SimpleTask execute(ITaskSimpleListener handler) throws AbstractDataRequestException {
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {

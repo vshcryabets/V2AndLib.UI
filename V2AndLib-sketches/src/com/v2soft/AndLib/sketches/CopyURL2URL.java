@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.v2soft.AndLib.dataproviders.Cancelable;
+import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,6 +30,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -61,23 +64,14 @@ public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cance
 	protected Boolean doInBackground(Void... params) {
 		try {
 			isCanceled = false;
-			InputStream input = null;
-			String path = mSource.getPath();
-			if ( path.startsWith(ANDROID_ASSETS)) {
-				input = mContext.getAssets().open(mSource.getPath().replace(ANDROID_ASSETS,""));
-			} else {
-				HttpURLConnection connection = (HttpURLConnection) mSource.openConnection();
-				connection.getDoInput();
-				connection.connect();
-				input = connection.getInputStream();
-			}
+			DataStreamWrapper input = DataStreamWrapper.getStream(mContext, new URI(mSource.toString()));
 			FileOutputStream output = new FileOutputStream(mTarget.getPath());
 			byte [] buffer = new byte[8192];
 			int read;
 			long total = 0;
 			long prevTotal = 0;
 			long updateMeasure = getUpdateMeasure();
-			while ( (read = input.read(buffer)) > 0 && !isCanceled ) {
+			while ( (read = input.getInputStream().read(buffer)) > 0 && !isCanceled ) {
 				output.write(buffer, 0, read);
 				total += read;
 				if ( total-prevTotal > updateMeasure ) {
@@ -89,7 +83,10 @@ public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cance
 			output.close();
 			return !isCanceled;
 		} catch (MalformedURLException e) {
+			Log.e(TAG, e.toString(), e);
 		} catch (IOException e) {
+			Log.e(TAG, e.toString(), e);
+		} catch (URISyntaxException e) {
 			Log.e(TAG, e.toString(), e);
 		}
 		return false;
