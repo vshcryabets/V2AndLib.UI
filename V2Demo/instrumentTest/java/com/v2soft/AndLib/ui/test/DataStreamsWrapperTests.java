@@ -15,10 +15,19 @@ import java.net.URISyntaxException;
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  */
 public class DataStreamsWrapperTests extends AndroidTestCase {
+	public static final String ASSET_FILE_PATH = "file:///android_asset/test.mp3";
+	public static final URI ASSETS_FILE;
+	static {
+		try {
+			ASSETS_FILE = new URI(ASSET_FILE_PATH);
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@SmallTest
 	public void testOpenFile() throws URISyntaxException, IOException {
-		DataStreamWrapper wrapper = DataStreamWrapper.getStream(getContext(),
-				new URI("file:///android_asset/test.mp3"));
+		DataStreamWrapper wrapper = DataStreamWrapper.getStream(getContext(), ASSETS_FILE);
 		File tempOutFile = File.createTempFile("tmp", "", getContext().getExternalCacheDir());
 		FileOutputStream output = new FileOutputStream(tempOutFile);
 		wrapper.copyToOutputStream(output).close();
