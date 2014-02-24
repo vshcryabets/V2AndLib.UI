@@ -74,5 +74,6 @@ public class CacheLogicTests extends AndroidTestCase {
 		assertFalse("File shouldn't be present in cache", isInCache);
 		isInCache = cache.isInCache(Uri.parse(DataStreamsWrapperTests.ASSET_FILE_PATH));
 		assertFalse("File shouldn't be present in cache", isInCache);
+		// TODO outdate tests
 	}
 }
