@@ -104,7 +104,7 @@ public class SamplesList
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Class<?> clazz = sActivities[arg2];
-		if ( Activity.class.equals(clazz) ) {
+		if ( Activity.class.isAssignableFrom(clazz) ) {
 			startActivity(new Intent(getActivity(), sActivities[arg2]));
 		} else {
 			if ( clazz.equals(SynchronizationFragment.class)) {

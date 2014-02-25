@@ -15,7 +15,7 @@ JNIEXPORT jstring JNICALL Java_com_v2soft_AndLib_media_MP3Helper_getVersion
     return (*env)->NewStringUTF(env, get_lame_version());
 }
 
-JNIEXPORT jint JNICALL Java_com_v2soft_AndLib_media_MP3Helper_initNative (JNIEnv * env, jclass c) {
+JNIEXPORT jint JNICALL Java_com_v2soft_AndLib_media_MP3Helper_allocateEncoderNative(JNIEnv * env, jclass c) {
 	lgf = lame_init();
 	if (lame_init_params(lgf) == -1) {
 		__android_log_print(ANDROID_LOG_ERROR, "LameWrapper[Native]", "Lame init params failed");

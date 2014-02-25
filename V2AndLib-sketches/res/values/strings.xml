@@ -2,4 +2,6 @@
 <resources>
 
     <string name="v2andlib_downloaded_kb">Downloaded %d Kb.</string>
+    <string name="v2andlib_gps_disabled">GPS services are disabled</string>
+    <string name="v2andlib_gps_enable_message">Would you like to enable GPS in device settings?</string>
 </resources>

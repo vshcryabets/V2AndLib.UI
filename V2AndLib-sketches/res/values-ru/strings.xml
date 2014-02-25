@@ -2,5 +2,7 @@
 <resources>
 
     <string name="v2andlib_downloaded_kb">Загруженно %d килобайт.</string>
+    <string name="v2andlib_gps_disabled">Службы позиционированния отключенны</string>
+    <string name="v2andlib_gps_enable_message">Хотите включить GPS в настройках устройства?</string>
 
 </resources>

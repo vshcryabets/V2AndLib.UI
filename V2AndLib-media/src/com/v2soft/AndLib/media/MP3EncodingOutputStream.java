@@ -15,34 +15,46 @@
  */
 package com.v2soft.AndLib.media;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Queue;
 
 /**
  * @author V.Shcryabets (vshcryabets@gmail.com)
  */
-public class MP3EncodingOutputStream extends OutputStream {
-	private OutputStream mInnerOutputStream;
-	private Queue<byte[]> mEncodeBuffers;
-	private int position;
+public class MP3EncodingOutputStream extends BufferedOutputStream {
 
-	public MP3EncodingOutputStream(OutputStream output) {
-		mInnerOutputStream = output;
+	/**
+	 *
+	 * @param output
+	 * @param inSampleRate input sample rate in Hz
+	 * @param mode stereo, jstereo, dual channel (not supported), mono default: lame picks based on compression ration and input channels
+	 */
+	public MP3EncodingOutputStream(final OutputStream output, int inSampleRate,
+								   MP3Helper.LAMEMode mode) {
+		super(new InternallStream(output, inSampleRate, mode));
 	}
 
-	@Override
-	public void write(int oneByte) throws IOException {
+	private static class InternallStream extends OutputStream {
+		private byte[] mEncodedBuffer;
+		private MP3Helper mHelper;
+		private OutputStream mEncodedStream;
 
-	}
+		InternallStream(OutputStream output, int inSampleRate,
+						MP3Helper.LAMEMode mode) {
+			mEncodedStream = output;
+			mHelper = new MP3Helper(inSampleRate, mode);
+		}
 
-	@Override
-	public void write(byte[] buffer) throws IOException {
-		this.write(buffer, 0, buffer.length);
-	}
-
-	@Override
-	public void write(byte[] buffer, int offset, int count) throws IOException {
-		super.write(buffer, offset, count);
+		@Override
+		public void write(int oneByte) throws IOException {
+		}
+		@Override
+		public void write(byte[] buffer, int offset, int count) throws IOException {
+			// send data to encoder
+//			int encoded = mHelper.encodeBuffer(buffer, offset, count, mEncodedBuffer);
+			// write encoded data to main output stream
+//			mEncodedStream.write(mEncodedBuffer, 0, encoded);
+		}
 	}
 }

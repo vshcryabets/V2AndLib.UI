@@ -58,15 +58,24 @@ implements OnClickListener {
 
     /**
      * Subscribe to specified OnClick events
-     * @param ids array of view identificators.
+     * @param ids array of view identifiers.
      */
     protected void registerOnClickListener(int[] ids, View inview) {
-        for (int i : ids) {
-            final View view = inview.findViewById(i);
-            if ( view == null ) throw new NullPointerException("Can't get view with id "+i);
-            view.setOnClickListener(this);
-        }
+		registerOnClickListener(ids, inview, this);
     }
+	/**
+	 * Subscribe to specified OnClick events
+	 * @param ids array of view identifiers.
+	 */
+	protected void registerOnClickListener(int[] ids, View inview, OnClickListener listener) {
+		for (int i : ids) {
+			final View view = inview.findViewById(i);
+			if ( view == null ) {
+				throw new NullPointerException("Can't found view with id "+i);
+			}
+			view.setOnClickListener(listener);
+		}
+	}
     /**
      * Start new fragment in specified container view with custom animations
      * @param resId container view resource ID
