@@ -20,10 +20,6 @@ import java.io.Serializable;
 import android.content.Context;
 import android.content.Intent;
 
-import com.v2soft.AndLib.dataproviders.AbstractDataRequest;
-import com.v2soft.AndLib.dataproviders.ITask;
-import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
-
 /**
  * 
  * @author V.Shcryabets<vshcryabets@gmail.com>
@@ -32,9 +28,8 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  * @param <Params> parameters data type
  * @param <RawData>
  */
-public abstract class AbstractServiceRequest<ResultType, Params, RawData> 
-    extends AbstractDataRequest<ResultType, Params, RawData> 
-    implements ITask{
+public abstract class AbstractServiceRequest<ResultType extends Serializable, Params, RawData>
+    extends AbstractDataRequest<ResultType, Params, RawData> {
     private static final long serialVersionUID = 1L;
     public static final String EXTRA_TASK = "com.v2soft.AndLib.dataproviders.TASK";
     public static final String EXTRA_EXCEPTION = "com.v2soft.AndLib.dataproviders.EXCEPTION";
@@ -42,9 +37,7 @@ public abstract class AbstractServiceRequest<ResultType, Params, RawData>
     // Fields
     //===============================================================
     transient protected Context mContext;
-    protected int mTaskId, mTaskTag;
-    private Serializable mTagObj;
-    
+
     public AbstractServiceRequest(Context context) {
         super();
         mContext = context;
@@ -66,43 +59,5 @@ public abstract class AbstractServiceRequest<ResultType, Params, RawData>
 
     public void setContext(Context context) {
         mContext = context;
-    }
-    // ========================================================
-    // ITask interface
-    // ========================================================
-    @Override
-    public int getTaskId() {
-        return mTaskId;
-    }
-    @Override
-    public void setTaskId(int id) {
-        mTaskId = id;
-    }
-    @Override
-    public int getTaskTag() {
-        return mTaskTag;
-    }
-    @Override
-    public ITask setTaskTag(int id) {
-        mTaskTag = id;
-        return this;
-    }
-    @Override
-    public Serializable getTaskTagObject() {
-        return mTagObj;
-    }
-    @Override
-    public ITask setTaskTagObject(Serializable tag) {
-        mTagObj = tag;
-        return this;
-    }
-
-    @Override
-    public void execute(ITaskSimpleListener handler) throws AbstractDataRequestException {
-        execute();
-    }
-
-    @Override
-    public void cancelTask() {
     }
 }

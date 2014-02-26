@@ -1,10 +1,14 @@
-February 2014:
-- AndroidAccountHelepr - helps to operate with accounts & SyncAdapter
+Something new in February 2014
+- Bitmap operation helper in V2AndLib-media library
+- File cache helper
+- LAME wrapper
+- DataStreamWrapper - New helper class DataStreamWrapper - helps to open input stream for different resources
+- New Class AndroidAccountHelper - helps to operate with system accounts & SyncAdapter
 
 December 2013
 - Updated for Gradle 1.9 Android plugin 0.7.1
 
-Ocotber 2013
+October 2013
 - code base was separeted between few sub-projects
 
 September 2013

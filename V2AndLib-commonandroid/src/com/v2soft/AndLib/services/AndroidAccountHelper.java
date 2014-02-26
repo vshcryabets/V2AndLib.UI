@@ -91,7 +91,15 @@ public class AndroidAccountHelper {
 		mPrimaryAccount = getAccountByType(0);
 	}
 
-	public void enableAutoSync(boolean enabled) {
+	/**
+	 * Set whether or not the provider is synced when it receives a network tickle.
+	 * This method requires the caller to hold the permission WRITE_SYNC_SETTINGS.
+	 * @param enabled
+	 */
+	public void enableAutoSync(boolean enabled) throws IllegalStateException {
+		if ( mPrimaryAccount == null ) {
+			throw new IllegalStateException("Primary account doesn't exists");
+		}
 		ContentResolver.setSyncAutomatically(mPrimaryAccount, mAuthority, enabled);
 	}
 
@@ -100,7 +108,10 @@ public class AndroidAccountHelper {
 	 * @param pollFrequency how frequently the sync should be performed, in seconds.
 	 * @param enabled
 	 */
-	public void enablePeriodicSync(long pollFrequency, boolean enabled) {
+	public void enablePeriodicSync(long pollFrequency, boolean enabled) throws IllegalStateException {
+		if ( mPrimaryAccount == null ) {
+			throw new IllegalStateException("Primary account doesn't exists");
+		}
 		if ( enabled ) {
 			ContentResolver.addPeriodicSync(mPrimaryAccount, mAuthority, new Bundle(), pollFrequency);
 		} else {
@@ -108,7 +119,33 @@ public class AndroidAccountHelper {
 		}
 	}
 
-	public void requestSync() {
+	/**
+	 * Start an asynchronous sync operation.
+	 * @throws IllegalStateException
+	 */
+	public void requestSync() throws IllegalStateException {
+		if ( mPrimaryAccount == null ) {
+			throw new IllegalStateException("Primary account doesn't exists");
+		}
 		ContentResolver.requestSync(mPrimaryAccount, mAuthority, new Bundle());
+	}
+	/**
+	 * Start an asynchronous sync operation.
+	 * Only values of the following types may be used in the extras bundle:
+	 * Integer
+	 * Long
+	 * Boolean
+	 * Float
+	 * Double
+	 * String
+	 * Account
+	 * null
+	 * @throws IllegalStateException
+	 */
+	public void requestSync(Bundle bundle) throws IllegalStateException {
+		if ( mPrimaryAccount == null ) {
+			throw new IllegalStateException("Primary account doesn't exists");
+		}
+		ContentResolver.requestSync(mPrimaryAccount, mAuthority, bundle);
 	}
 }

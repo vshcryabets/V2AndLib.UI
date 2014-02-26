@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,30 +20,24 @@ import java.io.Serializable;
 /**
  * Abstract data request class
  * @author V.Shcryabets<vshcryabets@gmail.com>
- *
  */
-public abstract class AbstractDataRequest<ResultType, Params, RawData> implements Serializable {
+public abstract class AbstractDataRequest<ResultType extends Serializable, Params, RawData>
+		implements Serializable, ITask<ResultType> {
     private static final long serialVersionUID = 1L;
-
-    public interface AbstractDataRequestCallback<R> {
-        void onDataReady(R result);
-    }
-
-    transient protected AbstractDataRequestCallback<ResultType> mCallback;
     protected ResultType mData;
+	protected int mTaskId;
+	private Serializable mTagObj;
 
-    public AbstractDataRequest() {
-
-    }
-    public AbstractDataRequest(AbstractDataRequestCallback<ResultType> callback) {
-        mCallback = callback;
+	public AbstractDataRequest() {
     }
 
     /**
      * Execute request.
      * @throws AbstractDataRequestException
      */
-    public AbstractDataRequest<ResultType, Params, RawData> execute() throws AbstractDataRequestException {
+	@Override
+    public AbstractDataRequest<ResultType, Params, RawData> execute(ITaskSimpleListener handler)
+			throws AbstractDataRequestException {
         final Params params = prepareParameters();
         final RawData rawData = sendRequest(params);
         final ResultType res = parseResult(rawData);
@@ -57,19 +51,49 @@ public abstract class AbstractDataRequest<ResultType, Params, RawData> implement
      */
     protected void deliveryResult(ResultType data) {
         mData = data;
-        if ( mCallback != null ) {
-            mCallback.onDataReady(data);
-        }
     }
 
     protected abstract ResultType parseResult(RawData data) throws AbstractDataRequestException;
     protected abstract RawData sendRequest(Params p) throws AbstractDataRequestException;
     protected abstract Params prepareParameters() throws AbstractDataRequestException;
-    /**
-     * Get result of the data request.
-     * @return result of the data request.
-     */
-    public ResultType getResult() {
-        return mData;
-    }
+	// ========================================================
+	// ITask interface
+	// ========================================================
+	/**
+	 * Get result of the data request.
+	 * @return result of the data request.
+	 */
+	@Override
+	public ResultType getResult() {
+		return mData;
+	}
+	@Override
+	public int getTaskId() {
+		return mTaskId;
+	}
+	@Override
+	public void setTaskId(int id) {
+		mTaskId = id;
+	}
+	@Override
+	public Serializable getTaskTagObject() {
+		return mTagObj;
+	}
+	@Override
+	public ITask setTaskTagObject(Serializable tag) {
+		mTagObj = tag;
+		return this;
+	}
+	@Override
+	public void cancel() {
+	}
+	@Override
+	public boolean canBeCanceled() {
+		return true;
+	}
+
+	@Override
+	public boolean isCanceled() {
+		return false;
+	}
 }

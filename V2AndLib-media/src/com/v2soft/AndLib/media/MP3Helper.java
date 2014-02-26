@@ -21,5 +21,19 @@ package com.v2soft.AndLib.media;
  *
  */
 public class MP3Helper {
-	public static native int encodeBuffer(byte [] inbuffer, int offset, int size, byte[] outbuffer);
+	public enum LAMEMode {
+		stereo, jstereo, dualchannel, mono
+	};
+	private int mEncoderId;
+
+	public MP3Helper(int inSampleRate, LAMEMode mode) {
+		mEncoderId = allocateEncoderNative();
+		if ( mEncoderId == 0 ) {
+			throw new IllegalStateException("Can't allocate encoder");
+		}
+	}
+
+	private native String getVersion();
+	private native int allocateEncoderNative();
+	private native int encodeBufferNative(byte [] inbuffer, int offset, int size, byte[] outbuffer);
 }

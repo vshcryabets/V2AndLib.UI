@@ -16,6 +16,7 @@
 package com.v2soft.AndLib.dataproviders;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -26,7 +27,7 @@ import android.content.Context;
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  *
  */
-public abstract class AbstractHTTPServiceRequest<ResultType, ParametrType, RawData> 
+public abstract class AbstractHTTPServiceRequest<ResultType extends Serializable, ParametrType, RawData>
     extends AbstractServiceRequest<ResultType, ParametrType, RawData> {
     private static final long serialVersionUID = 1L;
 
@@ -36,7 +37,6 @@ public abstract class AbstractHTTPServiceRequest<ResultType, ParametrType, RawDa
     /**
      * Prepare url connection for this request.
      * @param url
-     * @param method
      * @return
      * @throws IOException
      */

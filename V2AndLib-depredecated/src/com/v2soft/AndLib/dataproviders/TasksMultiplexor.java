@@ -138,7 +138,7 @@ public class TasksMultiplexor implements ITaskHub {
     }
 
     @Override
-    public void onMessageFromTask(final ITask task, final Message message) {
+    public void onMessageFromTask(final ITask task, final Object message) {
         final ITaskListener listener = mListeners.get(task.getTaskId());
         if ( listener != null ) {
             mHandler.post(new Runnable() {

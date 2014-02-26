@@ -15,22 +15,17 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
-import android.accounts.Account;
-import android.accounts.AccountManagerFuture;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
 
-import com.v2soft.AndLib.services.AndroidAccountHelper;
+import com.v2soft.AndLib.dataproviders.AsyncTaskExecutor;
+import com.v2soft.AndLib.dataproviders.tasks.CacheHTTPFile;
 import com.v2soft.AndLib.sketches.CopyURL2URL;
 import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
 import com.v2soft.AndLib.sketches.OpenHelpers;
@@ -38,13 +33,12 @@ import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
-import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;
-import com.v2soft.V2AndLib.demoapp.providers.DemoSyncAdapter;
-import com.v2soft.V2AndLib.demoapp.services.DemoAuthService;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Fragment that demonstarte work of open helpers.
@@ -78,35 +72,46 @@ public class OpenHelpersFragment
 //						R.string.error_cant_open);
 				mProgressDlg.setMessage(getString(R.string.v2andlib_loading));
 				mProgressDlg.show();
-				final File outputFileRemote = new File(getActivity().getExternalCacheDir(), "sample.pdf");
 				try {
-					final CopyURL2URL copyTask = new CopyURL2URL(getActivity(),
-							new URL("https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf"),
-							new URL(Uri.fromFile(outputFileRemote).toString())
-					){
+					URL remotePDF = new URL("https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf");
+					final CacheHTTPFile dowloadTask = new CacheHTTPFile(remotePDF, getActivity().getExternalCacheDir());
+					AsyncTaskExecutor executor = new AsyncTaskExecutor<CacheHTTPFile>() {
 						@Override
-						protected void onProgressUpdate(Long... values) {
+						protected void onProgressUpdate(Object... values) {
 							super.onProgressUpdate(values);
-							mProgressDlg.setMessage(getString(R.string.v2andlib_downloaded_kb, (int) (values[0] / 1024)));
+							Message message = (Message) values[0];
+							if ( message.what == CacheHTTPFile.MSG_CONTENT_LENGTH ) {
+								mProgressDlg.setMax((int) (((Long)message.obj) / 1024));
+							} else if ( message.what == CacheHTTPFile.MSG_RECEIVED_LENGTH ) {
+								mProgressDlg.setMessage(getString(R.string.v2andlib_downloaded_kb,
+										((Long)message.obj) / 1024));
+								mProgressDlg.setProgress((int) (((Long)message.obj) / 1024));
+							}
 						}
-
 						@Override
-						protected void onPostExecute(Boolean aBoolean) {
-							super.onPostExecute(aBoolean);
+						protected void onPostExecute(CacheHTTPFile iTask) {
+							super.onPostExecute(iTask);
 							mProgressDlg.dismiss();
-							if ( aBoolean ) {
-								OpenHelpers.openLocalPDFFile(getActivity(),
-										Uri.fromFile(outputFileRemote),
-										R.string.title_select_PDF_application,
-										R.string.error_cant_open);
+							if ( iTask.getResult() ) {
+								try {
+									String filePath = iTask.getFullLocalPath();
+									OpenHelpers.openLocalPDFFile(getActivity(),
+											Uri.parse("file://"+filePath),
+											R.string.title_select_PDF_application,
+											R.string.error_cant_open);
+								} catch (NoSuchAlgorithmException e) {
+									e.printStackTrace();
+								} catch (UnsupportedEncodingException e) {
+									e.printStackTrace();
+								}
 							}
 						}
 					};
-					copyTask.execute(new Void[0]);
+					executor.execute(new CacheHTTPFile[]{dowloadTask});
 					mProgressDlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface dialog) {
-							copyTask.cancel();
+							dowloadTask.cancel();
 						}
 					});
 				} catch (MalformedURLException e) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import java.io.Serializable;
  * @author V.Shcryabets<vshcryabets@gmail.com>
  *
  */
-public abstract class AbstractDataRequestException extends Exception implements Serializable {
+public abstract class AbstractDataRequestException extends ITaskException implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public AbstractDataRequestException(String message) {
@@ -30,14 +30,6 @@ public abstract class AbstractDataRequestException extends Exception implements 
 	}
 	public AbstractDataRequestException(Throwable e) {
 		super(e);
-	}
-	@Override
-	public String toString() {
-		if ( getMessage().length() > 0 ) {
-			return getMessage();
-		} else {
-			return super.toString();
-		}
 	}
 }
 

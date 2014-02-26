@@ -57,7 +57,7 @@ public class TaskExecutorLoader extends AsyncTaskLoader<Void> implements ITaskSi
     }
 
     @Override
-    public void onMessageFromTask(ITask task, final Message message) {
+    public void onMessageFromTask(ITask task, final Object message) {
         mHandler.post(new Runnable() {
             @Override
             public void run() {

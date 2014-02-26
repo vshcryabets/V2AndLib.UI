@@ -17,6 +17,7 @@ package com.v2soft.AndLib.ui.fragments;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,16 +58,25 @@ implements OnClickListener {
     }
 
     /**
-     * Метод для подписки на OnClick события
-     * @param is массив идентификаторов вьюшек на которые нужно подписаться
+     * Subscribe to specified OnClick events
+     * @param ids array of view identifiers.
      */
-    protected void registerOnClickListener(int[] is, View inview) {
-        for (int i : is) {
-            final View view = inview.findViewById(i);
-            if ( view == null ) throw new NullPointerException("Can't get view with id "+i);
-            view.setOnClickListener(this);
-        }
+    protected void registerOnClickListener(int[] ids, View inview) {
+		registerOnClickListener(ids, inview, this);
     }
+	/**
+	 * Subscribe to specified OnClick events
+	 * @param ids array of view identifiers.
+	 */
+	protected void registerOnClickListener(int[] ids, View inview, OnClickListener listener) {
+		for (int i : ids) {
+			final View view = inview.findViewById(i);
+			if ( view == null ) {
+				throw new NullPointerException("Can't found view with id "+i);
+			}
+			view.setOnClickListener(listener);
+		}
+	}
     /**
      * Start new fragment in specified container view with custom animations
      * @param resId container view resource ID
@@ -120,7 +130,7 @@ implements OnClickListener {
     }
     /**
      * Show error to user 
-     * @param message
+     * @param messageResource
      */
     public void showError(int messageResource) {
         showError(getString(messageResource));
@@ -145,4 +155,15 @@ implements OnClickListener {
             activity.setBlockingProcess(value, tag);
         }
     }
+
+	/**
+	 * Clear framents back stack.
+	 */
+	public void clearBackStack() {
+		// clear back stack
+		FragmentManager fm = getFragmentManager();
+		for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+			fm.popBackStack();
+		}
+	}
 }
