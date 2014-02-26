@@ -16,14 +16,7 @@ import java.net.URISyntaxException;
  */
 public class DataStreamsWrapperTests extends AndroidTestCase {
 	public static final String ASSET_FILE_PATH = "file:///android_asset/test.mp3";
-	public static final URI ASSETS_FILE;
-	static {
-		try {
-			ASSETS_FILE = new URI(ASSET_FILE_PATH);
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-	}
+	public static final URI ASSETS_FILE = URI.create(ASSET_FILE_PATH);
 
 	@SmallTest
 	public void testOpenFile() throws URISyntaxException, IOException {
