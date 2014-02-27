@@ -28,6 +28,8 @@ import com.v2soft.AndLib.dataproviders.AsyncTaskExecutor;
 import com.v2soft.AndLib.dataproviders.tasks.CacheHTTPFile;
 import com.v2soft.AndLib.sketches.CopyURL2URL;
 import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
+import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
+import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
 import com.v2soft.AndLib.sketches.OpenHelpers;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;

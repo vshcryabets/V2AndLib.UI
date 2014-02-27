@@ -1,13 +1,23 @@
+/*
+ * Copyright (C) 2014 V.Shcryabets (vshcryabets@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.v2soft.AndLib.dataproviders;
-
-import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.net.Uri;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,10 +30,8 @@ import java.net.URL;
  */
 public class DataStreamWrapper implements Closeable {
 	private static final String FILE_SCHEME_URI = "file";
-	private static final String CONTENT_SCHEME_URI = "content";
 	private static final String HTTP_SCHEME_URI = "http";
 	private static final String HTTPS_SCHEME_URI = "https";
-	private static final String ANDROID_ASSETS = "/android_asset/";
 	private static final int BUFFER_SIZE = 8192;
 	private static final long UPDATE_MEASURE = 10 * 1024; // update every 10kB
 
@@ -31,38 +39,25 @@ public class DataStreamWrapper implements Closeable {
 		public void onPositionChanged(long position, long maxPosition);
 	}
 
-	private InputStream mStream;
-	private long mAvaiableDataSize;
-	private long mUpdateMeasure = UPDATE_MEASURE;
+	protected InputStream mStream;
+	protected long mAvaiableDataSize;
+	protected long mUpdateMeasure = UPDATE_MEASURE;
 
-	private DataStreamWrapper() {}
+	protected DataStreamWrapper() {}
 
 	public DataStreamWrapper(InputStream in, long dataSize) {
 		mStream = in;
 		mAvaiableDataSize = dataSize;
 	}
 
-	public static DataStreamWrapper getStream(Context context, URI uri) throws IOException {
+	public static DataStreamWrapper getStream(URI uri) throws IOException {
 		DataStreamWrapper result = new DataStreamWrapper();
 		String path = uri.getPath();
 
 		if ( uri.getScheme().equalsIgnoreCase(FILE_SCHEME_URI)) {
-			if ( path.startsWith(ANDROID_ASSETS)) {
-				try {
-					AssetFileDescriptor fd = context.getAssets().openFd(path.replace(ANDROID_ASSETS, ""));
-					result.mAvaiableDataSize = fd.getLength();
-					result.mStream = fd.createInputStream();
-				} catch (FileNotFoundException e) {
-					result.mStream = context.getAssets().open(path.replace(ANDROID_ASSETS, ""));
-					result.mAvaiableDataSize = Long.MIN_VALUE;
-				}
-			} else {
-				File file = new File(path);
-				result.mStream = new FileInputStream(path);
-				result.mAvaiableDataSize = file.length();
-			}
-		} else if ( uri.getScheme().equalsIgnoreCase(CONTENT_SCHEME_URI)) {
-			context.getContentResolver().openInputStream(Uri.parse(uri.toString()));
+			File file = new File(path);
+			result.mStream = new FileInputStream(path);
+			result.mAvaiableDataSize = file.length();
 		} else if ( uri.getScheme().equalsIgnoreCase(HTTP_SCHEME_URI) ||
 				uri.getScheme().equalsIgnoreCase(HTTPS_SCHEME_URI)) {
 			URL url = new URL(uri.toString());
@@ -96,7 +91,7 @@ public class DataStreamWrapper implements Closeable {
 	 * @param out
 	 * @param listener
 	 * @return
-	 * @throws IOException
+	 * @throws java.io.IOException
 	 */
 	public DataStreamWrapper copyToOutputStream(OutputStream out, StreamPositionListener listener)
 			throws IOException {

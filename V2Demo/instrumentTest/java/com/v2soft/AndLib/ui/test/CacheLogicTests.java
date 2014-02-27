@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
 import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
 import com.v2soft.AndLib.filecache.JavaHashFactory;
@@ -53,7 +54,7 @@ public class CacheLogicTests extends AndroidTestCase {
 		assertFalse("File shouldn't be present in cache", isInCache);
 		File file = cache.getFileByURI(DataStreamsWrapperTests.ASSETS_FILE);
 		FileOutputStream out = new FileOutputStream(file);
-		DataStreamWrapper wrapper = DataStreamWrapper.getStream(mContext, DataStreamsWrapperTests.ASSETS_FILE);
+		DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(mContext, DataStreamsWrapperTests.ASSETS_FILE);
 		wrapper.copyToOutputStream(out);
 		wrapper.close();
 		out.close();

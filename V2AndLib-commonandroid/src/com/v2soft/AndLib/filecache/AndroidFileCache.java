@@ -50,6 +50,9 @@ public class AndroidFileCache extends FileCache {
 		}
 
 		public AndroidFileCache build() {
+			if ( mNameFactory == null ) {
+				throw new NullPointerException("Name factory wasn't specified");
+			}
 			return new AndroidFileCache(mNameFactory, mCacheFolder);
 		}
 	}
