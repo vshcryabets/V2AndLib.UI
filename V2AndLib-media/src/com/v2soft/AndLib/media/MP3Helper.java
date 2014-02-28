@@ -24,16 +24,20 @@ public class MP3Helper {
 	public enum LAMEMode {
 		stereo, jstereo, dualchannel, mono
 	};
+	static {
+		System.loadLibrary("lamewrapper_full");
+	}
+
 	private int mEncoderId;
 
 	public MP3Helper(int inSampleRate, LAMEMode mode) {
-		mEncoderId = allocateEncoderNative();
+		mEncoderId = MP3Helper.allocateEncoderNative();
 		if ( mEncoderId == 0 ) {
 			throw new IllegalStateException("Can't allocate encoder");
 		}
 	}
 
 	private native String getVersion();
-	private native int allocateEncoderNative();
+	private static native int allocateEncoderNative();
 	private native int encodeBufferNative(byte [] inbuffer, int offset, int size, byte[] outbuffer);
 }

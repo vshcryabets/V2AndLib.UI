@@ -16,6 +16,9 @@
 package com.v2soft.AndLib.filecache;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 
@@ -75,6 +78,24 @@ public class FileCache {
 		File file = getFileByURI(fileName);
 		return file.delete();
 	}
+	public FileOutputStream getFileOutputStream(URI name) throws NoSuchAlgorithmException, FileNotFoundException {
+		File file = getFileByURI(name);
+		return new FileOutputStream(file);
+	}
+	public FileInputStream getFileInputStream(URI name) throws NoSuchAlgorithmException, FileNotFoundException {
+		File file = getFileByURI(name);
+		return new FileInputStream(file);
+	}
+
+	/**
+	 * Get absolute cached file path.
+	 * @param uri
+	 * @return absolute file path in cache.
+	 */
+	public String getCachePathURI(URI uri) throws NoSuchAlgorithmException {
+		return new File(mCacheFolder, mNameFactory.getLocalName(uri.toString())).getAbsolutePath();
+	}
+
 	public static class Builder {
 		protected NameFactory mNameFactory;
 		protected File mCacheFolder;

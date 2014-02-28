@@ -10,7 +10,7 @@ extern "C" {
  * Method:    getVersion
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_v2soft_AndLib_media_MP3Helper_getVersion (JNIEnv *, jclass);
+JNIEXPORT jstring JNICALL Java_com_v2soft_AndLib_media_MP3Helper_getVersion(JNIEnv *, jclass);
 
 /*
  * Class:     com_v2soft_AndLib_media_MP3Helper

@@ -23,7 +23,7 @@ import java.io.OutputStream;
  * @author V.Shcryabets (vshcryabets@gmail.com)
  */
 public class MP3EncodingOutputStream extends BufferedOutputStream {
-
+	protected OutputStream mInternalStream;
 	/**
 	 *
 	 * @param output
@@ -32,7 +32,14 @@ public class MP3EncodingOutputStream extends BufferedOutputStream {
 	 */
 	public MP3EncodingOutputStream(final OutputStream output, int inSampleRate,
 								   MP3Helper.LAMEMode mode) {
-		super(new InternallStream(output, inSampleRate, mode));
+		super(new InternallStream(output, inSampleRate, mode), 8192);
+		mInternalStream = output;
+	}
+
+	@Override
+	public synchronized void close() throws IOException {
+		mInternalStream.close();
+		super.close();
 	}
 
 	private static class InternallStream extends OutputStream {

@@ -36,7 +36,6 @@ public class CacheLogicTests extends AndroidTestCase {
 		factory = new JavaHashFactory();
 		result = factory.getLocalName(inputName);
 		assertEquals("Wrong Java hash result", JAVA_HASH_NAME, result);
-
 	}
 	@SmallTest
 	public void testCacheNaming() throws URISyntaxException, IOException, NoSuchAlgorithmException {
@@ -46,14 +45,16 @@ public class CacheLogicTests extends AndroidTestCase {
 		builder.useExternalCacheFolder(CACHE_TYPE);
 		AndroidFileCache cache = builder.build();
 		cache.clear();
+
+		String localPath = cache.getCachePathURI(DataStreamsWrapperTests.ASSETS_FILE);
+		assertNotNull("No local path", localPath);
 		boolean isInCache = cache.isInCache(DataStreamsWrapperTests.ASSETS_FILE);
 		assertFalse("File shouldn't be present in cache", isInCache);
 		isInCache = cache.isInCache(DataStreamsWrapperTests.ASSET_FILE_PATH);
 		assertFalse("File shouldn't be present in cache", isInCache);
 		isInCache = cache.isInCache(Uri.parse(DataStreamsWrapperTests.ASSET_FILE_PATH));
 		assertFalse("File shouldn't be present in cache", isInCache);
-		File file = cache.getFileByURI(DataStreamsWrapperTests.ASSETS_FILE);
-		FileOutputStream out = new FileOutputStream(file);
+		FileOutputStream out = cache.getFileOutputStream(DataStreamsWrapperTests.ASSETS_FILE);
 		DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(mContext, DataStreamsWrapperTests.ASSETS_FILE);
 		wrapper.copyToOutputStream(out);
 		wrapper.close();
