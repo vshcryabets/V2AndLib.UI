@@ -4,12 +4,9 @@
 #include "lame_global_flags.h"
 #include <map>
 
-#define mp3buf_size 8192//1.25 * nsamples + 7200;
 #define count_to_read_pcm 8192
 #define count_to_read_mp3 2048
 
-lame_global_flags *lgf;
-unsigned char *mp3buf;
 unsigned int g_lastHandler = 1;
 
 JNIEXPORT jstring JNICALL Java_com_v2soft_AndLib_media_MP3Helper_getVersion(JNIEnv * env, jclass c) {
@@ -17,12 +14,8 @@ JNIEXPORT jstring JNICALL Java_com_v2soft_AndLib_media_MP3Helper_getVersion(JNIE
 }
 
 JNIEXPORT jint JNICALL Java_com_v2soft_AndLib_media_MP3Helper_allocateEncoderNative(JNIEnv * env, jclass c) {
-	lgf = lame_init();
-	if (lame_init_params(lgf) == -1) {
-		__android_log_print(ANDROID_LOG_ERROR, "LameWrapper[Native]", "Lame init params failed");
-		return 0;
-	}
-	mp3buf = (unsigned char *) malloc(mp3buf_size);
+    LameDataUnit *unit = new LameDataUnit();
+    // register data unit at the poll
 	return 1;
 }
 
