@@ -23,6 +23,7 @@ import java.io.OutputStream;
  * @author V.Shcryabets (vshcryabets@gmail.com)
  */
 public class MP3EncodingOutputStream extends BufferedOutputStream {
+	private static final int BUFFER_SIZE = 8192;
 	protected OutputStream mInternalStream;
 	/**
 	 *
@@ -30,16 +31,19 @@ public class MP3EncodingOutputStream extends BufferedOutputStream {
 	 * @param inSampleRate input sample rate in Hz
 	 * @param mode stereo, jstereo, dual channel (not supported), mono default: lame picks based on compression ration and input channels
 	 */
-	public MP3EncodingOutputStream(final OutputStream output, int inSampleRate,
+	public MP3EncodingOutputStream(final OutputStream output,
+								   int numberOfChannels,
+								   int inSampleRate,
+								   int outSampleRate,
 								   MP3Helper.LAMEMode mode) {
-		super(new InternallStream(output, inSampleRate, mode), 8192);
+		super(new InternallStream(output, inSampleRate, outSampleRate, numberOfChannels, mode), BUFFER_SIZE);
 		mInternalStream = output;
 	}
 
 	@Override
 	public synchronized void close() throws IOException {
-		mInternalStream.close();
 		super.close();
+		mInternalStream.close();
 	}
 
 	private static class InternallStream extends OutputStream {
@@ -48,9 +52,12 @@ public class MP3EncodingOutputStream extends BufferedOutputStream {
 		private OutputStream mEncodedStream;
 
 		InternallStream(OutputStream output, int inSampleRate,
+						int outSampleRate,
+						int numberOfCahnnels,
 						MP3Helper.LAMEMode mode) {
 			mEncodedStream = output;
-			mHelper = new MP3Helper(inSampleRate, mode);
+			mHelper = new MP3Helper(numberOfCahnnels, inSampleRate, outSampleRate, mode);
+			mEncodedBuffer = new byte[BUFFER_SIZE];
 		}
 
 		@Override
@@ -59,9 +66,9 @@ public class MP3EncodingOutputStream extends BufferedOutputStream {
 		@Override
 		public void write(byte[] buffer, int offset, int count) throws IOException {
 			// send data to encoder
-//			int encoded = mHelper.encodeBuffer(buffer, offset, count, mEncodedBuffer);
+			int encoded = mHelper.encodeBuffer(buffer, offset, count, mEncodedBuffer);
 			// write encoded data to main output stream
-//			mEncodedStream.write(mEncodedBuffer, 0, encoded);
+			mEncodedStream.write(mEncodedBuffer, 0, encoded);
 		}
 	}
 }

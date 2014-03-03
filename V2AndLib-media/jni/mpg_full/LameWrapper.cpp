@@ -1,45 +1,62 @@
-#include "lame.h"
-#include <android/log.h>
 #include "LameWrapper.h"
-#include "lame_global_flags.h"
+#include "lame_handler.h"
+#include <android/log.h>
 #include <map>
 
-#define count_to_read_pcm 8192
-#define count_to_read_mp3 2048
-
 unsigned int g_lastHandler = 1;
+std::map<int, lamewrapper::LameDataUnit*> g_Handlers;
 
 JNIEXPORT jstring JNICALL Java_com_v2soft_AndLib_media_MP3Helper_getVersion(JNIEnv * env, jclass c) {
     return env->NewStringUTF(get_lame_version());
 }
 
-JNIEXPORT jint JNICALL Java_com_v2soft_AndLib_media_MP3Helper_allocateEncoderNative(JNIEnv * env, jclass c) {
-    LameDataUnit *unit = new LameDataUnit();
+JNIEXPORT jint JNICALL Java_com_v2soft_AndLib_media_MP3Helper_allocateEncoderNative(JNIEnv * env, jclass c,
+        jint numberOfChannels, jint inputSampleRate, jint outputSampleRate, jint mode) {
+    lamewrapper::LameDataUnit *unit = new lamewrapper::LameDataUnit();
+    unit->initialize(numberOfChannels, inputSampleRate, outputSampleRate, static_cast<MPEG_mode>(mode));
     // register data unit at the poll
-	return 1;
+    int handler = g_lastHandler++;
+    g_Handlers.insert(std::pair<int, lamewrapper::LameDataUnit*>(handler,unit));
+	return handler;
 }
 
-JNIEXPORT jint JNICALL Java_com_v2soft_AndLib_media_MP3Helper_lameEncodeBufferNative
-  (JNIEnv * env, jclass c, jobject buffer_l, jobject buffer_r, jint nsamples)
-{
-	short int *buf_l = (short int*)env->GetDirectBufferAddress(buffer_l);
-	short int *buf_r = (short int*)env->GetDirectBufferAddress(buffer_r);
-	(*lgf).num_channels=1;
-	(*lgf).mode = STEREO;
-	int res = lame_encode_buffer(lgf, buf_l, buf_r, nsamples, mp3buf, mp3buf_size);
-//	__android_log_print(ANDROID_LOG_INFO, "LameWrapper[Native]", "POINTER AFTER: %p - %d ", buf_l, nsamples);
-//	fwrite(buf_l, sizeof(short int), nsamples, file);			
-
-	if (res != 0)
-	{			
-	} else __android_log_print(ANDROID_LOG_ERROR, "LameWrapper[Native]", "Encoded buffer size is 0");
-	    
-	return res;
+JNIEXPORT jint JNICALL Java_com_v2soft_AndLib_media_MP3Helper_lameEncodeBufferNative(JNIEnv * env,
+    jclass c, jbyteArray jInputBuffer, jbyteArray bufferOutput, jint handler) {
+    std::map<int, lamewrapper::LameDataUnit*>::iterator iterator = g_Handlers.find(handler);
+    if ( jInputBuffer == NULL || bufferOutput == NULL) {
+        return ERR_NULL_BUFFER;
+    }
+    if ( iterator == g_Handlers.end() ) {
+        return ERR_NO_SUCH_HANDLER;
+    } else {
+        // TODO use env->GetByteArrayRegion(array, 0, len, buffer);
+        jbyte* inputBuffer = env->GetByteArrayElements(jInputBuffer, 0);
+        if (inputBuffer != NULL) {
+            size_t inputBufferLength = env->GetArrayLength(jInputBuffer);
+            int encodedCount = iterator->second->encodeBuffer((unsigned char*)inputBuffer, NULL, inputBufferLength);
+            env->ReleaseByteArrayElements(jInputBuffer, inputBuffer, JNI_ABORT);
+            if ( encodedCount < 0 ) {
+                __android_log_print(ANDROID_LOG_VERBOSE, "LAME", "A1.6 %d", encodedCount);
+                return ERR_LAME_ERROR;
+            } else if ( encodedCount > env->GetArrayLength(bufferOutput)) {
+                return ERR_SMALL_OUTPUT_BUFFER;
+            }
+            env->SetByteArrayRegion(bufferOutput, 0, encodedCount, (const jbyte*)iterator->second->getEncoderBuffer());
+            return encodedCount;
+        } else {
+            return ERR_WRONG_INPUT_BUFFER;
+        }
+    }
 }
 
-JNIEXPORT jint JNICALL Java_air_babbler_sound_LameWrapper_finishNative(JNIEnv * env, jclass c) {
-	free(mp3buf);
-	lame_close(lgf);
-	return 0;
+JNIEXPORT jint JNICALL Java_com_v2soft_AndLib_media_MP3Helper_finishNative(JNIEnv * env, jclass c, jint handler) {
+    std::map<int, lamewrapper::LameDataUnit*>::iterator iterator = g_Handlers.find(handler);
+    if ( iterator == g_Handlers.end() ) {
+        return ERR_NO_SUCH_HANDLER;
+    } else {
+        delete iterator->second;
+        g_Handlers.erase(handler);
+    }
+	return ERR_OPPERATION_SUCCESS;
 }
 

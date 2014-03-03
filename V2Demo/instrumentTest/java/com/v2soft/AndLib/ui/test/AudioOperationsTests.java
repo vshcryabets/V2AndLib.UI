@@ -37,7 +37,7 @@ public class AudioOperationsTests extends AndroidTestCase {
 
 		OutputStream output = cache.getFileOutputStream(URI.create(ASSET_SOURCE_FILE_PATH));
 		MP3EncodingOutputStream encoderStream = new MP3EncodingOutputStream(
-				output, 44100, MP3Helper.LAMEMode.stereo);
+				output, 1, 8000, 44100, MP3Helper.LAMEMode.stereo);
 		wrapper.copyToOutputStream(encoderStream);
 		wrapper.close();
 		encoderStream.close();
@@ -45,7 +45,7 @@ public class AudioOperationsTests extends AndroidTestCase {
 		DataStreamWrapper outWrapper = DataStreamWrapper.getStream(
 				URI.create("file://"+cache.getCachePathURI(URI.create(ASSET_SOURCE_FILE_PATH))));
 		assertTrue("Zero size output file", outWrapper.getAvaiableDataSize() > 0 );
-		assertTrue("Wrong compression", outWrapper.getAvaiableDataSize() >= wrapper.getAvaiableDataSize() );
+		assertTrue("Wrong compression", wrapper.getAvaiableDataSize() >= outWrapper.getAvaiableDataSize() );
 	}
 
 }

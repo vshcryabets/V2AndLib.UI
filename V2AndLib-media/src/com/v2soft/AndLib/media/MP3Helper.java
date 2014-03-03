@@ -22,7 +22,12 @@ package com.v2soft.AndLib.media;
  */
 public class MP3Helper {
 	public enum LAMEMode {
-		stereo, jstereo, dualchannel, mono
+		stereo,
+		jstereo,
+		dualchannel, // LAME doesn't supports this!
+		mono,
+		not_set,
+		max_indicator // Don't use this! It's used for sanity checks.
 	};
 	static {
 		System.loadLibrary("lamewrapper_full");
@@ -30,14 +35,25 @@ public class MP3Helper {
 
 	private int mEncoderId;
 
-	public MP3Helper(int inSampleRate, LAMEMode mode) {
-		mEncoderId = MP3Helper.allocateEncoderNative();
+	public MP3Helper(int numberOfCahnnels, int inSampleRate, int outSampleRate, LAMEMode mode) {
+		mEncoderId = allocateEncoderNative(numberOfCahnnels, inSampleRate, outSampleRate, mode.ordinal());
 		if ( mEncoderId == 0 ) {
 			throw new IllegalStateException("Can't allocate encoder");
 		}
 	}
+	public int encodeBuffer(byte[] buffer, int offset, int count, byte[] outputBuffer) {
+		if ( buffer == null) {
+			throw new NullPointerException("Input buffer is null");
+		}
+		if ( outputBuffer == null) {
+			throw new NullPointerException("Output buffer is null");
+		}
+		// TODO use offset & count
+		return lameEncodeBufferNative(buffer, outputBuffer, mEncoderId);
+	}
 
 	private native String getVersion();
-	private static native int allocateEncoderNative();
-	private native int encodeBufferNative(byte [] inbuffer, int offset, int size, byte[] outbuffer);
+	private native int allocateEncoderNative(int numberOfChannels, int inputSampleRate, int outputSampleRate, int mode);
+	private native int lameEncodeBufferNative(byte [] inbuffer, byte[] outbuffer, int handler);
+	private native int finishNative(int handler);
 }
