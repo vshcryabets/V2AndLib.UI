@@ -76,4 +76,17 @@ public class BitmapOperationsTests extends AndroidTestCase {
 		assertTrue("Wrong bitmap size", bitmap.getWidth() <= screenRect.width()
 				&& bitmap.getHeight() <= screenRect.height());
 	}
+
+	@SmallTest
+	public void testScale() throws IOException {
+		URI uri = URI.create(ASSET_FILE_PATH);
+		int width = 384;
+		Rect margins = new Rect(0, 0, width, width);
+		BitmapOperations helper = new BitmapOperations(getContext());
+		Bitmap loadedImage = helper.loadBitmap(uri);
+		Bitmap scaledImage = helper.scaleBitmap(loadedImage, margins, BitmapOperations.ScaleType.FIT_CENTER, true);
+		assertNotNull("No bitmap", scaledImage);
+		assertEquals("Wrong bitmap width", 384, scaledImage.getWidth());
+		assertEquals("Wrong bitmap height", 320, scaledImage.getHeight());
+	}
 }

@@ -31,7 +31,7 @@ import java.net.URI;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  */
 public class BitmapOperations {
-	public enum ScaleType {CENTER_CROP, FIT_CENTER, NONE};
+	public enum ScaleType {CENTER_CROP, FIT_CENTER, NONE}
 	protected Context mContext;
 
 	public BitmapOperations(Context context) {
@@ -55,7 +55,7 @@ public class BitmapOperations {
 	 * Load bitmap from specified source.
 	 * @param uri bitmap source uri.
 	 * @param options
-	 * @return
+	 * @return bitmap object.
 	 */
 	public Bitmap loadBitmap(URI uri, BitmapFactory.Options options) throws IOException {
 		DataStreamWrapper stream = AndroidDataStreamWrapper.getStream(mContext, uri);
@@ -75,32 +75,27 @@ public class BitmapOperations {
 	/**
 	 * Load bitmap from specified source.
 	 * @param uri bitmap source uri.
-	 * @param destRect destination rectangle.
+	 * @param margins destination rectangle.
 	 * @param scaleType scale type.
 	 * @param filter    true if the source should be filtered.
 	 * @return bitmap from specified source.
 	 */
-	public Bitmap loadBitmap(URI uri, Rect destRect, ScaleType scaleType, boolean filter) throws IOException {
+	public Bitmap loadBitmap(URI uri, Rect margins, ScaleType scaleType, boolean filter) throws IOException {
 		BitmapFactory.Options options = getBitmapOptions(uri);
-		Rect srcRect = new Rect(0,0, options.outWidth, options.outHeight);
-		float scaleDownFactor = getScaleFactor(scaleType, destRect, srcRect);
-		int outputWidth = (int) (options.outWidth*scaleDownFactor);
-		int outputHeight = (int) (options.outHeight*scaleDownFactor);
-
+		Rect destRect = scaleRect(options, margins, scaleType);
 		options = getBitmapScaleOptions(uri, destRect, scaleType);
 		Bitmap bitmap = loadBitmap(uri, options);
-		Bitmap result = Bitmap.createScaledBitmap(bitmap, outputWidth, outputHeight, filter);
+		Bitmap result = Bitmap.createScaledBitmap(bitmap, destRect.width(), destRect.height(), filter);
 		bitmap.recycle();
 		return result;
 	}
 
-
 	/**
 	 * Calculate scale factor.
 	 * @param scaleType scale type
-	 * @param destRect
+	 * @param destRect margins.
 	 * @param sourceRect
-	 * @return
+	 * @return scale factor.
 	 */
 	public float getScaleFactor(ScaleType scaleType, Rect destRect, Rect sourceRect) {
 		float verticalScaleFactor = (float)destRect.width()/(float)sourceRect.width();
@@ -116,11 +111,11 @@ public class BitmapOperations {
 	}
 
 	/**
-	 * Calculate BitmapFactory.Options::inScaleSize value to fit bitmap in destRect
+	 * Calculate BitmapFactory.Options::inScaleSize value to fit bitmap in specified margins.
 	 * @param uri bitmap source uri.
-	 * @param destRect destination rectangle.
+	 * @param destRect destination margins.
 	 * @param scaleType scale type.
-	 * @return
+	 * @return bitmap loading options.
 	 */
 	public BitmapFactory.Options getBitmapScaleOptions(URI uri, Rect destRect, ScaleType scaleType) throws IOException {
 		BitmapFactory.Options options = getBitmapOptions(uri);
@@ -132,6 +127,38 @@ public class BitmapOperations {
 		int scaleDownInt = (int) Math.pow(2, scaleDownPower2);
 		options.inSampleSize = scaleDownInt;
 		return options;
+	}
+
+	/**
+	 * Scale bitmap to fit inside specified margins.
+	 * @param bitmap source bitmap.
+	 * @param margins margins.
+	 * @return scaled bitmap object.
+	 */
+	public Bitmap scaleBitmap(Bitmap bitmap, Rect margins, ScaleType scaleType, boolean filter) {
+		Rect rect = scaleRect(bitmap, margins, scaleType);
+		Bitmap result = Bitmap.createScaledBitmap(bitmap, rect.width(), rect.height(), filter);
+		return result;
+	}
+
+	protected Rect scaleRect(Bitmap bitmap, Rect margins, ScaleType type) {
+		Rect source = new Rect(0,0, bitmap.getWidth(), bitmap.getHeight());
+		return scaleRect(source, margins, type);
+	}
+	protected Rect scaleRect(BitmapFactory.Options options, Rect margins, ScaleType scaleType) {
+		Rect srcRect = new Rect(0,0, options.outWidth, options.outHeight);
+		return scaleRect(srcRect, margins, scaleType);
+	}
+	protected Rect scaleRect(Rect source, Rect margins, ScaleType type) {
+		float scaleDownFactor = getScaleFactor(type, margins, source);
+		return multipleRect(source, scaleDownFactor);
+	}
+
+	protected Rect multipleRect(Rect src, float factor) {
+		return new Rect((int)(src.left*factor),
+				(int)(src.top*factor),
+				(int)(src.right*factor),
+				(int)(src.bottom*factor));
 	}
 
 }
