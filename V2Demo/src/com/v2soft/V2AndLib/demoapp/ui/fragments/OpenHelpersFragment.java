@@ -26,9 +26,11 @@ import android.view.ViewGroup;
 
 import com.v2soft.AndLib.dataproviders.AsyncTaskExecutor;
 import com.v2soft.AndLib.dataproviders.tasks.CacheHTTPFile;
+import com.v2soft.AndLib.dataproviders.tasks.DownloadTask;
+import com.v2soft.AndLib.filecache.AndroidFileCache;
+import com.v2soft.AndLib.filecache.FileCache;
+import com.v2soft.AndLib.filecache.MD5CacheFactory;
 import com.v2soft.AndLib.sketches.CopyURL2URL;
-import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
-import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
 import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
 import com.v2soft.AndLib.sketches.OpenHelpers;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
@@ -39,6 +41,8 @@ import com.v2soft.V2AndLib.demoapp.R;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 
@@ -50,6 +54,7 @@ import java.security.NoSuchAlgorithmException;
 public class OpenHelpersFragment
 		extends BaseFragment<DemoApplication, DemoAppSettings> {
 	private HorizontalProgressDialog mProgressDlg;
+	private FileCache mCache;
 
 	public static Fragment newInstance() {
 		return new OpenHelpersFragment();
@@ -58,9 +63,13 @@ public class OpenHelpersFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = View.inflate(getActivity(), R.layout.fragment_open_helpers, null);
-		registerOnClickListener(new int[]{R.id.openRemotePDF, R.id.openLocalPDF}, view);
+		registerOnClickListener(new int[]{R.id.openRemotePDF, R.id.openLocalPDF, R.id.clear}, view);
 		mProgressDlg = new HorizontalProgressDialog(getActivity(), 0,
 				R.string.title_downloading_document, R.string.v2andlib_loading, 0, false);
+		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getActivity());
+		builder.setNamesFactory(new MD5CacheFactory());
+		builder.useExternalCacheFolder("pdf");
+		mCache = builder.build();
 		return view;
 	}
 
@@ -68,16 +77,12 @@ public class OpenHelpersFragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.openRemotePDF:
-//				OpenHelpers.openRemotePDFFile(getActivity(),
-//						Uri.parse("http://www.w3.org/Protocols/HTTP/1.1/rfc2616.pdf"),//"https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf"),
-//						R.string.title_select_PDF_application,
-//						R.string.error_cant_open);
 				mProgressDlg.setMessage(getString(R.string.v2andlib_loading));
 				mProgressDlg.show();
 				try {
-					URL remotePDF = new URL("https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf");
-					final CacheHTTPFile dowloadTask = new CacheHTTPFile(remotePDF, getActivity().getExternalCacheDir());
-					AsyncTaskExecutor executor = new AsyncTaskExecutor<CacheHTTPFile>() {
+					URI remotePDF = new URI("https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf");
+					final CacheHTTPFile downloadTask = new CacheHTTPFile(remotePDF, mCache);
+					AsyncTaskExecutor executor = new AsyncTaskExecutor<DownloadTask>() {
 						@Override
 						protected void onProgressUpdate(Object... values) {
 							super.onProgressUpdate(values);
@@ -91,34 +96,29 @@ public class OpenHelpersFragment
 							}
 						}
 						@Override
-						protected void onPostExecute(CacheHTTPFile iTask) {
+						protected void onPostExecute(DownloadTask iTask) {
 							super.onPostExecute(iTask);
 							mProgressDlg.dismiss();
 							if ( iTask.getResult() ) {
-								try {
-									String filePath = iTask.getFullLocalPath();
-									OpenHelpers.openLocalPDFFile(getActivity(),
-											Uri.parse("file://"+filePath),
-											R.string.title_select_PDF_application,
-											R.string.error_cant_open);
-								} catch (NoSuchAlgorithmException e) {
-									e.printStackTrace();
-								} catch (UnsupportedEncodingException e) {
-									e.printStackTrace();
-								}
+								String filePath = iTask.getLocalFilePath().getAbsolutePath();
+								OpenHelpers.openLocalPDFFile(getActivity(),
+										Uri.parse("file://"+filePath),
+										R.string.title_select_PDF_application,
+										R.string.error_cant_open);
 							}
 						}
 					};
-					executor.execute(new CacheHTTPFile[]{dowloadTask});
+					executor.execute(new DownloadTask[]{downloadTask});
 					mProgressDlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface dialog) {
-							dowloadTask.cancel();
+							downloadTask.cancel();
 						}
 					});
-				} catch (MalformedURLException e) {
+				} catch (URISyntaxException e) {
 					throw new RuntimeException(e);
-				}				break;
+				}
+				break;
 			case R.id.openLocalPDF:
 				final File outputFile = new File(getActivity().getExternalCacheDir(), "sample.pdf");
 				try {
@@ -141,6 +141,9 @@ public class OpenHelpersFragment
 				} catch (MalformedURLException e) {
 					throw new RuntimeException(e);
 				}
+				break;
+			case R.id.clear:
+				mCache.clear();
 				break;
 		}
 	}

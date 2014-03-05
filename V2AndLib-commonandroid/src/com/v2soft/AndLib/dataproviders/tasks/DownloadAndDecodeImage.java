@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,12 @@
  */
 package com.v2soft.AndLib.dataproviders.tasks;
 
-import java.io.File;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.security.NoSuchAlgorithmException;
-
 import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
-import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
+import com.v2soft.AndLib.filecache.FileCache;
+
+import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Task that will download & encode bitmap file in background thread
@@ -32,37 +29,28 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  */
 public class DownloadAndDecodeImage extends LoadBitmapTask {
     private static final long serialVersionUID = 1L;
-    private URL mURL;
-    private File mCacheDir;
-    protected String mCustomHashString;
+    private URI mURL;
+	protected FileCache mCache;
 
-    public DownloadAndDecodeImage(URL imageURL, File cacheDir) {
+    public DownloadAndDecodeImage(URI imageURL, FileCache cache) {
         super("");
         mURL = imageURL;
-        mCacheDir = cacheDir;
-    }
-    public DownloadAndDecodeImage(URL imageURL, File cacheDir, String customHash) {
-        super("");
-        mURL = imageURL;
-        mCacheDir = cacheDir;
-        mCustomHashString = customHash;
+		mCache = cache;
     }
 
     @Override
     public LoadBitmapTask execute(ITaskSimpleListener hub) throws AbstractDataRequestException {
-        final CacheHTTPFile cache = new CacheHTTPFile(mURL, mCacheDir, mCustomHashString);
+        final DownloadTask cache = new DownloadTask(mURL, mCache);
         cache.execute(hub);
         checkCanceled();
 		try {
-			mFilePath = new File(mCacheDir, cache.getLocalPath()).getAbsolutePath();
+			mFilePath = mCache.getCachePathURI(mURL);
 		} catch (NoSuchAlgorithmException e) {
-			throw new DummyTaskException(e.toString());
-		} catch (UnsupportedEncodingException e) {
 			throw new DummyTaskException(e.toString());
 		}
 		return super.execute(hub);
     }
-    public URL getURL() {
+    public URI getURL() {
         return mURL;
     }
 }

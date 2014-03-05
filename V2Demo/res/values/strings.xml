@@ -37,5 +37,6 @@
     <string name="button_open_local_pdf">Open local PDF</string>
     <string name="title_downloading_document">Downloading...</string>
     <string name="btn_check_gps">Check GPS state</string>
+    <string name="button_clear">Clear</string>
 
 </resources>

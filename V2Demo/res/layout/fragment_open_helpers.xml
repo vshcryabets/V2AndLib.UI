@@ -13,4 +13,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/openLocalPDF"
         android:text="@string/button_open_local_pdf"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/clear"
+        android:text="@string/button_clear"/>
 </LinearLayout>

@@ -1,9 +1,5 @@
 package com.v2soft.AndLib.ui.bitmaps;
 
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -11,6 +7,10 @@ import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.ITaskHub;
 import com.v2soft.AndLib.dataproviders.ITaskListener;
 import com.v2soft.AndLib.dataproviders.tasks.DownloadAndDecodeImage;
+import com.v2soft.AndLib.filecache.FileCache;
+
+import java.net.URI;
+import java.util.HashMap;
 
 /**
  * !!! Experimental class !!!! Do not use it!
@@ -26,14 +26,14 @@ public class BitmapsCache implements ITaskListener {
     private static final String LOG_TAG = BitmapsCache.class.getSimpleName();
 
     private HashMap<Integer, BitmapsCacheListener> mListeners;
-    private HashMap<URL, Bitmap> mBitmaps;
+    private HashMap<URI, Bitmap> mBitmaps;
     private HashMap<Bitmap, Integer> mCountRefs;
     private ITaskHub mTaskHub;
-    private File mCacheDir;
+    private FileCache mCacheDir;
 
-    public BitmapsCache(ITaskHub taskHub, File cacheDir) {
+    public BitmapsCache(ITaskHub taskHub, FileCache cacheDir) {
         mCountRefs = new HashMap<Bitmap, Integer>();
-        mBitmaps = new HashMap<URL, Bitmap>();
+        mBitmaps = new HashMap<URI, Bitmap>();
         mListeners = new HashMap<Integer, BitmapsCacheListener>();
         mTaskHub = taskHub;
         mCacheDir = cacheDir;
@@ -74,7 +74,7 @@ public class BitmapsCache implements ITaskListener {
     
     public void releaseAll() {
         synchronized ( mBitmaps ) {
-            for (URL url : mBitmaps.keySet()) {
+            for (URI url : mBitmaps.keySet()) {
                 Bitmap bitmap = mBitmaps.get(url);
                 if ( !bitmap.isRecycled() ) {
                     bitmap.recycle();
@@ -84,7 +84,7 @@ public class BitmapsCache implements ITaskListener {
         }
     }
 
-    public void getBitmap(URL url, BitmapsCacheListener listener, int tag) {
+    public void getBitmap(URI url, BitmapsCacheListener listener, int tag) {
         if ( url == null ) {
             return;
         }
@@ -114,7 +114,7 @@ public class BitmapsCache implements ITaskListener {
             BitmapsCacheListener listener = mListeners.get(id);
             DownloadAndDecodeImage task = (DownloadAndDecodeImage) t;
             Bitmap bitmap = task.getBitmap();
-            URL url = task.getURL();
+            URI url = task.getURL();
             mBitmaps.put(url, bitmap);
             listener.onBitmapUpdated(bitmap, id);
             Log.d(LOG_TAG, "Return bitmap for id = "+id);
