@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.v2soft.AndLib.dataproviders.AsyncTaskExecutor;
+import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
 import com.v2soft.AndLib.dataproviders.tasks.CacheHTTPFile;
 import com.v2soft.AndLib.dataproviders.tasks.DownloadTask;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
@@ -77,77 +78,59 @@ public class OpenHelpersFragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.openRemotePDF:
-				mProgressDlg.setMessage(getString(R.string.v2andlib_loading));
-				mProgressDlg.show();
-				try {
-					URI remotePDF = new URI("https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf");
-					final CacheHTTPFile downloadTask = new CacheHTTPFile(remotePDF, mCache);
-					AsyncTaskExecutor executor = new AsyncTaskExecutor<DownloadTask>() {
-						@Override
-						protected void onProgressUpdate(Object... values) {
-							super.onProgressUpdate(values);
-							Message message = (Message) values[0];
-							if ( message.what == CacheHTTPFile.MSG_CONTENT_LENGTH ) {
-								mProgressDlg.setMax((int) (((Long)message.obj) / 1024));
-							} else if ( message.what == CacheHTTPFile.MSG_RECEIVED_LENGTH ) {
-								mProgressDlg.setMessage(getString(R.string.v2andlib_downloaded_kb,
-										((Long)message.obj) / 1024));
-								mProgressDlg.setProgress((int) (((Long)message.obj) / 1024));
-							}
-						}
-						@Override
-						protected void onPostExecute(DownloadTask iTask) {
-							super.onPostExecute(iTask);
-							mProgressDlg.dismiss();
-							if ( iTask.getResult() ) {
-								String filePath = iTask.getLocalFilePath().getAbsolutePath();
-								OpenHelpers.openLocalPDFFile(getActivity(),
-										Uri.parse("file://"+filePath),
-										R.string.title_select_PDF_application,
-										R.string.error_cant_open);
-							}
-						}
-					};
-					executor.execute(new DownloadTask[]{downloadTask});
-					mProgressDlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						@Override
-						public void onCancel(DialogInterface dialog) {
-							downloadTask.cancel();
-						}
-					});
-				} catch (URISyntaxException e) {
-					throw new RuntimeException(e);
-				}
+                URI remotePDF = URI.create("https://dl.dropboxusercontent.com/u/18391781/Datasheets/FT232R.pdf");
+                showPDFFrom(remotePDF);
 				break;
 			case R.id.openLocalPDF:
-				final File outputFile = new File(getActivity().getExternalCacheDir(), "sample.pdf");
-				try {
-					CopyURL2URL copyTask = new CopyURL2URL(getActivity(),
-							new URL("file:///android_asset/BT139_SERIES.pdf"),
-							new URL(Uri.fromFile(outputFile).toString())
-					){
-						@Override
-						protected void onPostExecute(Boolean aBoolean) {
-							super.onPostExecute(aBoolean);
-							if ( aBoolean ) {
-								OpenHelpers.openLocalPDFFile(getActivity(),
-										Uri.fromFile(outputFile),
-										R.string.title_select_PDF_application,
-										R.string.error_cant_open);
-							}
-						}
-					};
-					copyTask.execute(new Void[0]);
-				} catch (MalformedURLException e) {
-					throw new RuntimeException(e);
-				}
+                remotePDF = URI.create("file:///android_asset/BT139_SERIES.pdf");
+                showPDFFrom(remotePDF);
 				break;
 			case R.id.clear:
 				mCache.clear();
 				break;
 		}
 	}
-	/**
+
+    private void showPDFFrom(URI remotePDF) {
+        mProgressDlg.setMessage(getString(R.string.v2andlib_loading));
+        mProgressDlg.show();
+        final CacheHTTPFile downloadTask = new CacheHTTPFile(getActivity(), remotePDF, mCache);
+        AsyncTaskExecutor executor = new AsyncTaskExecutor<DownloadTask>() {
+            @Override
+            protected void onProgressUpdate(Object... values) {
+                super.onProgressUpdate(values);
+                Message message = (Message) values[0];
+                if ( message.what == CacheHTTPFile.MSG_CONTENT_LENGTH ) {
+                    mProgressDlg.setMax((int) (((Long)message.obj) / 1024));
+                } else if ( message.what == CacheHTTPFile.MSG_RECEIVED_LENGTH ) {
+                    mProgressDlg.setMessage(getString(R.string.v2andlib_downloaded_kb,
+                            ((Long)message.obj) / 1024));
+                    mProgressDlg.setProgress((int) (((Long)message.obj) / 1024));
+                }
+            }
+            @Override
+            protected void onPostExecute(DownloadTask iTask) {
+                super.onPostExecute(iTask);
+                mProgressDlg.dismiss();
+                if ( iTask.getResult() ) {
+                    String filePath = iTask.getLocalFilePath().getAbsolutePath();
+                    OpenHelpers.openLocalPDFFile(getActivity(),
+                            Uri.parse("file://"+filePath),
+                            R.string.title_select_PDF_application,
+                            R.string.error_cant_open);
+                }
+            }
+        };
+        executor.execute(new DownloadTask[]{downloadTask});
+        mProgressDlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                downloadTask.cancel();
+            }
+        });
+    }
+
+    /**
 	 * Return sample display name
 	 * @return
 	 */

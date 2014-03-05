@@ -90,11 +90,12 @@ public class DataStreamWrapper implements Closeable {
 	 * Copy stream to specified output stream.
 	 * @param out
 	 * @param listener
+     * @param cancelMonitor
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public DataStreamWrapper copyToOutputStream(OutputStream out, StreamPositionListener listener)
-			throws IOException {
+	public DataStreamWrapper copyToOutputStream(OutputStream out, StreamPositionListener listener, Cancelable cancelMonitor)
+            throws IOException, InterruptedException {
 		byte buffer[] = new byte[BUFFER_SIZE];
 		int read;
 		long total = 0, prevtotal = 0;
@@ -104,13 +105,16 @@ public class DataStreamWrapper implements Closeable {
 			if ( listener != null && total - mUpdateMeasure > prevtotal ) {
 				listener.onPositionChanged(total, mAvaiableDataSize);
 			}
+            if ( cancelMonitor != null && cancelMonitor.isCanceled() ) {
+                throw new InterruptedException("Copy process was interrupted");
+            }
 		}
 		return this;
 	}
 
 	public DataStreamWrapper copyToOutputStream(OutputStream out)
-			throws IOException {
-		return copyToOutputStream(out, null);
+            throws IOException, InterruptedException {
+		return copyToOutputStream(out, null, null);
 	}
 
 	public void setUpdateMeasure(long mUpdateMeasure) {

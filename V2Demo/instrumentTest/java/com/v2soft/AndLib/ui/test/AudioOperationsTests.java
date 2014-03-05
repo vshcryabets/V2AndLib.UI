@@ -27,7 +27,7 @@ public class AudioOperationsTests extends AndroidTestCase {
 	public static final String ASSET_SOURCE_FILE_PATH = "file:///android_asset/sample.wav";
 
 	@SmallTest
-	public void testMP3Encoder() throws IOException, NoSuchAlgorithmException {
+	public void testMP3Encoder() throws IOException, NoSuchAlgorithmException, InterruptedException {
 		DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(getContext(),
 				URI.create(ASSET_SOURCE_FILE_PATH));
 		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getContext());

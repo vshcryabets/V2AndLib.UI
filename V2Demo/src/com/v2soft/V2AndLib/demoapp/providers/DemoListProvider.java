@@ -172,8 +172,9 @@ public class DemoListProvider extends ContentProvider {
 			return parcel;
 		} catch (NoSuchAlgorithmException e) {
 		} catch (IOException e) {
-		}
-		return null;
+		} catch (InterruptedException e) {
+        }
+        return null;
 	}
 
 	@Override

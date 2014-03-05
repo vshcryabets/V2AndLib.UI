@@ -33,9 +33,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.content.Context;
 import android.os.Message;
 
 import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
+import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
 import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
 import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 import com.v2soft.AndLib.filecache.FileCache;
@@ -49,17 +51,19 @@ public class CacheHTTPFile extends DownloadTask {
 	private static final long serialVersionUID = 1L;
 	public static final int MSG_CONTENT_LENGTH = 1;
 	public static final int MSG_RECEIVED_LENGTH = 2;
-
+    protected Context mContext;
 	/**
 	 *
 	 * @param source source resource path
 	 */
-	public CacheHTTPFile(URI source, File localFile) {
+	public CacheHTTPFile(Context context, URI source, File localFile) {
 		super(source, localFile);
+        mContext = context;
 	}
 
-	public CacheHTTPFile(URI filePath, FileCache cache) {
+	public CacheHTTPFile(Context context, URI filePath, FileCache cache) {
 		super(filePath, cache);
+        mContext = context;
 	}
 
 	@Override
@@ -83,4 +87,10 @@ public class CacheHTTPFile extends DownloadTask {
 		}
 		return super.execute(handler);
 	}
+
+    @Override
+    protected DataStreamWrapper getStream(URI uri) throws IOException {
+        return AndroidDataStreamWrapper.getStream(mContext, uri);
+    }
+
 }

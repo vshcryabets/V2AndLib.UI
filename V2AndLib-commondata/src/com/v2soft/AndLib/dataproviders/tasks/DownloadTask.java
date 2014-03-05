@@ -76,12 +76,16 @@ public class DownloadTask extends DummyTask<Boolean> {
 				mSuccess = true;
 				return this;
 			}
-			DataStreamWrapper wrapper = DataStreamWrapper.getStream(mURI);
+			DataStreamWrapper wrapper = getStream(mURI);
 			FileOutputStream output = new FileOutputStream(mCachedFile);
-			wrapper.copyToOutputStream(output, mListener);
-			wrapper.close();
+            try {
+                wrapper.copyToOutputStream(output, mListener, this);
+                mSuccess = true;
+            } catch (InterruptedException e) {
+                mSuccess = false;
+            }
+            wrapper.close();
 			output.close();
-			mSuccess = true;
 			return this;
 		} catch (UnsupportedEncodingException e) {
 			throw new DummyTaskException(e.toString());
@@ -94,7 +98,11 @@ public class DownloadTask extends DummyTask<Boolean> {
 		}
 	}
 
-	public File getLocalFilePath() {
+    protected DataStreamWrapper getStream(URI uri) throws IOException {
+        return DataStreamWrapper.getStream(uri);
+    }
+
+    public File getLocalFilePath() {
 		return mCachedFile;
 	}
 }

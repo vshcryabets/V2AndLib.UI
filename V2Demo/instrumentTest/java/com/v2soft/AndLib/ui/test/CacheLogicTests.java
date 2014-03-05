@@ -38,7 +38,7 @@ public class CacheLogicTests extends AndroidTestCase {
 		assertEquals("Wrong Java hash result", JAVA_HASH_NAME, result);
 	}
 	@SmallTest
-	public void testCacheNaming() throws URISyntaxException, IOException, NoSuchAlgorithmException {
+	public void testCacheNaming() throws URISyntaxException, IOException, NoSuchAlgorithmException, InterruptedException {
 		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getContext());
 		builder.setNamesFactory(new MD5CacheFactory());
 		builder.setOutdate(Calendar.DAY_OF_MONTH, 30);

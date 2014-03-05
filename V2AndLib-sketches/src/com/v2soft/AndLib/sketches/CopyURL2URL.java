@@ -60,8 +60,12 @@ public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cance
 			isCanceled = false;
 			DataStreamWrapper input = AndroidDataStreamWrapper.getStream(mContext, new URI(mSource.toString()));
 			FileOutputStream output = new FileOutputStream(mTarget.getPath());
-			input.copyToOutputStream(output, this).close();
-			output.close();
+            try {
+                input.copyToOutputStream(output, this, this).close();
+            } catch (InterruptedException e) {
+                isCanceled = true;
+            }
+            output.close();
 			return !isCanceled;
 		} catch (MalformedURLException e) {
 			Log.e(TAG, e.toString(), e);
