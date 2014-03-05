@@ -27,7 +27,7 @@ public class AndroidDataStreamWrapper extends DataStreamWrapper {
 	}
 
 	public static DataStreamWrapper getStream(Context context, URI uri) throws IOException {
-		DataStreamWrapper result = new AndroidDataStreamWrapper();
+		DataStreamWrapper result;
 		String path = uri.getPath();
 		if ( uri.getScheme().equalsIgnoreCase(ContentResolver.SCHEME_FILE) && path.startsWith(ANDROID_ASSETS)) {
 			result = new AndroidDataStreamWrapper();

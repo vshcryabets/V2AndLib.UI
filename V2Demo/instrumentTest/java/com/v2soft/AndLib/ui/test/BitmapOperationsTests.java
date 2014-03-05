@@ -64,7 +64,7 @@ public class BitmapOperationsTests extends AndroidTestCase {
 		URI uri = URI.create(ASSET_LARGE_FILE_PATH);
 		BitmapFactory.Options options = helper.getBitmapScaleOptions(uri, screenRect, BitmapOperations.ScaleType.FIT_CENTER);
 		assertNotNull("No bitmap options", options);
-		assertEquals("Wrong inSample size", options.inSampleSize, 4);
+		assertEquals("Wrong inSample size", 4, options.inSampleSize);
 
 		Bitmap bitmap = helper.loadBitmap(uri, screenRect, BitmapOperations.ScaleType.CENTER_CROP, false);
 		assertNotNull("No bitmap", bitmap);
