@@ -32,7 +32,6 @@ public class AudioOperationsTests extends AndroidTestCase {
 				URI.create(ASSET_SOURCE_FILE_PATH));
 		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getContext());
 		builder.useExternalCacheFolder("audio");
-		builder.setNamesFactory(new MD5CacheFactory());
 		FileCache cache = builder.build();
 
 		OutputStream output = cache.getFileOutputStream(URI.create(ASSET_SOURCE_FILE_PATH));

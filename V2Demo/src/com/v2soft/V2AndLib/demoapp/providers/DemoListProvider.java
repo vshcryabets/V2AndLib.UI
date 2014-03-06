@@ -84,7 +84,6 @@ public class DemoListProvider extends ContentProvider {
         mUriMatcher.addURI(PROVIDER_NAME, "insert10Items", FEED_INSERT);
 		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getContext());
 		builder.useExternalCacheFolder("test");
-		builder.setNamesFactory(new MD5CacheFactory());
 		mCache = builder.build();
 
 		return false;

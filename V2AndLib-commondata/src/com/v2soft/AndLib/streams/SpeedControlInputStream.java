@@ -1,49 +1,45 @@
+/*
+ * Copyright (C) 2014 V.Shcryabets (vshcryabets@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.v2soft.AndLib.streams;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Stream that allows to control transfer speed.
+ * Input stream that allows to control transfer speed.
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  */
 public class SpeedControlInputStream extends InputStream {
-    private static final long TIME_SLOT_MS = 100;
+    protected ResourceTimeController mSpeedControl;
     protected InputStream mInnerStream;
-    protected int mRemainBytes;
-    protected int mSpeedBytesPerScond;
-    protected long mNextTime;
 
     public SpeedControlInputStream(InputStream input, int speedInBytesPerSecond) {
         mInnerStream = input;
-        mSpeedBytesPerScond = speedInBytesPerSecond;
-        updateStat();
-    }
-
-    private void updateStat() {
-        mNextTime = System.currentTimeMillis()+ TIME_SLOT_MS;
-        mRemainBytes = (int) (mSpeedBytesPerScond*TIME_SLOT_MS/1000);
+        mSpeedControl = new ResourceTimeController(speedInBytesPerSecond);
     }
 
     @Override
     public int read() throws IOException {
-        if ( mRemainBytes < 1 ) {
-            waitTimeSlot();
+        try {
+            mSpeedControl.checkRemainedResources();
+        } catch (InterruptedException e) {
+            throw new IOException("Interrupted", e);
         }
-        mRemainBytes--;
+        mSpeedControl.decrementResources(1);
         return mInnerStream.read();
-    }
-
-    private void waitTimeSlot() throws IOException {
-        long current = System.currentTimeMillis();
-        if ( mNextTime > current ) {
-            try {
-                Thread.sleep(mNextTime-current);
-            } catch (InterruptedException e) {
-                throw new IOException("Interrupted", e);
-            }
-        }
-        updateStat();
     }
 
     @Override
@@ -53,14 +49,14 @@ public class SpeedControlInputStream extends InputStream {
 
     @Override
     public int read(byte[] bytes, int offset, int count) throws IOException {
-        if ( mRemainBytes < 1 ) {
-            waitTimeSlot();
+        try {
+            mSpeedControl.checkRemainedResources();
+        } catch (InterruptedException e) {
+            throw new IOException("Interrupted", e);
         }
-        if ( count > mRemainBytes ) {
-            count = mRemainBytes;
-        }
+        count = (int)mSpeedControl.requestResources(count);
         count = mInnerStream.read(bytes, offset, count);
-        mRemainBytes -= count;
+        mSpeedControl.decrementResources(count);
         return count;
     }
 }

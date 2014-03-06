@@ -68,7 +68,6 @@ public class OpenHelpersFragment
 		mProgressDlg = new HorizontalProgressDialog(getActivity(), 0,
 				R.string.title_downloading_document, R.string.v2andlib_loading, 0, false);
 		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getActivity());
-		builder.setNamesFactory(new MD5CacheFactory());
 		builder.useExternalCacheFolder("pdf");
 		mCache = builder.build();
 		return view;

@@ -117,7 +117,17 @@ public class FileCache {
 		}
 
 		public FileCache build() {
+            preBuildCheck();
 			return new FileCache(mNameFactory, mCacheFolder);
 		}
-	}
+
+        protected void preBuildCheck() {
+            if ( mNameFactory == null ) {
+                mNameFactory = new JavaHashFactory();
+            }
+            if ( mCacheFolder == null ) {
+                throw new NullPointerException("Cache folder wasn't specified");
+            }
+        }
+    }
 }

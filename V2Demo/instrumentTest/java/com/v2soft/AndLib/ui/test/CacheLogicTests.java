@@ -40,7 +40,6 @@ public class CacheLogicTests extends AndroidTestCase {
 	@SmallTest
 	public void testCacheNaming() throws URISyntaxException, IOException, NoSuchAlgorithmException, InterruptedException {
 		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getContext());
-		builder.setNamesFactory(new MD5CacheFactory());
 		builder.setOutdate(Calendar.DAY_OF_MONTH, 30);
 		builder.useExternalCacheFolder(CACHE_TYPE);
 		AndroidFileCache cache = builder.build();

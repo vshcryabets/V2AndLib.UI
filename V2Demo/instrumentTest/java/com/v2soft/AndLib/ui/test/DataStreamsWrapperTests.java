@@ -7,12 +7,14 @@ import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
 import com.v2soft.AndLib.dataproviders.Cancelable;
 import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
 import com.v2soft.AndLib.streams.SpeedControlInputStream;
+import com.v2soft.AndLib.streams.SpeedControlOutputStream;
 import com.v2soft.AndLib.streams.ZeroInputStream;
 import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -86,7 +88,7 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
         assertTrue("Cancelation doesn't works counter="+output.getCounter(), output.getCounter() > 10000);
     }
     @SmallTest
-    public void testSpeedControl() throws IOException {
+    public void testInputSpeedControl() throws IOException {
         int speedLimit = 50*1024;
         int sizeLimit = 1024*1024;
         SpeedControlInputStream stream = new SpeedControlInputStream(new ZeroInputStream(), speedLimit);
@@ -105,7 +107,27 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
         assertTrue("Speed limit doesn't affect", time <= expectedTime2);
         wrapper.close();
     }
-
+    @SmallTest
+    public void testOutputSpeedControl() throws IOException {
+        int speedLimit = 50*1024;
+        int sizeLimit = 1024*1024;
+        InputStream input = new ZeroInputStream();
+        TestOutputStream output = new TestOutputStream(sizeLimit);
+        SpeedControlOutputStream stream = new SpeedControlOutputStream(output, speedLimit);
+        DataStreamWrapper wrapper = new DataStreamWrapper(input, Long.MIN_VALUE);
+        long startTime = System.currentTimeMillis();
+        try {
+            wrapper.copyToOutputStream(stream, null, output);
+            assertTrue("Copy process wasn't interrupted", false);
+        } catch (InterruptedException e) {}
+        long endTime = System.currentTimeMillis();
+        long time = (endTime-startTime)/1000;
+        long expectedTime1 = sizeLimit/speedLimit;
+        long expectedTime2 = sizeLimit/speedLimit*110/100;
+        assertTrue("Speed limit doesn't affect", time >= expectedTime1);
+        assertTrue("Speed limit doesn't affect", time <= expectedTime2);
+        wrapper.close();
+    }
     private class TestOutputStream extends OutputStream implements Cancelable {
         private long mCounter = 0;
         private int mLimit;
