@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.v2soft.AndLib.dataproviders;
+package com.v2soft.AndLib.streams;
+
+import com.v2soft.AndLib.dataproviders.Cancelable;
 
 import java.io.Closeable;
 import java.io.File;
@@ -28,14 +30,14 @@ import java.net.URL;
 /**
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  */
-public class DataStreamWrapper implements Closeable {
+public class StreamHelper implements Closeable {
 	private static final String FILE_SCHEME_URI = "file";
 	private static final String HTTP_SCHEME_URI = "http";
 	private static final String HTTPS_SCHEME_URI = "https";
 	private static final int BUFFER_SIZE = 8192;
 	private static final long UPDATE_MEASURE = 10 * 1024; // update every 10kB
 
-	public interface StreamPositionListener {
+    public interface StreamPositionListener {
 		public void onPositionChanged(long position, long maxPosition);
 	}
 
@@ -43,15 +45,14 @@ public class DataStreamWrapper implements Closeable {
 	protected long mAvaiableDataSize;
 	protected long mUpdateMeasure = UPDATE_MEASURE;
 
-	protected DataStreamWrapper() {}
+	protected StreamHelper() {}
 
-	public DataStreamWrapper(InputStream in, long dataSize) {
-		mStream = in;
-		mAvaiableDataSize = dataSize;
+	public StreamHelper(InputStream in, long dataSize) {
+        setStreamData(in, dataSize);
 	}
 
-	public static DataStreamWrapper getStream(URI uri) throws IOException {
-		DataStreamWrapper result = new DataStreamWrapper();
+	public static StreamHelper getStream(URI uri) throws IOException {
+		StreamHelper result = new StreamHelper();
 		String path = uri.getPath();
 
 		if ( uri.getScheme().equalsIgnoreCase(FILE_SCHEME_URI)) {
@@ -88,31 +89,50 @@ public class DataStreamWrapper implements Closeable {
 
 	/**
 	 * Copy stream to specified output stream.
-	 * @param out
-	 * @param listener
+     * @param out destination stream.
+     * @param listener progress listener.
      * @param cancelMonitor
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public DataStreamWrapper copyToOutputStream(OutputStream out, StreamPositionListener listener, Cancelable cancelMonitor)
+	public StreamHelper copyToOutputStream(OutputStream out, StreamPositionListener listener, Cancelable cancelMonitor)
             throws IOException, InterruptedException {
-		byte buffer[] = new byte[BUFFER_SIZE];
-		int read;
-		long total = 0, prevtotal = 0;
-		while ( (read = mStream.read(buffer)) > 0 ) {
-			out.write(buffer, 0, read);
-			total += read;
-			if ( listener != null && total - mUpdateMeasure > prevtotal ) {
-				listener.onPositionChanged(total, mAvaiableDataSize);
-			}
-            if ( cancelMonitor != null && cancelMonitor.isCanceled() ) {
-                throw new InterruptedException("Copy process was interrupted");
-            }
-		}
+        copy(mStream, out, listener, cancelMonitor, mUpdateMeasure, mAvaiableDataSize);
 		return this;
 	}
 
-	public DataStreamWrapper copyToOutputStream(OutputStream out)
+    /**
+     * Copy data from input to output stream.
+     * @param input source stream.
+     * @param output destination stream.
+     * @param listener progress listener.
+     * @param cancelMonitor
+     * @param updateMeasure
+     * @param maxSize
+     * @return
+     * @throws java.io.IOException
+     */
+    public static long copy(InputStream input, OutputStream output, StreamPositionListener listener,
+                            Cancelable cancelMonitor,
+                            long updateMeasure, long maxSize)
+            throws IOException, InterruptedException {
+        byte buffer[] = new byte[BUFFER_SIZE];
+        int read;
+        long total = 0, prevtotal = 0;
+        while ( (read = input.read(buffer)) > 0 ) {
+            output.write(buffer, 0, read);
+            total += read;
+            if ( listener != null && total - updateMeasure > prevtotal ) {
+                listener.onPositionChanged(total, maxSize);
+            }
+            if ( cancelMonitor != null && cancelMonitor.isCanceled() ) {
+                throw new InterruptedException("Copy process was interrupted");
+            }
+        }
+        return total;
+    }
+
+	public StreamHelper copyToOutputStream(OutputStream out)
             throws IOException, InterruptedException {
 		return copyToOutputStream(out, null, null);
 	}
@@ -120,5 +140,15 @@ public class DataStreamWrapper implements Closeable {
 	public void setUpdateMeasure(long mUpdateMeasure) {
 		this.mUpdateMeasure = mUpdateMeasure;
 	}
+
+    /**
+     * Set input stream.
+     * @param inputStream
+     * @param length
+     */
+    public void setStreamData(InputStream inputStream, long length) {
+        mStream = inputStream;
+        mAvaiableDataSize = length;
+    }
 
 }

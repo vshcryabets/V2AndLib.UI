@@ -40,8 +40,14 @@ public class SpeedControlOutputStream extends OutputStream {
         } catch (InterruptedException e) {
             throw new IOException("Interrupted", e);
         }
-        mSpeedControl.requestResources(count);
-        mInnerStream.write(bytes, offset, count);
-        mSpeedControl.decrementResources(count);
+        int allowedCount = (int) mSpeedControl.requestResources(count);
+        if ( allowedCount < count ) {
+            mInnerStream.write(bytes, offset, allowedCount);
+            mSpeedControl.decrementResources(allowedCount);
+            this.write(bytes, offset+allowedCount, count-allowedCount);
+        } else {
+            mInnerStream.write(bytes, offset, count);
+            mSpeedControl.decrementResources(count);
+        }
     }
 }

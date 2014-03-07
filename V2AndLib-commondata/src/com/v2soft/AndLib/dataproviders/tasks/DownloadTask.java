@@ -16,7 +16,8 @@
 package com.v2soft.AndLib.dataproviders.tasks;
 
 import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
+import com.v2soft.AndLib.streams.SpeedControlOutputStream;
+import com.v2soft.AndLib.streams.StreamHelper;
 import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
 import com.v2soft.AndLib.filecache.FileCache;
 
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
@@ -39,7 +41,8 @@ public class DownloadTask extends DummyTask<Boolean> {
 	protected boolean mSuccess = false;
 	protected File mCachedFile;
 	protected FileCache mCache;
-	protected DataStreamWrapper.StreamPositionListener mListener;
+	protected StreamHelper.StreamPositionListener mListener;
+    protected int mSpeedLimit = Integer.MIN_VALUE; // negative means unlimited
 
 	/**
 	 *
@@ -59,6 +62,14 @@ public class DownloadTask extends DummyTask<Boolean> {
 		mURI = source;
 		mCache = cache;
 	}
+
+    /**
+     * Set download speed limit. Negative value means unlimited speed.
+     * @param limitInBytesPerSecond speed limit in bytes per second.
+     */
+    public void setSpeedLimit(int limitInBytesPerSecond) {
+        mSpeedLimit = limitInBytesPerSecond;
+    }
 	@Override
 	public Boolean getResult() {
 		return mSuccess;
@@ -76,8 +87,11 @@ public class DownloadTask extends DummyTask<Boolean> {
 				mSuccess = true;
 				return this;
 			}
-			DataStreamWrapper wrapper = getStream(mURI);
-			FileOutputStream output = new FileOutputStream(mCachedFile);
+			StreamHelper wrapper = getStream(mURI);
+			OutputStream output = new FileOutputStream(mCachedFile);
+            if ( mSpeedLimit > 0 ) {
+                output = new SpeedControlOutputStream(output, mSpeedLimit);
+            }
             try {
                 wrapper.copyToOutputStream(output, mListener, this);
                 mSuccess = true;
@@ -98,8 +112,8 @@ public class DownloadTask extends DummyTask<Boolean> {
 		}
 	}
 
-    protected DataStreamWrapper getStream(URI uri) throws IOException {
-        return DataStreamWrapper.getStream(uri);
+    protected StreamHelper getStream(URI uri) throws IOException {
+        return StreamHelper.getStream(uri);
     }
 
     public File getLocalFilePath() {

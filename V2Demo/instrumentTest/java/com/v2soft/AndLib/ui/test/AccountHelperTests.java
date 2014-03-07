@@ -1,25 +1,14 @@
 package com.v2soft.AndLib.ui.test;
 
 import android.accounts.Account;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
-import com.v2soft.AndLib.filecache.AndroidFileCache;
-import com.v2soft.AndLib.filecache.FileCache;
-import com.v2soft.AndLib.filecache.MD5CacheFactory;
-import com.v2soft.AndLib.media.MP3EncodingOutputStream;
-import com.v2soft.AndLib.media.MP3Helper;
 import com.v2soft.AndLib.services.AndroidAccountHelper;
 import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;
 import com.v2soft.V2AndLib.demoapp.services.DemoAuthService;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 

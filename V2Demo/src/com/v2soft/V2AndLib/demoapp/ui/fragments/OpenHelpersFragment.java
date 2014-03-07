@@ -25,13 +25,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.v2soft.AndLib.dataproviders.AsyncTaskExecutor;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
 import com.v2soft.AndLib.dataproviders.tasks.CacheHTTPFile;
 import com.v2soft.AndLib.dataproviders.tasks.DownloadTask;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
 import com.v2soft.AndLib.filecache.FileCache;
-import com.v2soft.AndLib.filecache.MD5CacheFactory;
-import com.v2soft.AndLib.sketches.CopyURL2URL;
 import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
 import com.v2soft.AndLib.sketches.OpenHelpers;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
@@ -39,13 +36,7 @@ import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Fragment that demonstarte work of open helpers.
@@ -67,9 +58,7 @@ public class OpenHelpersFragment
 		registerOnClickListener(new int[]{R.id.openRemotePDF, R.id.openLocalPDF, R.id.clear}, view);
 		mProgressDlg = new HorizontalProgressDialog(getActivity(), 0,
 				R.string.title_downloading_document, R.string.v2andlib_loading, 0, false);
-		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getActivity());
-		builder.useExternalCacheFolder("pdf");
-		mCache = builder.build();
+		mCache = new AndroidFileCache.Builder(getActivity()).useExternalCacheFolder("pdf").build();
 		return view;
 	}
 

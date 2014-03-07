@@ -20,10 +20,9 @@ import android.net.Uri;
 import android.os.CancellationSignal;
 import android.os.ParcelFileDescriptor;
 
-import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
+import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
+import com.v2soft.AndLib.streams.StreamHelper;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
-import com.v2soft.AndLib.filecache.MD5CacheFactory;
 import com.v2soft.V2AndLib.demoapp.database.DemoDataItem;
 import com.v2soft.V2AndLib.demoapp.database.DemoDatabaseHelper;
 
@@ -82,10 +81,7 @@ public class DemoListProvider extends ContentProvider {
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         mUriMatcher.addURI(PROVIDER_NAME, "items", FEED_ITEMS);
         mUriMatcher.addURI(PROVIDER_NAME, "insert10Items", FEED_INSERT);
-		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getContext());
-		builder.useExternalCacheFolder("test");
-		mCache = builder.build();
-
+		mCache = new AndroidFileCache.Builder(getContext()).useExternalCacheFolder("test").build();
 		return false;
     }
 
@@ -162,8 +158,8 @@ public class DemoListProvider extends ContentProvider {
 		try {
 			File file = mCache.getFileByUri(uri);
 			if ( !mCache.isInCache(uri) ) {
-				DataStreamWrapper stream = AndroidDataStreamWrapper.getStream(getContext(),
-					URI.create("file:///android_asset/data.jpg"));
+				StreamHelper stream = AndroidStreamHelper.getStream(getContext(),
+                        URI.create("file:///android_asset/data.jpg"));
 				stream.copyToOutputStream(new FileOutputStream(file));
 				stream.close();
 			}

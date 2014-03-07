@@ -45,14 +45,15 @@ public class AndroidFileCache extends FileCache {
 			mContext = context;
 		}
 
-		public void useInternalCacheFolder(String type) {
+		public Builder useInternalCacheFolder(String type) {
 			if ( type != null ) {
 				mCacheFolder = new File(mContext.getCacheDir(), type);
 			} else {
 				mCacheFolder = mContext.getCacheDir();
 			}
+            return this;
 		}
-		public void useExternalCacheFolder(String type) {
+		public Builder useExternalCacheFolder(String type) {
 			if ( type != null ) {
 				mCacheFolder = new File(mContext.getExternalCacheDir(), type);
 			} else {
@@ -61,6 +62,7 @@ public class AndroidFileCache extends FileCache {
 			if ( mCacheFolder == null ) {
 				useInternalCacheFolder(type);
 			}
+            return this;
 		}
 
 		public AndroidFileCache build() {

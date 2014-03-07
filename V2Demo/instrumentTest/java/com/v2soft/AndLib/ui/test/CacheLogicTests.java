@@ -4,13 +4,12 @@ import android.net.Uri;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
+import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
+import com.v2soft.AndLib.streams.StreamHelper;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
 import com.v2soft.AndLib.filecache.JavaHashFactory;
 import com.v2soft.AndLib.filecache.MD5CacheFactory;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -54,7 +53,7 @@ public class CacheLogicTests extends AndroidTestCase {
 		isInCache = cache.isInCache(Uri.parse(DataStreamsWrapperTests.ASSET_FILE_PATH));
 		assertFalse("File shouldn't be present in cache", isInCache);
 		FileOutputStream out = cache.getFileOutputStream(DataStreamsWrapperTests.ASSETS_FILE);
-		DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(mContext, DataStreamsWrapperTests.ASSETS_FILE);
+		StreamHelper wrapper = AndroidStreamHelper.getStream(mContext, DataStreamsWrapperTests.ASSETS_FILE);
 		wrapper.copyToOutputStream(out);
 		wrapper.close();
 		out.close();

@@ -20,8 +20,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
-import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
+import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
+import com.v2soft.AndLib.streams.StreamHelper;
 
 import java.io.IOException;
 import java.net.URI;
@@ -58,7 +58,7 @@ public class BitmapOperations {
 	 * @return bitmap object.
 	 */
 	public Bitmap loadBitmap(URI uri, BitmapFactory.Options options) throws IOException {
-		DataStreamWrapper stream = AndroidDataStreamWrapper.getStream(mContext, uri);
+		StreamHelper stream = AndroidStreamHelper.getStream(mContext, uri);
 		Bitmap result = BitmapFactory.decodeStream(stream.getInputStream(), null, options);
 		stream.close();
 		return result;

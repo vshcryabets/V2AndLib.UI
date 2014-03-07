@@ -19,9 +19,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
+import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
 import com.v2soft.AndLib.dataproviders.Cancelable;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
+import com.v2soft.AndLib.streams.StreamHelper;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,7 +38,7 @@ import java.net.URL;
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  *
  */
-public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cancelable, AndroidDataStreamWrapper.StreamPositionListener {
+public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cancelable, AndroidStreamHelper.StreamPositionListener {
 	private static final String FILE_SCHEME = "file";
 	private static final String TAG = CopyURL2URL.class.getSimpleName();
 	private URL mSource;
@@ -58,7 +58,7 @@ public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cance
 	protected Boolean doInBackground(Void... params) {
 		try {
 			isCanceled = false;
-			DataStreamWrapper input = AndroidDataStreamWrapper.getStream(mContext, new URI(mSource.toString()));
+			StreamHelper input = AndroidStreamHelper.getStream(mContext, new URI(mSource.toString()));
 			FileOutputStream output = new FileOutputStream(mTarget.getPath());
             try {
                 input.copyToOutputStream(output, this, this).close();

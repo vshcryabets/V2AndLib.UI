@@ -1,11 +1,12 @@
 Something new in March 2014
-- SpeedControlInputStream was added to library
+- SpeedControlInputStream/SpeedControlOutptuStream was added to library
+- ResourceTimeController
 
 Something new in February 2014
 - Bitmap operation helper in V2AndLib-media library
 - File cache helper
 - LAME wrapper
-- DataStreamWrapper - New helper class DataStreamWrapper - helps to open input stream for different resources
+- StreamHelper/AndroidStreamHelper - New helper class DataStreamWrapper - helps to open input stream for different resources
 - New Class AndroidAccountHelper - helps to operate with system accounts & SyncAdapter
 
 December 2013

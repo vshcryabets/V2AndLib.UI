@@ -3,9 +3,9 @@ package com.v2soft.AndLib.ui.test;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.v2soft.AndLib.dataproviders.AndroidDataStreamWrapper;
+import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
 import com.v2soft.AndLib.dataproviders.Cancelable;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
+import com.v2soft.AndLib.streams.StreamHelper;
 import com.v2soft.AndLib.streams.SpeedControlInputStream;
 import com.v2soft.AndLib.streams.SpeedControlOutputStream;
 import com.v2soft.AndLib.streams.ZeroInputStream;
@@ -25,15 +25,16 @@ import java.net.URISyntaxException;
 public class DataStreamsWrapperTests extends AndroidTestCase {
     public static final String ASSET_FILE_PATH = "file:///android_asset/test.mp3";
     public static final URI ASSETS_FILE = URI.create(ASSET_FILE_PATH);
+    public static final String HTTP_FILE = "https://dl.dropboxusercontent.com/u/18391781/Datasheets/STK500%20Protocol.pdf";
 
     @SmallTest
     public void testOpenFile() throws URISyntaxException, IOException, InterruptedException {
-        DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(getContext(), ASSETS_FILE);
+        StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(), ASSETS_FILE);
         File tempOutFile = File.createTempFile("tmp", "", getContext().getExternalCacheDir());
         FileOutputStream output = new FileOutputStream(tempOutFile);
         wrapper.copyToOutputStream(output).close();
 
-        wrapper = AndroidDataStreamWrapper.getStream(getContext(), new URI("file", "",
+        wrapper = AndroidStreamHelper.getStream(getContext(), new URI("file", "",
                 tempOutFile.getAbsolutePath(), ""));
         assertNotNull(wrapper);
         assertNotNull(wrapper.getInputStream());
@@ -41,21 +42,21 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
     }
     @SmallTest
     public void testOpenContent() throws URISyntaxException, IOException {
-        DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(getContext(),
-                new URI("content://"+ DemoListProvider.PROVIDER_NAME+"/data.jpg"));
+        StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(),
+                new URI("content://" + DemoListProvider.PROVIDER_NAME + "/data.jpg"));
         assertNotNull(wrapper);
         assertNotNull(wrapper.getInputStream());
         assertEquals(76367, wrapper.getAvaiableDataSize());
     }
     @SmallTest
     public void testOpenAssets() throws URISyntaxException, IOException {
-        DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(getContext(),
+        StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(),
                 new URI("file:///android_asset/BT139_SERIES.pdf"));
         assertNotNull(wrapper);
         assertNotNull(wrapper.getInputStream());
         assertEquals(Long.MIN_VALUE, wrapper.getAvaiableDataSize());
         wrapper.close();
-        wrapper = AndroidDataStreamWrapper.getStream(getContext(),
+        wrapper = AndroidStreamHelper.getStream(getContext(),
                 new URI("file:///android_asset/test.mp3"));
         assertNotNull(wrapper);
         assertNotNull(wrapper.getInputStream());
@@ -64,8 +65,8 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
     }
     @SmallTest
     public void testOpenHTTP() throws URISyntaxException, IOException {
-        DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(getContext(),
-                new URI("https://dl.dropboxusercontent.com/u/18391781/Datasheets/STK500%20Protocol.pdf"));
+        StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(),
+                new URI(HTTP_FILE));
         assertNotNull(wrapper);
         assertNotNull(wrapper.getInputStream());
         assertEquals(161607, wrapper.getAvaiableDataSize());
@@ -73,7 +74,7 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
     }
     @SmallTest
     public void testCancelation() throws IOException {
-        DataStreamWrapper wrapper = AndroidDataStreamWrapper.getStream(getContext(),
+        StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(),
                 URI.create("https://dl.dropboxusercontent.com/u/18391781/Datasheets/STK500%20Protocol.pdf"));
         assertNotNull(wrapper);
         assertNotNull(wrapper.getInputStream());
@@ -92,7 +93,7 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
         int speedLimit = 50*1024;
         int sizeLimit = 1024*1024;
         SpeedControlInputStream stream = new SpeedControlInputStream(new ZeroInputStream(), speedLimit);
-        DataStreamWrapper wrapper = new DataStreamWrapper(stream, Long.MIN_VALUE);
+        StreamHelper wrapper = new StreamHelper(stream, Long.MIN_VALUE);
         TestOutputStream output = new TestOutputStream(sizeLimit);
         long startTime = System.currentTimeMillis();
         try {
@@ -114,7 +115,7 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
         InputStream input = new ZeroInputStream();
         TestOutputStream output = new TestOutputStream(sizeLimit);
         SpeedControlOutputStream stream = new SpeedControlOutputStream(output, speedLimit);
-        DataStreamWrapper wrapper = new DataStreamWrapper(input, Long.MIN_VALUE);
+        StreamHelper wrapper = new StreamHelper(input, Long.MIN_VALUE);
         long startTime = System.currentTimeMillis();
         try {
             wrapper.copyToOutputStream(stream, null, output);
@@ -124,8 +125,8 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
         long time = (endTime-startTime)/1000;
         long expectedTime1 = sizeLimit/speedLimit;
         long expectedTime2 = sizeLimit/speedLimit*110/100;
-        assertTrue("Speed limit doesn't affect", time >= expectedTime1);
-        assertTrue("Speed limit doesn't affect", time <= expectedTime2);
+        assertTrue("Speed limit doesn't affect (was "+time+" expected > "+expectedTime1+")", time >= expectedTime1);
+        assertTrue("Speed limit doesn't affect (was "+time+" expected < "+expectedTime2+")", time <= expectedTime2);
         wrapper.close();
     }
     private class TestOutputStream extends OutputStream implements Cancelable {
