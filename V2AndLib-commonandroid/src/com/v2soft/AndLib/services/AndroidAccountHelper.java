@@ -49,11 +49,11 @@ public class AndroidAccountHelper {
 	 * Remove account. This operation is async.
 	 * @return
 	 */
-	public AccountManagerFuture<Boolean> removePrimaryAccount() {
+	public AccountManagerFuture<Boolean> removePrimaryAccount(final AccountManagerCallback<Boolean> listener) {
 		if ( mPrimaryAccount == null ) {
 			return null;
 		}
-		AccountManagerFuture<Boolean> result = removeAccount(mPrimaryAccount);
+		AccountManagerFuture<Boolean> result = removeAccount(mPrimaryAccount, listener);
 		updatePrimaryAccount();
 		return result;
 	}
@@ -74,11 +74,20 @@ public class AndroidAccountHelper {
 	 * @param account
 	 * @return
 	 */
-	public AccountManagerFuture<Boolean> removeAccount(Account account) {
+	public AccountManagerFuture<Boolean> removeAccount(Account account, final AccountManagerCallback<Boolean> listener) {
 		if ( account == null ) {
 			throw new NullPointerException("Account is null");
 		}
-		AccountManagerFuture<Boolean> result = mAccountManager.removeAccount(account, mRemoveHandler, null);
+		AccountManagerFuture<Boolean> result = mAccountManager.removeAccount(account,
+                new AccountManagerCallback<Boolean>() {
+                    @Override
+                    public void run(AccountManagerFuture<Boolean> future) {
+                        updatePrimaryAccount();
+                        if ( listener != null ) {
+                            listener.run(future);
+                        }
+                    }
+                }, null);
 		updatePrimaryAccount();
 		return result;
 	}

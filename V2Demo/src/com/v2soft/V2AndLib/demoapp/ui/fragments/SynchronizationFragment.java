@@ -91,7 +91,7 @@ public class SynchronizationFragment
 				break;
 			case R.id.deleteAccount:
 				if ( account != null ) {
-					AccountManagerFuture<Boolean> result2 = mHelper.removePrimaryAccount();
+					AccountManagerFuture<Boolean> result2 = mHelper.removePrimaryAccount(null);
 					showInfo("Delete account " + result2.isDone());
 				} else {
 					showInfo("Can't find account");
