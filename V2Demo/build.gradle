@@ -27,8 +27,9 @@ android {
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
             res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
         }
-        instrumentTest {
+        androidTest {
             java.srcDirs = ['instrumentTest/java']
         }
     }
