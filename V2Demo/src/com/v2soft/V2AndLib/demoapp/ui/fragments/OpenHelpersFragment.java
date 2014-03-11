@@ -82,9 +82,9 @@ public class OpenHelpersFragment
 
     private void showPDFFrom(URI remotePDF) {
         mProgressDlg = new DownloadProgressDialog(getActivity(), 0,
-                R.string.title_downloading_document, R.string.v2andlib_loading, false, remotePDF, mCache,
+                R.string.title_downloading_document, remotePDF, mCache,
                 mDownloadListener);
-        mProgressDlg.setSpeedLimit(23*DownloadTask.BYTES_IN_KB);
+        mProgressDlg.setSpeedLimit(7*DownloadTask.BYTES_IN_KB);
         mProgressDlg.show();
     }
 

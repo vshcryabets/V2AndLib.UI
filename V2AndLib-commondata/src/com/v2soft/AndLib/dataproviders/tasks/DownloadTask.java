@@ -96,6 +96,7 @@ public class DownloadTask extends DummyTask<Boolean> {
                 mSuccess = true;
             } catch (InterruptedException e) {
                 mSuccess = false;
+                mCachedFile.delete();
             }
             wrapper.close();
 			output.close();

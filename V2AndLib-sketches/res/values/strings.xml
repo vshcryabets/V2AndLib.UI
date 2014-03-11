@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="v2andlib_downloaded_kb">Downloaded %d Kb.</string>
+    <string name="v2andlib_downloaded_kb">Downloaded %1$d KB from %2$d KB.</string>
     <string name="v2andlib_gps_disabled">GPS services are disabled</string>
     <string name="v2andlib_gps_enable_message">Would you like to enable GPS in device settings?</string>
+    <string name="label_speed">Speed:</string>
+    <string name="label_eta">ETA:</string>
+    <string name="label_speed_format">Speed: %.1f KB/S.</string>
+    <string name="label_eta_format">ETA: %1$d seconds.</string>
 </resources>
