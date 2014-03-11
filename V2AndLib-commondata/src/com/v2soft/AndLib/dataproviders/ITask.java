@@ -35,6 +35,6 @@ public interface ITask<ExecutionResult extends Serializable> extends Cancelable 
 	 * Execute request.
 	 * @throws AbstractDataRequestException
 	 */
-	public ITask<ExecutionResult> execute(ITaskSimpleListener handler)
+	public ITask<ExecutionResult> execute(ITaskSimpleListener<?> handler)
 			throws ITaskException;
 }

@@ -21,15 +21,15 @@ package com.v2soft.AndLib.dataproviders;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public interface ITaskListener extends ITaskSimpleListener {
+public interface ITaskListener<T extends ITask,M> extends ITaskSimpleListener<M> {
     /**
      * Will be called if task finished without exception
      * @param task
      */
-    void onTaskFinished(ITask task);
+    void onTaskFinished(T task);
     /**
      * Will be called if task finished with exception
      * @param task
      */
-    void onTaskFailed(ITask task, Throwable error);
+    void onTaskFailed(T task, Throwable error);
 }

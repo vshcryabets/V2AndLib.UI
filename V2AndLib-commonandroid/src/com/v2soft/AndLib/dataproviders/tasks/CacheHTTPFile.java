@@ -37,8 +37,12 @@ public class CacheHTTPFile extends DownloadTask {
 	private static final long serialVersionUID = 1L;
 	public static final int MSG_CONTENT_LENGTH = 1;
 	public static final int MSG_RECEIVED_LENGTH = 2;
+    public static final  int MSG_RECEIVED_LENGTH_ARRAY = 3;
+    public static final int ARRAY_MAX = 1;
+    public static final int ARRAY_POSITION = 0;
     protected Context mContext;
-	/**
+
+    /**
 	 *
 	 * @param source source resource path
 	 */
@@ -60,13 +64,8 @@ public class CacheHTTPFile extends DownloadTask {
 				@Override
 				public void onPositionChanged(long position, long maxPosition) {
 					final Message msg = new Message();
-					if ( position == 0 ) {
-						msg.what = MSG_CONTENT_LENGTH;
-						msg.obj = maxPosition;
-					} else {
-						msg.what = MSG_RECEIVED_LENGTH;
-						msg.obj = position;
-					}
+                    msg.what = MSG_RECEIVED_LENGTH_ARRAY;
+                    msg.obj = new long[]{position, maxPosition};
 					handler.onMessageFromTask(CacheHTTPFile.this, msg);
 				}
 			};

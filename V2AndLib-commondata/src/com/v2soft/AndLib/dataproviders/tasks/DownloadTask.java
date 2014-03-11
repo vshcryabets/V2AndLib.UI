@@ -43,6 +43,7 @@ public class DownloadTask extends DummyTask<Boolean> {
 	protected FileCache mCache;
 	protected StreamHelper.StreamPositionListener mListener;
     protected int mSpeedLimit = Integer.MIN_VALUE; // negative means unlimited
+    public static final int BYTES_IN_KB = 1024;
 
 	/**
 	 *
@@ -80,9 +81,7 @@ public class DownloadTask extends DummyTask<Boolean> {
 			throws AbstractDataRequestException {
 		mSuccess = false;
 		try {
-			if ( mCachedFile == null ) {
-				mCachedFile = mCache.getFileByURI(mURI);
-			}
+            mCachedFile = getLocalFilePath();
 			if ( mCachedFile.exists() ) {
 				mSuccess = true;
 				return this;
@@ -116,7 +115,10 @@ public class DownloadTask extends DummyTask<Boolean> {
         return StreamHelper.getStream(uri);
     }
 
-    public File getLocalFilePath() {
+    public File getLocalFilePath() throws NoSuchAlgorithmException {
+        if ( mCachedFile == null ) {
+            mCachedFile = mCache.getFileByURI(mURI);
+        }
 		return mCachedFile;
 	}
 }

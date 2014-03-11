@@ -25,10 +25,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.v2soft.AndLib.dataproviders.AsyncTaskExecutor;
+import com.v2soft.AndLib.dataproviders.ITask;
 import com.v2soft.AndLib.dataproviders.tasks.CacheHTTPFile;
 import com.v2soft.AndLib.dataproviders.tasks.DownloadTask;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
 import com.v2soft.AndLib.filecache.FileCache;
+import com.v2soft.AndLib.sketches.DownloadProgressDialog;
 import com.v2soft.AndLib.sketches.HorizontalProgressDialog;
 import com.v2soft.AndLib.sketches.OpenHelpers;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
@@ -37,6 +39,7 @@ import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
 
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Fragment that demonstarte work of open helpers.
@@ -45,10 +48,10 @@ import java.net.URI;
  */
 public class OpenHelpersFragment
 		extends BaseFragment<DemoApplication, DemoAppSettings> {
-	private HorizontalProgressDialog mProgressDlg;
+	private DownloadProgressDialog mProgressDlg;
 	private FileCache mCache;
 
-	public static Fragment newInstance() {
+    public static Fragment newInstance() {
 		return new OpenHelpersFragment();
 	}
 
@@ -56,9 +59,7 @@ public class OpenHelpersFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = View.inflate(getActivity(), R.layout.fragment_open_helpers, null);
 		registerOnClickListener(new int[]{R.id.openRemotePDF, R.id.openLocalPDF, R.id.clear}, view);
-		mProgressDlg = new HorizontalProgressDialog(getActivity(), 0,
-				R.string.title_downloading_document, R.string.v2andlib_loading, 0, false);
-		mCache = new AndroidFileCache.Builder(getActivity()).useExternalCacheFolder("pdf").build();
+        mCache = new AndroidFileCache.Builder(getActivity()).useExternalCacheFolder("pdf").build();
 		return view;
 	}
 
@@ -80,43 +81,46 @@ public class OpenHelpersFragment
 	}
 
     private void showPDFFrom(URI remotePDF) {
-        mProgressDlg.setMessage(getString(R.string.v2andlib_loading));
+        mProgressDlg = new DownloadProgressDialog(getActivity(), 0,
+                R.string.title_downloading_document, R.string.v2andlib_loading, false, remotePDF, mCache,
+                mDownloadListener);
+        mProgressDlg.setSpeedLimit(23*DownloadTask.BYTES_IN_KB);
         mProgressDlg.show();
-        final CacheHTTPFile downloadTask = new CacheHTTPFile(getActivity(), remotePDF, mCache);
-        AsyncTaskExecutor executor = new AsyncTaskExecutor<DownloadTask>() {
-            @Override
-            protected void onProgressUpdate(Object... values) {
-                super.onProgressUpdate(values);
-                Message message = (Message) values[0];
-                if ( message.what == CacheHTTPFile.MSG_CONTENT_LENGTH ) {
-                    mProgressDlg.setMax((int) (((Long)message.obj) / 1024));
-                } else if ( message.what == CacheHTTPFile.MSG_RECEIVED_LENGTH ) {
-                    mProgressDlg.setMessage(getString(R.string.v2andlib_downloaded_kb,
-                            ((Long)message.obj) / 1024));
-                    mProgressDlg.setProgress((int) (((Long)message.obj) / 1024));
-                }
-            }
-            @Override
-            protected void onPostExecute(DownloadTask iTask) {
-                super.onPostExecute(iTask);
-                mProgressDlg.dismiss();
-                if ( iTask.getResult() ) {
-                    String filePath = iTask.getLocalFilePath().getAbsolutePath();
+    }
+
+    private DownloadProgressDialog.OnDownloadFinished mDownloadListener = new DownloadProgressDialog.OnDownloadFinished() {
+        @Override
+        public void onCanceled(DownloadTask task) {
+
+        }
+
+        @Override
+        public void onTaskFinished(DownloadTask task) {
+            DownloadTask iTask = (DownloadTask) task;
+            if ( iTask.getResult() ) {
+                try {
+                    String filePath = null;
+                    filePath = iTask.getLocalFilePath().getAbsolutePath();
                     OpenHelpers.openLocalPDFFile(getActivity(),
                             Uri.parse("file://"+filePath),
                             R.string.title_select_PDF_application,
                             R.string.error_cant_open);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
                 }
             }
-        };
-        executor.execute(new DownloadTask[]{downloadTask});
-        mProgressDlg.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                downloadTask.cancel();
-            }
-        });
-    }
+        }
+
+        @Override
+        public void onTaskFailed(DownloadTask task, Throwable error) {
+
+        }
+
+        @Override
+        public void onMessageFromTask(ITask task, Object message) {
+
+        }
+    };
 
     /**
 	 * Return sample display name

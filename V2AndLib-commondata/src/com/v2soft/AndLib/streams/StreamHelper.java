@@ -118,11 +118,11 @@ public class StreamHelper implements Closeable {
             throws IOException, InterruptedException {
         byte buffer[] = new byte[BUFFER_SIZE];
         int read;
-        long total = 0, prevtotal = 0;
+        long total = 0, prevTotal = 0;
         while ( (read = input.read(buffer)) > 0 ) {
             output.write(buffer, 0, read);
             total += read;
-            if ( listener != null && total - updateMeasure > prevtotal ) {
+            if ( listener != null && total - updateMeasure > prevTotal ) {
                 listener.onPositionChanged(total, maxSize);
             }
             if ( cancelMonitor != null && cancelMonitor.isCanceled() ) {
