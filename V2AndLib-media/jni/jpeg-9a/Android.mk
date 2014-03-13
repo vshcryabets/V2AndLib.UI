@@ -8,8 +8,8 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := libjpeg
-LOCAL_MODULE_FILENAME := libjpeg
+LOCAL_MODULE := libjpegwrapper
+LOCAL_MODULE_FILENAME := libjpegwrapper
 LOCAL_CFLAGS := -ffast-math -DFPM_ARM -fexceptions -O2
 LOCAL_ARM_MODE := arm
 APP_ABI := all
@@ -22,7 +22,7 @@ LOCAL_SRC_FILES := \
     jdinput.c jdmainct.c jdmarker.c jdmaster.c jdmerge.c \
     jdpostct.c jdsample.c jdtrans.c jerror.c jfdctflt.c jfdctfst.c \
     jfdctint.c jidctflt.c jidctfst.c jidctint.c jquant1.c \
-    jquant2.c jutils.c jmemmgr.c jcarith.c jdarith.c jaricom.c
+    jquant2.c jutils.c jmemmgr.c jcarith.c jdarith.c jaricom.c JpegWrapper.cpp
 
 # Use the no backing store memory manager provided by
 # libjpeg. See install.txt
