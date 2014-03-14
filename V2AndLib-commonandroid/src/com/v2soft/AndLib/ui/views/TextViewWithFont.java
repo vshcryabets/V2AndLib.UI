@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,12 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
+import com.v2soft.AndLib.application.BaseInjector;
 import com.v2soft.AndLib.commonandroid.R;
 import com.v2soft.AndLib.ui.activities.IBaseActivity;
 import com.v2soft.AndLib.ui.fonts.FontManager;
+
+import javax.inject.Inject;
 
 /**
  * View extender that hides it content after specified time
@@ -32,6 +35,9 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  *
  */
 public class TextViewWithFont extends TextView {
+    @Inject
+    protected FontManager mFontManager;
+
     private static final String LOG_TAG = TextViewWithFont.class.getSimpleName();
     //----------------------------------------------------------------------------------------------
     // Constructor	
@@ -44,29 +50,15 @@ public class TextViewWithFont extends TextView {
     }
     public TextViewWithFont(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        Context subcontext = context;
-        IBaseActivity<?> activity = null;
-        if ( subcontext instanceof IBaseActivity ) {
-            // may be this is dialog?
-            activity = (IBaseActivity<?>) subcontext;
-        } else {
-            if ( context instanceof ContextThemeWrapper ) {
-                subcontext = ((ContextThemeWrapper)context).getBaseContext();
-            }
-            if ( subcontext instanceof IBaseActivity ) {
-                // may be this is dialog?
-                activity = (IBaseActivity<?>) subcontext;
-            }
-        }
-        if ( activity != null ) {
+        BaseInjector.getInstance().inject(this);
+        if ( context != null ) {
             // we can get font manager
-            final FontManager fm = activity.getFontManager();
             final TypedArray arr = context.obtainStyledAttributes(attrs, R.styleable.TextViewWithFont,
                     0, 0);
             final String fontName = arr.getString(R.styleable.TextViewWithFont_fontName);
             if ( fontName != null ) {
                 try {
-                    setTypeface(fm.getFont(fontName));
+                    setTypeface(mFontManager.getFont(fontName));
                 } catch (Exception e) {
                     Log.e(LOG_TAG, e.toString(), e);
                 }

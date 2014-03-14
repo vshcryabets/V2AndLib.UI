@@ -26,6 +26,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.v2soft.AndLib.application.BaseInjector;
+import com.v2soft.AndLib.ui.fonts.FontManager;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
@@ -45,6 +47,8 @@ import com.v2soft.V2AndLib.demoapp.ui.activities.WiFiList;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Fragment that contains list of samples.
@@ -79,6 +83,7 @@ public class SamplesList
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        BaseInjector.getInstance().inject(this);
 		View view = View.inflate(getActivity(), R.layout.fragment_samples_list, null);
 		ListView list = (ListView) view.findViewById(android.R.id.list);
 		final List<String> names= new ArrayList<String>();

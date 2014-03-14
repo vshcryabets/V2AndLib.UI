@@ -1,6 +1,7 @@
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
 import com.v2soft.AndLib.ui.activities.BaseActivity;
+import com.v2soft.AndLib.ui.fonts.FontManager;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 
