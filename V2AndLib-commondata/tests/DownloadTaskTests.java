@@ -1,37 +1,32 @@
-package com.v2soft.AndLib.ui.test;
-
-import android.test.AndroidTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
-
 import com.v2soft.AndLib.dataproviders.AbstractDataRequestException;
-import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
-import com.v2soft.AndLib.dataproviders.Cancelable;
 import com.v2soft.AndLib.dataproviders.tasks.DownloadTask;
-import com.v2soft.AndLib.filecache.AndroidFileCache;
 import com.v2soft.AndLib.filecache.FileCache;
-import com.v2soft.AndLib.streams.SpeedControlInputStream;
-import com.v2soft.AndLib.streams.SpeedControlOutputStream;
 import com.v2soft.AndLib.streams.StreamHelper;
-import com.v2soft.AndLib.streams.ZeroInputStream;
-import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  */
-public class DownloadTaskTests extends AndroidTestCase {
+public class DownloadTaskTests  {
     private Random mRandom = new Random();
 
-    @SmallTest
+    @Before
+    public void setUp() {
+    }
+
+    @Test
     public void testDownloadSpeedLimit() throws IOException, NoSuchAlgorithmException, AbstractDataRequestException {
         URI source = URI.create(DataStreamsWrapperTests.HTTP_FILE);
         StreamHelper helper = StreamHelper.getStream(source);
@@ -39,7 +34,7 @@ public class DownloadTaskTests extends AndroidTestCase {
         helper.close();
         long speedLimit = 1024*(mRandom.nextInt(20)+5);// random speed between 5-25 kb/s
 
-        FileCache cache = new AndroidFileCache.Builder(mContext).build();
+        FileCache cache = new FileCache.Builder().setCacheFolder(new File("./cache/")).build();
         cache.clear();
         DownloadTask task = new DownloadTask(source, cache);
         task.setSpeedLimit((int) speedLimit);

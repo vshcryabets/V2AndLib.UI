@@ -23,24 +23,11 @@ public class CacheLogicTests extends AndroidTestCase {
 	private static final String MD5_NAME = "eef5051286bff7a55c25645bf44606aa";
 	private static final String JAVA_HASH_NAME = "784584757";
 	private static final String CACHE_TYPE = "testCache";
-	String inputName = "http://developer.android.com/reference/android/app/Activity.html";
 
-	@SmallTest
-	public void testNamesFactory() throws URISyntaxException, IOException, NoSuchAlgorithmException {
-		String inputName = "http://developer.android.com/reference/android/app/Activity.html";
-		AndroidFileCache.NameFactory factory = new MD5CacheFactory();
-		String result = factory.getLocalName(inputName);
-		assertEquals("Wrong MD5 result", MD5_NAME, result);
-		// test Java hash naming
-		factory = new JavaHashFactory();
-		result = factory.getLocalName(inputName);
-		assertEquals("Wrong Java hash result", JAVA_HASH_NAME, result);
-	}
 	@SmallTest
 	public void testCacheNaming() throws URISyntaxException, IOException, NoSuchAlgorithmException, InterruptedException {
 		AndroidFileCache.Builder builder = new AndroidFileCache.Builder(getContext());
 		builder.setOutdate(Calendar.DAY_OF_MONTH, 30);
-		builder.useExternalCacheFolder(CACHE_TYPE);
 		AndroidFileCache cache = builder.build();
 		cache.clear();
 

@@ -104,16 +104,18 @@ public class FileCache {
 
 		}
 
-		public void setNamesFactory(NameFactory nameFactory) {
-			mNameFactory = nameFactory;
+		public Builder setNamesFactory(NameFactory nameFactory) {
+            mNameFactory = nameFactory;
+            return this;
 		}
 
 		public void setOutdate(int calendarType, int value) {
 
 		}
 
-		public void setCacheFolder(File folder) {
+		public Builder setCacheFolder(File folder) {
 			mCacheFolder = folder;
+            return this;
 		}
 
 		public FileCache build() {
