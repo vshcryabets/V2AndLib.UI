@@ -27,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.v2soft.AndLib.application.BaseInjector;
-import com.v2soft.AndLib.ui.fonts.FontManager;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
@@ -47,8 +46,6 @@ import com.v2soft.V2AndLib.demoapp.ui.activities.WiFiList;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * Fragment that contains list of samples.
@@ -71,7 +68,8 @@ public class SamplesList
 			TricksActivity.class,
 			NavigationDrawerActivity.class,
 			SynchronizationFragment.class,
-			OpenHelpersFragment.class
+			OpenHelpersFragment.class,
+            AudioStreamClientFragment.class
 	};
 	private static final String TAG = SamplesList.class.getSimpleName();
 
@@ -118,7 +116,10 @@ public class SamplesList
 			} else if ( clazz.equals(OpenHelpersFragment.class)) {
 				startFragment(R.id.content, OpenHelpersFragment.newInstance(),
 						true, TAG, 0, 0, 0, 0);
-			}
+			} else if ( clazz.equals(AudioStreamClientFragment.class)) {
+                startFragment(R.id.content, AudioStreamClientFragment.newInstance(),
+                        true, TAG, 0, 0, 0, 0);
+            }
 		}
 	}
 }

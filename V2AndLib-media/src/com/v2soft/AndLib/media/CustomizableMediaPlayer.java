@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2010-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +19,30 @@ import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
-import android.view.SurfaceHolder;
 
 /**
- * MediaPlayer shell
+ * MediaPlayer wrapper.
  * @author V.Shcryabets
- * @version 1.0 (2010-12)
+ * @version 2.0 (2010-14)
  */
-public class CustomizableMediaPlayer 
-implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
+public class CustomizableMediaPlayer
+        implements Closeable {
     private static final int MIN_SLEEP = 500;
     private static final String LOG_TAG = CustomizableMediaPlayer.class.getSimpleName();
+    private long DEFAULT_POSITION_UPDATE = 333;
+
     //--------------------------------------------------------------------------------------------
     // Enums
     //--------------------------------------------------------------------------------------------
@@ -55,24 +63,25 @@ implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
     //--------------------------------------------------------------------------------------------
     private MediaPlayer mMediaPlayer = null;
     private FileInputStream mInputStream = null;
-    private int mEndPosition;
-    private int mStartPosition;
+    //    private int mEndPosition = 0;
+//    private int mStartPosition = 0;
     private PlayerState mState = PlayerState.PL_FREE;
     private ArrayList<CustomizableMediaPlayerListener> mListeners = new ArrayList<CustomizableMediaPlayerListener>();
-    private Thread mBackgroundUpdate;
     private boolean isProcessing;
-    private boolean mNeedFadedown = false;
-    private SurfaceHolder mVideoHolder = null;
-    private String mSourceName;
-    private float mVolume = 1.0f;
+    //    private boolean mNeedFadedown = false;
+//    private SurfaceHolder mVideoHolder = null;
+//    private float mVolume = 1.0f;
+//    protected CustomizableMediaPlayerListener mPositionListener;
+    protected Context mContext;
+    protected ScheduledFuture mPositionUpdater;
+    protected Handler mHandler;
     //--------------------------------------------------------------------------------------------
     // Constructors
     //--------------------------------------------------------------------------------------------
-    public CustomizableMediaPlayer() {
-        mBackgroundUpdate = new Thread(this);
+    public CustomizableMediaPlayer(Context context, Handler handler) {
+        mContext = context;
+        mHandler = handler;
         isProcessing =true;
-        mBackgroundUpdate.setPriority(Thread.MIN_PRIORITY);
-        mBackgroundUpdate.start();
     }
 
     @Override
@@ -109,80 +118,89 @@ implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
         catch (Exception e) {
             Log.e(LOG_TAG, e.toString(), e);
         }
-    }	
+    }
 
     private void setState(PlayerState newState) {
         mState = newState;
         switch (newState) {
-        case PL_UNPREPARED:
-            for (CustomizableMediaPlayerListener listener : mListeners) {
-                listener.onReadyStateChanged(false);
-            }
-            break;
-        case PL_PREPARED:
-            for (CustomizableMediaPlayerListener listener : mListeners) {
-                listener.onReadyStateChanged(true);
-            }
-            break;
-        case PL_STOPED:
-            // inform listeners
-            for (CustomizableMediaPlayerListener listener : mListeners) {
-                listener.onFinishPlay();
-            }
-            break;
-        case PL_PAUSED:
-            // inform listeners
-            for (CustomizableMediaPlayerListener listener : mListeners) {
-                listener.onPausePlay(true);
-            }
-            break;
-        case PL_PLAYING:
-            // inform listeners
-            for (CustomizableMediaPlayerListener listener : mListeners) {
-                listener.onBeginPlay();
-            }
-            break;
+            case PL_UNPREPARED:
+                for (CustomizableMediaPlayerListener listener : mListeners) {
+                    listener.onReadyStateChanged(false);
+                }
+                break;
+            case PL_PREPARED:
+                for (CustomizableMediaPlayerListener listener : mListeners) {
+                    listener.onReadyStateChanged(true);
+                }
+                break;
+            case PL_STOPED:
+                // inform listeners
+                for (CustomizableMediaPlayerListener listener : mListeners) {
+                    listener.onFinishPlay();
+                }
+                break;
+            case PL_PAUSED:
+                // inform listeners
+                for (CustomizableMediaPlayerListener listener : mListeners) {
+                    listener.onPausePlay(true);
+                }
+                break;
+            case PL_PLAYING:
+                // inform listeners
+                for (CustomizableMediaPlayerListener listener : mListeners) {
+                    listener.onBeginPlay();
+                }
+                break;
         }
-    }	
+    }
     //--------------------------------------------------------------------------------------------
     // Public methods
     //--------------------------------------------------------------------------------------------
     /**
      * Set source media file name
-     * @param filename
+     * @param filename path to local media file.
      * @throws IllegalArgumentException
      * @throws IllegalStateException
      * @throws IOException
      */
-    public synchronized void setSourceFile(String filename) 
+    public synchronized void setSourceFile(String filename)
             throws IllegalArgumentException, IllegalStateException, IOException  {
-        if ( mMediaPlayer != null ) {
-            freePlayer();
-        }
-        mSourceName = filename;
-        mInputStream = new FileInputStream(mSourceName);
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setOnPreparedListener(this);
-        mMediaPlayer.setOnCompletionListener(this);
+        freePlayer();
+        mMediaPlayer = prepareMediaPlayerObject();
+        mInputStream = new FileInputStream(filename);
         mMediaPlayer.setDataSource(mInputStream.getFD());
-        setVolume(mVolume);
+//        setVolume(mVolume);
         setState(PlayerState.PL_UNPREPARED);
         prepare();
     }
-    public String getSourceFilename() {return mSourceName;}
+    public synchronized void setSourceUri(Uri uri) throws IOException {
+        freePlayer();
+        mMediaPlayer = prepareMediaPlayerObject();
+        mMediaPlayer.setDataSource(mContext, uri);
+//        setVolume(mVolume);
+        setState(PlayerState.PL_UNPREPARED);
+        prepare();
+    }
+
+    protected MediaPlayer prepareMediaPlayerObject() {
+        MediaPlayer result = new MediaPlayer();
+        result.setOnPreparedListener(mPreparedListener);
+        result.setOnCompletionListener(mCompletedListener);
+        return result;
+    }
 
     public synchronized void play() throws Exception {
         switch ( mState ) {
-        case PL_UNPREPARED:
-        case PL_STOPED:
-            prepare();
-        case PL_PREPARED:
-            mMediaPlayer.seekTo(mStartPosition);
-        case PL_PAUSED:
-            mMediaPlayer.start();
-            mNeedFadedown = false;
-            setState(PlayerState.PL_PLAYING);			
-            break;
+            case PL_UNPREPARED:
+            case PL_STOPED:
+                prepare();
+            case PL_PREPARED:
+//            mMediaPlayer.seekTo(mStartPosition);
+            case PL_PAUSED:
+                mMediaPlayer.start();
+//            mNeedFadedown = false;
+                setState(PlayerState.PL_PLAYING);
+                break;
         }
     }
 
@@ -208,12 +226,12 @@ implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
         if ( pos < 0 ) {
             pos = 0;
         }
-        if ( pos < mStartPosition ) {
-            pos = mStartPosition;
-        }
-        if ( mEndPosition > 0 && pos > mEndPosition ) {
-            pos = mEndPosition;
-        }
+//        if ( pos < mStartPosition ) {
+//            pos = mStartPosition;
+//        }
+//        if ( mEndPosition > 0 && pos > mEndPosition ) {
+//            pos = mEndPosition;
+//        }
         mMediaPlayer.seekTo(pos);
         // inform listeners
         for (CustomizableMediaPlayerListener listener : mListeners) {
@@ -226,13 +244,13 @@ implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
                 ( mState != PlayerState.PL_PAUSED )) {
             return;
         }
-        mEndPosition = 0;
-        mStartPosition = 0;
+//        mEndPosition = 0;
+//        mStartPosition = 0;
         try
         {
             mMediaPlayer.stop();
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
             Log.e(LOG_TAG, e.toString(), e);
         }
@@ -245,96 +263,84 @@ implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
             return;
         }
         // prepare video surface
-        if ( mVideoHolder !=  null ) {
-            mMediaPlayer.setScreenOnWhilePlaying(true);
-            mMediaPlayer.setDisplay(mVideoHolder);
-        }
+//        if ( mVideoHolder !=  null ) {
+//            mMediaPlayer.setScreenOnWhilePlaying(true);
+//            mMediaPlayer.setDisplay(mVideoHolder);
+//        }
         mMediaPlayer.prepare();
-        final int duration = mMediaPlayer.getDuration();
-        if ( duration >  0) {
-            mEndPosition = 0;
-            setState(PlayerState.PL_PREPARED);
-        }
+//        final int duration = mMediaPlayer.getDuration();
+//        if ( duration >  0) {
+//            mEndPosition = 0;
+//        }
+        setState(PlayerState.PL_PREPARED);
     }
 
-    public void setEndPosition(int pos) {
-        if ( pos > 0 ) {
-            if ( pos < mStartPosition ) {
-                return;
-            }
-        }
-        mEndPosition = pos;
-    }
+//    public void setEndPosition(int pos) {
+//        if ( pos > 0 ) {
+//            if ( pos < mStartPosition ) {
+//                return;
+//            }
+//        }
+//        mEndPosition = pos;
+//    }
+//
+//    /**
+//     * Specify startposition of player
+//     * @param startPosition position in miliseconds
+//     */
+//    public void setStartPosition(int startPosition)
+//    {
+//        if ( ( mEndPosition > 0 ) && ( startPosition > mEndPosition )) {
+//            return;
+//        }
+//        mStartPosition = startPosition;
+//    }
 
-    /**
-     * Specify startposition of player
-     * @param i position in miliseconds
-     */
-    public void setStartPosition(int i) 
-    {
-        if ( ( mEndPosition > 0 ) && ( i > mEndPosition )) {
-            return;
-        }
-        mStartPosition = i;
-    }
+//    public void fadedown() {
+//        mNeedFadedown = true;
+//    }
 
-    public void fadedown() {
-        mNeedFadedown = true;
-    }
-
-    @Override
-    public void run() {
-        while ( isProcessing ) {
-            try {
-                Thread.sleep(MIN_SLEEP);
-                if ( mState == PlayerState.PL_PLAYING ) {
-                    final int pos = mMediaPlayer.getCurrentPosition();
-                    //Log.d("MyMediaPlayer::run", "e="+end_position+" p="+pos);
-                    if ( ( mEndPosition>0) && ( pos > mEndPosition )) {
-                        // We reached end position
-                        stop();
-                    }
-                    // inform listeners
-                    for (CustomizableMediaPlayerListener listener : mListeners) {
-                        listener.onUpdatePosition(pos);
-                    }
-
-                    if ( mNeedFadedown ) {
-                        // fade down media player volume
-                        for ( int i = 10; i > 0; i-- ) {
-                            mMediaPlayer.setVolume((float)i/10, (float)i/10);
-                            Thread.sleep(200);
-                        }
-                        stop();
-                    }
-                }
-            }
-            catch (Exception e) 
-            {
-                Log.e(LOG_TAG, e.toString(), e);
-            }
-        }
-    }
+//    @Override
+//    public void run() {
+//        while ( isProcessing ) {
+//            try {
+//                Thread.sleep(MIN_SLEEP);
+//                if ( mState == PlayerState.PL_PLAYING ) {
+//                    final int pos = mMediaPlayer.getCurrentPosition();
+//                    if ( ( mEndPosition>0) && ( pos > mEndPosition )) {
+//                        // We reached end position
+//                        stop();
+//                    }
+//                    // inform listeners
+//                    for (CustomizableMediaPlayerListener listener : mListeners) {
+//                        listener.onUpdatePosition(pos);
+//                    }
+//
+//                    if ( mNeedFadedown ) {
+//                        // fade down media player volume
+//                        for ( int i = 10; i > 0; i-- ) {
+//                            mMediaPlayer.setVolume((float)i/10, (float)i/10);
+//                            Thread.sleep(200);
+//                        }
+//                        stop();
+//                    }
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                Log.e(LOG_TAG, e.toString(), e);
+//            }
+//        }
+//    }
 
     public boolean isPaused() {return mState == PlayerState.PL_PAUSED;}
 
-    public void setVideoHolder(SurfaceHolder holder) {
-        mVideoHolder = holder;
-        if ( isReady() ) {
-            stop();
-        }
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer arg0) {
-        try {
-            stop();
-        }
-        catch (Exception e) 
-        {
-            Log.e(LOG_TAG, e.toString(), e);
-        }
-    }
+//    public void setVideoHolder(SurfaceHolder holder) {
+//        mVideoHolder = holder;
+//        if ( isReady() ) {
+//            stop();
+//        }
+//    }
 
     /**
      * Get current position in milliseconds
@@ -355,7 +361,7 @@ implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
      * Get media file duration in milliseconds
      * @return Media file duration in miliseconds
      */
-    public int getDuration() 
+    public int getDuration()
     {
         int res = 0;
         try
@@ -380,24 +386,77 @@ implements Runnable, OnCompletionListener, OnPreparedListener, Closeable {
         return ( mState == PlayerState.PL_PLAYING );
     }
 
-    public float getVolume()
-    {
-        return mVolume;
-    }
+//    public float getVolume()
+//    {
+//        return mVolume;
+//    }
 
-    public void setVolume(float vol)
-    {
-        if ( mMediaPlayer != null ) {
-            mMediaPlayer.setVolume(vol, vol);
-        }
-        mVolume = vol;
-    }
+    //    public void setVolume(float volume) {
+//        if ( mMediaPlayer != null ) {
+//            mMediaPlayer.setVolume(volume, volume);
+//        }
+//        mVolume = volume;
+//    }
     //--------------------------------------------------------------------------------------------
     // OnPrepare listener
     //--------------------------------------------------------------------------------------------
-    @Override
-    public void onPrepared(MediaPlayer arg0) {
-        // setState(PlayerState.PL_PREPARED);
-    }
+    private OnPreparedListener mPreparedListener = new OnPreparedListener() {
+        @Override
+        public void onPrepared(MediaPlayer mp) {
+            setState(PlayerState.PL_PREPARED);
+        }
+    };
+    //--------------------------------------------------------------------------------------------
+    // OnCompletionListener listener
+    //--------------------------------------------------------------------------------------------
+    private OnCompletionListener mCompletedListener = new OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer player) {
+            try {
+                stop();
+            }
+            catch (Exception e)
+            {
+                Log.e(LOG_TAG, e.toString(), e);
+            }
+        }
+    };
+
+//    /**
+//     * Set position listener.
+//     *
+//     * @param listener update position listener.
+//     */
+//    public void setPositionListener(CustomizableMediaPlayerListener listener) {
+//        mPositionListener = listener;
+//        if ( mPositionUpdater != null ) {
+//            mPositionUpdater.cancel(true);
+//            mPositionUpdater = null;
+//        }
+//        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+//        mPositionUpdater = executorService.scheduleWithFixedDelay(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if ( mState == PlayerState.PL_PLAYING && mMediaPlayer != null) {
+//                            final int pos = mMediaPlayer.getCurrentPosition();
+//                            mHandler.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    mPositionListener.onUpdatePosition(pos);
+//                                }
+//                            });
+//                        }
+//                    }
+//                },
+//                200, //initialDelay
+//                getPositionUpdateDelay(), //delay
+//                TimeUnit.MILLISECONDS
+//        );
+//    }
+//
+//    protected long getPositionUpdateDelay() {
+//        return DEFAULT_POSITION_UPDATE;
+//    }
 
 }
