@@ -62,9 +62,9 @@ public class AudioStreamClientFragment
             case R.id.btnStartPlay:
                 mPlayer = new CustomizableMediaPlayer(getActivity(), new Handler());
                 try {
-                    mPlayer.setSourceUri(Uri.parse("http://142.4.200.46:8000/Trance3"));
+                    mPlayer.setSourceUri(Uri.parse("http://142.4.200.46:8000/Trance3"), false);
                     mPlayer.play();
-                    mPlayer.setPositionListener(mPositionListener);
+//                    mPlayer.setPositionListener(mPositionListener);
                 } catch (Exception e) {
                     showError(e.toString());
                 }

@@ -48,15 +48,15 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
         assertEquals(76367, wrapper.getAvaiableDataSize());
     }
     @SmallTest
-    public void testOpenAssets() throws URISyntaxException, IOException {
+    public void testOpenAssets() throws IOException {
         StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(),
-                new URI("file:///android_asset/BT139_SERIES.pdf"));
+                URI.create("file:///android_asset/BT139_SERIES.pdf"));
         assertNotNull(wrapper);
         assertNotNull(wrapper.getInputStream());
         assertEquals(Long.MIN_VALUE, wrapper.getAvaiableDataSize());
         wrapper.close();
         wrapper = AndroidStreamHelper.getStream(getContext(),
-                new URI("file:///android_asset/test.mp3"));
+                URI.create("file:///android_asset/test.mp3"));
         assertNotNull(wrapper);
         assertNotNull(wrapper.getInputStream());
         assertEquals(1024, wrapper.getAvaiableDataSize());
