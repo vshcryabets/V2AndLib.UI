@@ -9,16 +9,18 @@ dependencies {
 android {
     buildToolsVersion "19.0.1"
     compileSdkVersion 19
-     sourceSets {
+    sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
             res.srcDirs = ['res']
+//            jni.srcDirs = []
+//            jniLibs.srcDirs = ['ndk-libs']
         }
         instrumentTest.setRoot('tests')
     }
-} 
+}
 
 task nativeLibsToJar(
         type: Zip,

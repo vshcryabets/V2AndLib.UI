@@ -41,10 +41,10 @@ public class JPEGHelper {
      * @return
      */
     public BitmapFactory.Options getImageOptions(File file) {
-        getJPEGInfo(file.getAbsolutePath());
-        return null;
+        BitmapFactory.Options result = getJPEGInfo(file.getAbsolutePath());
+        return result;
     }
 
 	public native String getVersion();
-    private native Object getJPEGInfo(String localFilePath);
+    private native BitmapFactory.Options getJPEGInfo(String localFilePath);
 }
