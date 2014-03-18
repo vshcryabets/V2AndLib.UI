@@ -18,7 +18,14 @@ android {
 //            jni.srcDirs = []
 //            jniLibs.srcDirs = ['ndk-libs']
         }
-        instrumentTest.setRoot('tests')
+        androidTest {
+            java.srcDirs = ['instrumentTest/java']
+        }
+    }
+    android {
+        lintOptions {
+            abortOnError false
+        }
     }
 }
 

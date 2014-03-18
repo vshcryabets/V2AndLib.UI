@@ -1,4 +1,4 @@
-package com.v2soft.AndLib.ui.test;
+package com.v2soft.AndLib.demotest;
 
 import android.database.Cursor;
 import android.provider.ContactsContract;

@@ -18,4 +18,9 @@ android {
         }
         instrumentTest.setRoot('tests')
     }
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
 } 

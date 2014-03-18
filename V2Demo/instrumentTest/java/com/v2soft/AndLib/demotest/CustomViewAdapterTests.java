@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.v2soft.AndLib.ui.test;
+package com.v2soft.AndLib.demotest;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -24,7 +24,6 @@ import com.v2soft.V2AndLib.demoapp.V2DemoActivity;
 
 import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 
 /**

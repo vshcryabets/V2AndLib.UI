@@ -1,11 +1,10 @@
-package com.v2soft.AndLib.ui.test;
+package com.v2soft.AndLib.ui.demotest;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.widget.ImageView;
 
 import com.v2soft.AndLib.media.BitmapOperations;
 

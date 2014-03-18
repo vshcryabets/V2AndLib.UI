@@ -1,13 +1,10 @@
-package com.v2soft.AndLib.ui.test;
+package com.v2soft.AndLib.demotest;
 
 import android.accounts.Account;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
 
 import com.v2soft.AndLib.services.AndroidAccountHelper;
 import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;

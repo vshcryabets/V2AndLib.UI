@@ -1,21 +1,15 @@
-package com.v2soft.AndLib.ui.test;
+package com.v2soft.AndLib.demotest;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
-import com.v2soft.AndLib.dataproviders.Cancelable;
 import com.v2soft.AndLib.streams.StreamHelper;
-import com.v2soft.AndLib.streams.SpeedControlInputStream;
-import com.v2soft.AndLib.streams.SpeedControlOutputStream;
-import com.v2soft.AndLib.streams.ZeroInputStream;
 import com.v2soft.V2AndLib.demoapp.providers.DemoListProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -40,14 +34,6 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
         assertEquals(1024, wrapper.getAvaiableDataSize());
     }
     @SmallTest
-    public void testOpenContent() throws URISyntaxException, IOException {
-        StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(),
-                new URI("content://" + DemoListProvider.PROVIDER_NAME + "/data.jpg"));
-        assertNotNull(wrapper);
-        assertNotNull(wrapper.getInputStream());
-        assertEquals(76367, wrapper.getAvaiableDataSize());
-    }
-    @SmallTest
     public void testOpenAssets() throws IOException {
         StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(),
                 URI.create("file:///android_asset/BT139_SERIES.pdf"));
@@ -61,5 +47,13 @@ public class DataStreamsWrapperTests extends AndroidTestCase {
         assertNotNull(wrapper.getInputStream());
         assertEquals(1024, wrapper.getAvaiableDataSize());
         wrapper.close();
+    }
+    @SmallTest
+    public void testOpenContent() throws URISyntaxException, IOException {
+        StreamHelper wrapper = AndroidStreamHelper.getStream(getContext(),
+                new URI("content://" + DemoListProvider.PROVIDER_NAME + "/data.jpg"));
+        assertNotNull(wrapper);
+        assertNotNull(wrapper.getInputStream());
+        assertEquals(76367, wrapper.getAvaiableDataSize());
     }
 }

@@ -1,4 +1,4 @@
-package com.v2soft.AndLib.ui.test;
+package com.v2soft.AndLib.ui.demotest;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -7,12 +7,9 @@ import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
 import com.v2soft.AndLib.streams.StreamHelper;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
 import com.v2soft.AndLib.filecache.FileCache;
-import com.v2soft.AndLib.media.MP3EncodingOutputStream;
-import com.v2soft.AndLib.media.MP3Helper;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;

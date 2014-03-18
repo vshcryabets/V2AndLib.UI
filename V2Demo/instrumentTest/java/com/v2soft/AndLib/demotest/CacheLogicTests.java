@@ -1,4 +1,4 @@
-package com.v2soft.AndLib.ui.test;
+package com.v2soft.AndLib.demotest;
 
 import android.net.Uri;
 import android.test.AndroidTestCase;
@@ -7,8 +7,6 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
 import com.v2soft.AndLib.streams.StreamHelper;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
-import com.v2soft.AndLib.filecache.JavaHashFactory;
-import com.v2soft.AndLib.filecache.MD5CacheFactory;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

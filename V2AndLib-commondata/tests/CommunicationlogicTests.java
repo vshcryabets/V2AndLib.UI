@@ -1,23 +1,23 @@
-package com.v2soft.AndLib.ui.test;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
-import android.test.AndroidTestCase;
 
 import com.v2soft.AndLib.communications.AbstractCommunicationChat;
 import com.v2soft.AndLib.communications.AbstractCommunicationMessage;
 import com.v2soft.AndLib.communications.AbstractCommunicationUser;
 import com.v2soft.AndLib.communications.AbstractIMStorage;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * Unit tests for communication classes
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  *
  */
-public class CommunicationlogicTests extends AndroidTestCase {
+public class CommunicationlogicTests {
     class TestUser extends AbstractCommunicationUser<UUID> {
         private static final long serialVersionUID = 1L;
     }
@@ -35,7 +35,7 @@ public class CommunicationlogicTests extends AndroidTestCase {
     }
     class TestStorage extends AbstractIMStorage<UUID, TestUser, UUID, TestMessage, UUID, TestChat> {
         public TestStorage() {
-            super(new AbstractIMStorage.ChatFactory<UUID, TestChat>() {
+            super(new ChatFactory<UUID, TestChat>() {
                 @Override
                 public TestChat newInstance(UUID id) {
                     return new TestChat(id);
@@ -43,11 +43,8 @@ public class CommunicationlogicTests extends AndroidTestCase {
             });
         }
     }
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-    
+
+    @Test
     public void testUnreadmessageCounterInChat() {
         TestChat chat = new TestChat(UUID.randomUUID());
         List<TestMessage> msg = new ArrayList<TestMessage>();
@@ -78,7 +75,8 @@ public class CommunicationlogicTests extends AndroidTestCase {
         chat.removeMessage(m4);
         assertEquals(2, chat.getUnreadMessageCount());
     }
-    
+
+    @Test
     public void testUnreadmessageCounterInIMStorage() {
         TestStorage storage = new TestStorage();
         int unreadMessageCount = 0;

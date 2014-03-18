@@ -1,15 +1,12 @@
-package com.v2soft.AndLib.ui.test;
+package com.v2soft.AndLib.demotest;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
 import com.v2soft.AndLib.filecache.AndroidFileCache;
 import com.v2soft.AndLib.filecache.FileCache;
-import com.v2soft.AndLib.media.BitmapOperations;
 import com.v2soft.AndLib.media.JPEGHelper;
 import com.v2soft.AndLib.streams.StreamHelper;
 
