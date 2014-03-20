@@ -20,17 +20,23 @@ import com.v2soft.AndLib.dataproviders.Cancelable;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.UnknownServiceException;
 
 /**
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  */
 public class StreamHelper implements Closeable {
+    public static final String EXCEPTION_NO_DATA_SCHEME = "Not specified data stream scheme.";
+    public static final String EXCEPTION_UNKNOWN_SCHEME = "Unknown scheme ";
+
 	private static final String FILE_SCHEME_URI = "file";
 	private static final String HTTP_SCHEME_URI = "http";
 	private static final String HTTPS_SCHEME_URI = "https";
@@ -55,6 +61,10 @@ public class StreamHelper implements Closeable {
 		StreamHelper result = new StreamHelper();
 		String path = uri.getPath();
 
+        if ( uri.getScheme() == null ) {
+            throw new UnknownServiceException(EXCEPTION_NO_DATA_SCHEME);
+        }
+
 		if ( uri.getScheme().equalsIgnoreCase(FILE_SCHEME_URI)) {
 			File file = new File(path);
 			result.mStream = new FileInputStream(path);
@@ -67,7 +77,9 @@ public class StreamHelper implements Closeable {
 			connection.connect();
 			result.mStream = connection.getInputStream();
 			result.mAvaiableDataSize = connection.getContentLength();
-		}
+		} else {
+            throw new UnknownServiceException(EXCEPTION_UNKNOWN_SCHEME+uri.getScheme());
+        }
 		return result;
 	}
 

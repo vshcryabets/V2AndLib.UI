@@ -4,6 +4,8 @@ import com.v2soft.AndLib.streams.SpeedControlOutputStream;
 import com.v2soft.AndLib.streams.StreamHelper;
 import com.v2soft.AndLib.streams.ZeroInputStream;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownServiceException;
 
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -120,5 +123,22 @@ public class DataStreamsWrapperTests  {
             return mCounter > mLimit;
         }
         public long getCounter(){return mCounter;}
+    }
+
+    @Test
+    public void testWrongURI() throws URISyntaxException, IOException {
+        // unknown scheme
+        try {
+            StreamHelper.getStream(new URI("unknown://test.test/file1"));
+            assertTrue("UnknownServiceException exception should happens there", false);
+        } catch (UnknownServiceException ex) {
+            assertTrue("Wrong exception "+ex.getMessage(), ex.getMessage().startsWith(StreamHelper.EXCEPTION_UNKNOWN_SCHEME));
+        }
+        // no scheme
+        try {
+            StreamHelper.getStream(new URI("/test.test/file1"));
+        } catch (UnknownServiceException ex) {
+            assertEquals("Wrong exception "+ex.getMessage(), StreamHelper.EXCEPTION_NO_DATA_SCHEME, ex.getMessage());
+        }
     }
 }
