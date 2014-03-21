@@ -36,7 +36,7 @@ public abstract class AbstractDataRequest<ResultType extends Serializable, Param
      * @throws AbstractDataRequestException
      */
 	@Override
-    public AbstractDataRequest<ResultType, Params, RawData> execute(ITaskSimpleListener handler)
+    public AbstractDataRequest<ResultType, Params, RawData> execute(ITaskSimpleListener<?> handler)
 			throws AbstractDataRequestException {
         final Params params = prepareParameters();
         final RawData rawData = sendRequest(params);

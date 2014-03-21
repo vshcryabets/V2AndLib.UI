@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public class AsyncTaskExecutor<T extends  ITask> extends AsyncTask<T, Object, T>
     private static final String LOG_TAG = AsyncTaskExecutor.class.getSimpleName();
     private boolean isWorking;
     private int mDelay = DEFAULT_DELAY;
-    protected ITaskListener mListener;
+    protected ITaskListener<T,?> mListener;
 	private int mRepeatCount = Integer.MIN_VALUE;
 
 	/**
@@ -39,7 +39,7 @@ public class AsyncTaskExecutor<T extends  ITask> extends AsyncTask<T, Object, T>
 		mRepeatCount = 1;
 	}
 
-    public AsyncTaskExecutor(T task, ITaskListener listener) {
+    public AsyncTaskExecutor(T task, ITaskListener<T,?> listener) {
         if ( listener == null ) {
             throw new NullPointerException("Listener can't be null");
         }

@@ -1,16 +1,28 @@
 package com.v2soft.V2AndLib.demoapp.providers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.UUID;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.CancellationSignal;
+import android.os.ParcelFileDescriptor;
 
+import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
+import com.v2soft.AndLib.streams.StreamHelper;
+import com.v2soft.AndLib.filecache.AndroidFileCache;
 import com.v2soft.V2AndLib.demoapp.database.DemoDataItem;
 import com.v2soft.V2AndLib.demoapp.database.DemoDatabaseHelper;
 
@@ -28,6 +40,7 @@ public class DemoListProvider extends ContentProvider {
     private static final int FEED_INSERT = 2;
     public static final String METHOD_CLEAN_DB = "clean";
     private DemoDatabaseHelper mDatabase;
+	private AndroidFileCache mCache;
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -68,7 +81,8 @@ public class DemoListProvider extends ContentProvider {
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         mUriMatcher.addURI(PROVIDER_NAME, "items", FEED_ITEMS);
         mUriMatcher.addURI(PROVIDER_NAME, "insert10Items", FEED_INSERT);
-        return false;
+		mCache = new AndroidFileCache.Builder(getContext()).useExternalCacheFolder("test").build();
+		return false;
     }
 
     @Override
@@ -133,4 +147,33 @@ public class DemoListProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
         return values.length;
     }
+
+	@Override
+	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
+		return this.openFile(uri, mode, null);
+	}
+
+	@Override
+	public ParcelFileDescriptor openFile(Uri uri, String mode, CancellationSignal signal) throws FileNotFoundException {
+		try {
+			File file = mCache.getFileByUri(uri);
+			if ( !mCache.isInCache(uri) ) {
+				StreamHelper stream = AndroidStreamHelper.getStream(getContext(),
+                        URI.create("file:///android_asset/data.jpg"));
+				stream.copyToOutputStream(new FileOutputStream(file));
+				stream.close();
+			}
+			ParcelFileDescriptor parcel = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+			return parcel;
+		} catch (NoSuchAlgorithmException e) {
+		} catch (IOException e) {
+		} catch (InterruptedException e) {
+        }
+        return null;
+	}
+
+	@Override
+	public AssetFileDescriptor openAssetFile(Uri uri, String mode, CancellationSignal signal) throws FileNotFoundException {
+		return super.openAssetFile(uri, mode, signal);
+	}
 }

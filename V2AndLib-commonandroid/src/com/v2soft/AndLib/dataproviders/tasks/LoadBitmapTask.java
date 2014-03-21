@@ -30,6 +30,7 @@ import com.v2soft.AndLib.dataproviders.ITaskSimpleListener;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
+// TODO BitmapHelper class should be used here.
 public class LoadBitmapTask extends DummyTask<Serializable> {
     private static final long serialVersionUID = 1L;
     protected String mFilePath;

@@ -4,14 +4,30 @@ sourceCompatibility = 1.6
 version = '1.2.1'
 jar {
     manifest {
-            attributes 'Implementation-Title': 'V2AndLib-commondata', 'Implementation-Version': version
+        attributes 'Implementation-Title': 'V2AndLib-commondata', 'Implementation-Version': version
     }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.11'
 }
 
 sourceSets {
     main {
-	java {
-    	    srcDir 'src'
+        java {
+            srcDir 'src'
         }
+    }
+    test {
+        java {
+            srcDir 'tests'
+        }
+    }
+}
+
+test {
+    testLogging {
+        // Show that tests are run in the command-line output
+        events 'passed'
     }
 }

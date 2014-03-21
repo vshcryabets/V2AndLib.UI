@@ -1,23 +1,24 @@
 apply plugin: 'android-library'
 
+version='1.2.1-api10'
 
 dependencies {
     compile project(':V2AndLib-commonandroid')
 }
 
 android {
-    buildToolsVersion "17.0"
-    compileSdkVersion 17
+    buildToolsVersion "19.0.1"
+    compileSdkVersion 19
      sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
-            aild.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
         }
         instrumentTest.setRoot('tests')
     }
-} 
+    lintOptions {
+        abortOnError false
+    }
+}

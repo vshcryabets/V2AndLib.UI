@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.v2soft.AndLib.ui.activities.BaseActivity;
+import com.v2soft.AndLib.ui.fonts.FontManager;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package com.v2soft.AndLib.application;
-
-import com.v2soft.AndLib.ui.fonts.FontManager;
 
 import android.app.Application;
 import android.content.pm.PackageInfo;
@@ -36,15 +34,19 @@ public abstract class BaseApplication<S extends BaseApplicationSettings<?>> exte
     // Private fields
     //-----------------------------------------------------------------------
     private S mSettings;
-    protected FontManager mFontManager;
+    protected Object mApplicationModule;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mFontManager = new FontManager(this);
         onCreateSettings(createApplicationSettings());
         mSettings.loadSettings();
+        mApplicationModule = onCreateApplicationModule();
+        initializeInjector();
     }
+
+    protected abstract void initializeInjector();
+    protected abstract Object onCreateApplicationModule();
 
     protected void onCreateSettings(S settings) {
         if ( settings == null ) {
@@ -80,13 +82,6 @@ public abstract class BaseApplication<S extends BaseApplicationSettings<?>> exte
         } catch (PackageManager.NameNotFoundException e) {
             return null;
         }
-    }
-
-    /**
-     * @return application custom font manager
-     */
-    public FontManager getFontManager() {
-        return mFontManager;
     }
     /**
      * 

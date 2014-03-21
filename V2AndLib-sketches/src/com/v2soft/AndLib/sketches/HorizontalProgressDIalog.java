@@ -26,8 +26,12 @@ public class HorizontalProgressDialog extends ProgressDialog {
 	public HorizontalProgressDialog(Context context, int theme, int title, int message, int maxValue,
 									boolean showAfterCreate) {
 		super(context, theme);
-		setTitle(title);
-		setMessage(context.getString(message));
+        if ( title > 0 ) {
+            setTitle(title);
+        }
+        if ( message > 0 ) {
+            setMessage(context.getString(message));
+        }
 		// change style
 		setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		// progress maximum

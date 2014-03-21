@@ -87,12 +87,6 @@ extends SherlockFragmentActivity implements IBaseActivity<T> {
     // UI routines
     // =================================================================
     /**
-     * @return application custom font manager
-     */
-    public FontManager getFontManager() {
-        return mApp.getFontManager();
-    }
-    /**
      * Show error to user 
      * @param message
      */

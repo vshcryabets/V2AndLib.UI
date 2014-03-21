@@ -41,8 +41,6 @@ implements OnClickListener {
     protected T mApp;
     protected S mSettings;
 
-    public static final int DIALOG_FILE_SEND_SERVICE = 10;
-
     @SuppressWarnings("unchecked")
     @Override
     public void onAttach(Activity activity) {
@@ -112,12 +110,6 @@ implements OnClickListener {
     // =================================================================
     // UI routines
     // =================================================================
-    /**
-     * @return application custom font manager
-     */
-    public FontManager getFontManager() {
-        return mApp.getFontManager();
-    }
     /**
      * Show error to user 
      * @param message

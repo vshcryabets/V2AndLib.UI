@@ -1,6 +1,6 @@
 apply plugin: 'android-library'
 
-version = '1.2.2-api10'
+version = '1.2.4-api10'
 
 repositories {
     maven {
@@ -22,15 +22,12 @@ android {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
-            aild.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
         }
         instrumentTest.setRoot('tests')
     }
-
     lintOptions {
         abortOnError false
     }
-} 
+}
+

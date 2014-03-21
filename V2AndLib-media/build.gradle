@@ -3,21 +3,45 @@ apply plugin: 'android-library'
 
 dependencies {
     compile project(':V2AndLib-commonandroid')
+    compile files('libs/native-libs.jar')
 }
 
 android {
-    buildToolsVersion "17.0"
-    compileSdkVersion 17
-     sourceSets {
+    buildToolsVersion "19.0.1"
+    compileSdkVersion 19
+    sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
             resources.srcDirs = ['src']
-            aild.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
+//            jni.srcDirs = []
+//            jniLibs.srcDirs = ['ndk-libs']
         }
-        instrumentTest.setRoot('tests')
+        androidTest {
+            java.srcDirs = ['instrumentTest/java']
+        }
     }
-} 
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
+}
+
+task nativeLibsToJar(
+        type: Zip,
+        description: 'create a jar archive of the native libs') {
+    destinationDir file("libs")
+    baseName 'native-libs'
+    extension 'jar'
+    version ''
+    from fileTree(dir: 'libs', include: '**/*.so') into 'lib/'
+}
+
+// Make copyNativeLibs depend on ndkBuild since we must build the libraries
+// before we can copy them.
+//nativeLibsToJar.dependsOn 'ndkBuild'
+
+tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn nativeLibsToJar }
+

@@ -23,13 +23,6 @@
     <module>V2AndLib-sketches</module>
   </modules>
 
-<!--  <scm>
-    <url>https://github.com/JakeWharton/ActionBarSherlock/</url>
-    <connection>scm:git:git://github.com/JakeWharton/ActionBarSherlock.git</connection>
-    <developerConnection>scm:git:git@github.com:JakeWharton/ActionBarSherlock.git</developerConnection>
-    <tag>1.1.0</tag>
-  </scm> -->
-
   <developers>
     <developer>
       <name>Vladimir Shcryabets</name>

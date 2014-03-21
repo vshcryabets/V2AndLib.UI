@@ -20,11 +20,11 @@ package com.v2soft.AndLib.dataproviders;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  *
  */
-public interface ITaskSimpleListener {
+public interface ITaskSimpleListener<M> {
     /**
      * Will be called if task finished without exception
      * @param task
      * @param message
      */
-    void onMessageFromTask(ITask task, Object message);
+    void onMessageFromTask(ITask task, M message);
 }

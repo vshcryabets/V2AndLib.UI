@@ -16,19 +16,15 @@
 package com.v2soft.AndLib.sketches;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.v2soft.AndLib.dataproviders.AndroidStreamHelper;
 import com.v2soft.AndLib.dataproviders.Cancelable;
-import com.v2soft.AndLib.dataproviders.DataStreamWrapper;
+import com.v2soft.AndLib.streams.StreamHelper;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,7 +38,7 @@ import java.net.URL;
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  *
  */
-public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cancelable, DataStreamWrapper.StreamPositionListener {
+public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cancelable, AndroidStreamHelper.StreamPositionListener {
 	private static final String FILE_SCHEME = "file";
 	private static final String TAG = CopyURL2URL.class.getSimpleName();
 	private URL mSource;
@@ -62,10 +58,14 @@ public class CopyURL2URL extends AsyncTask<Void, Long, Boolean> implements Cance
 	protected Boolean doInBackground(Void... params) {
 		try {
 			isCanceled = false;
-			DataStreamWrapper input = DataStreamWrapper.getStream(mContext, new URI(mSource.toString()));
+			StreamHelper input = AndroidStreamHelper.getStream(mContext, new URI(mSource.toString()));
 			FileOutputStream output = new FileOutputStream(mTarget.getPath());
-			input.copyToOutputStream(output, this).close();
-			output.close();
+            try {
+                input.copyToOutputStream(output, this, this).close();
+            } catch (InterruptedException e) {
+                isCanceled = true;
+            }
+            output.close();
 			return !isCanceled;
 		} catch (MalformedURLException e) {
 			Log.e(TAG, e.toString(), e);

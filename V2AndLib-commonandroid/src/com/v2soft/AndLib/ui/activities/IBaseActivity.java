@@ -10,17 +10,13 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  */
 public interface IBaseActivity<APP extends BaseApplication<?>> {
     /**
-     * @return application custom font manager
-     */
-    public FontManager getFontManager();
-    /**
      * Show error to user 
      * @param message
      */
     public void showError(String message);
     /**
      * Show error to user 
-     * @param message
+     * @param messageResource
      */
     public void showError(int messageResource);
     /**

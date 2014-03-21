@@ -17,6 +17,7 @@ package com.v2soft.AndLib.services;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -43,8 +44,18 @@ public class AndroidAccountHelper {
 	public Account getPrimaryAccount() {
 		return mPrimaryAccount;
 	}
-	public AccountManagerFuture<Boolean> removePrimaryAccount() {
-		return  removeAccount(mPrimaryAccount);
+
+	/**
+	 * Remove account. This operation is async.
+	 * @return
+	 */
+	public AccountManagerFuture<Boolean> removePrimaryAccount(final AccountManagerCallback<Boolean> listener) {
+		if ( mPrimaryAccount == null ) {
+			return null;
+		}
+		AccountManagerFuture<Boolean> result = removeAccount(mPrimaryAccount, listener);
+		updatePrimaryAccount();
+		return result;
 	}
 	/**
 	 * @param number
@@ -63,8 +74,20 @@ public class AndroidAccountHelper {
 	 * @param account
 	 * @return
 	 */
-	public AccountManagerFuture<Boolean> removeAccount(Account account) {
-		AccountManagerFuture<Boolean> result = mAccountManager.removeAccount(account, null, null);
+	public AccountManagerFuture<Boolean> removeAccount(Account account, final AccountManagerCallback<Boolean> listener) {
+		if ( account == null ) {
+			throw new NullPointerException("Account is null");
+		}
+		AccountManagerFuture<Boolean> result = mAccountManager.removeAccount(account,
+                new AccountManagerCallback<Boolean>() {
+                    @Override
+                    public void run(AccountManagerFuture<Boolean> future) {
+                        updatePrimaryAccount();
+                        if ( listener != null ) {
+                            listener.run(future);
+                        }
+                    }
+                }, null);
 		updatePrimaryAccount();
 		return result;
 	}
@@ -148,4 +171,11 @@ public class AndroidAccountHelper {
 		}
 		ContentResolver.requestSync(mPrimaryAccount, mAuthority, bundle);
 	}
+
+	private AccountManagerCallback<Boolean> mRemoveHandler = new AccountManagerCallback<Boolean>() {
+		@Override
+		public void run(AccountManagerFuture<Boolean> future) {
+			updatePrimaryAccount();
+		}
+	};
 }
