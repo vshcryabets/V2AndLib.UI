@@ -16,6 +16,7 @@
 package com.v2soft.AndLib.dataproviders;
 
 import android.os.AsyncTask;
+import android.os.Message;
 import android.util.Log;
 
 /**
@@ -24,12 +25,12 @@ import android.util.Log;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  * 
  */
-public class AsyncTaskExecutor<T extends  ITask> extends AsyncTask<T, Object, T> implements ITaskSimpleListener {
+public class AsyncTaskExecutor<T extends  ITask> extends AsyncTask<T, Object, T> implements ITaskSimpleListener<Message> {
     private static final int DEFAULT_DELAY = 30*1000; // 30 seconds 
     private static final String LOG_TAG = AsyncTaskExecutor.class.getSimpleName();
     private boolean isWorking;
     private int mDelay = DEFAULT_DELAY;
-    protected ITaskListener<T,?> mListener;
+    protected ITaskSimpleListener<?> mListener;
 	private int mRepeatCount = Integer.MIN_VALUE;
 
 	/**
@@ -39,7 +40,8 @@ public class AsyncTaskExecutor<T extends  ITask> extends AsyncTask<T, Object, T>
 		mRepeatCount = 1;
 	}
 
-    public AsyncTaskExecutor(T task, ITaskListener<T,?> listener) {
+    public AsyncTaskExecutor(ITaskSimpleListener<?> listener) {
+        this();
         if ( listener == null ) {
             throw new NullPointerException("Listener can't be null");
         }
@@ -54,7 +56,7 @@ public class AsyncTaskExecutor<T extends  ITask> extends AsyncTask<T, Object, T>
         while ( isWorking && repeatCount != 0 ) {
             try {
                 if ( task != null ) {
-                    task.execute(this);
+                    task.execute((mListener == null ? this : mListener ));
                 }
             } catch (Exception e) {
                 Log.e(LOG_TAG, e.toString(), e);
@@ -76,9 +78,9 @@ public class AsyncTaskExecutor<T extends  ITask> extends AsyncTask<T, Object, T>
         isWorking = false;
     }
 
-	@Override
-	public void onMessageFromTask(ITask task, Object message) {
-		publishProgress(message);
-	}
+    @Override
+    public void onMessageFromTask(ITask task, Message message) {
+        publishProgress(message);
+    }
 }
 
