@@ -39,14 +39,16 @@ public abstract class BaseApplication<S extends BaseApplicationSettings<?>> exte
     @Override
     public void onCreate() {
         super.onCreate();
+        // initialize settings
         onCreateSettings(createApplicationSettings());
         mSettings.loadSettings();
-        mApplicationModule = onCreateApplicationModule();
-        initializeInjector();
+        // initialize injector
+        mApplicationModule = onCreateApplicationModule(mSettings);
+        initializeInjector(mApplicationModule);
     }
 
-    protected abstract void initializeInjector();
-    protected abstract Object onCreateApplicationModule();
+    protected abstract void initializeInjector(Object mApplicationModule);
+    protected abstract Object onCreateApplicationModule(S mSettings);
 
     protected void onCreateSettings(S settings) {
         if ( settings == null ) {
