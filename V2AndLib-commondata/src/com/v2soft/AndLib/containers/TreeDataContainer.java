@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.v2soft.AndLib.dao;
+package com.v2soft.AndLib.containers;
+
+import com.v2soft.AndLib.dao.ITreeData;
+import com.v2soft.AndLib.dao.ITreePureNode;
 
 import java.util.List;
 
