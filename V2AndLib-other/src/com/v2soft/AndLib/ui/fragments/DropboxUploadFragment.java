@@ -124,7 +124,7 @@ implements OnClickListener {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		mSettings = ((BaseApplication<BaseApplicationSettings>)activity.getApplication()).getSettings();
+		mSettings = ((BaseApplication<BaseApplicationSettings<?>>)activity.getApplication()).getSettings();
 
 	}
 

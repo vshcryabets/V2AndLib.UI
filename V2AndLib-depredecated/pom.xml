@@ -12,7 +12,7 @@
 
   <artifactId>depredecated</artifactId>
   <name>V2AndLib-depredecated</name>
-  <version>1.2.2</version>
+  <version>1.2.4</version>
   <packaging>apklib</packaging>
 
   <build>
