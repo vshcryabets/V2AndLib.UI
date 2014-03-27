@@ -19,7 +19,6 @@ import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 
 import com.v2soft.AndLib.application.BaseApplication;
-import com.v2soft.AndLib.application.BaseApplicationModule;
 import com.v2soft.AndLib.application.BaseInjector;
 
 /**
@@ -36,14 +35,14 @@ public class DemoApplication extends BaseApplication<DemoAppSettings> {
     }
 
     @Override
-    protected void initializeInjector() {
+    protected void initializeInjector(Object module) {
         BaseInjector.setInjector(new DemoInjector());
-        BaseInjector.getInstance().init(mApplicationModule);
+        BaseInjector.getInstance().init(module);
     }
 
     @Override
-    protected Object onCreateApplicationModule() {
-        return new DemoApplicationModule(this);
+    protected Object onCreateApplicationModule(DemoAppSettings settings) {
+        return new DemoApplicationModule(this, settings);
     }
 
     @Override

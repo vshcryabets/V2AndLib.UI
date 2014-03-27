@@ -2,6 +2,7 @@ Something new in March 2014
 - SpeedControlInputStream/SpeedControlOutptuStream was added to library
 - ResourceTimeController
 - DownloadProgressDialog
+- TTLMap
 
 Something new in February 2014
 - Bitmap operation helper in V2AndLib-media library

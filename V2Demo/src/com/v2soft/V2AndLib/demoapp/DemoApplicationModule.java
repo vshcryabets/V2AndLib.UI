@@ -39,11 +39,21 @@ import dagger.Provides;
 )
 public class DemoApplicationModule  {
     protected BaseApplication mApplication;
-    public DemoApplicationModule(BaseApplication application) {
+    private DemoAppSettings mSettings;
+
+    public DemoApplicationModule(BaseApplication application, DemoAppSettings settings) {
+        if ( settings == null ) {
+            throw new NullPointerException("Settings is null");
+        }
         mApplication = application;
+        mSettings = settings;
     }
     @Provides
     BaseApplication provideApplication() {
         return mApplication;
+    }
+    @Provides
+    DemoAppSettings provideSettings() {
+        return mSettings;
     }
 }

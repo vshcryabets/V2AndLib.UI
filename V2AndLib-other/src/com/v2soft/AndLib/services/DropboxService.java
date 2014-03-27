@@ -217,12 +217,12 @@ extends Service {
         final String text = String.format(getString(R.string.v2andlib_uploading_file), 
                 file.getName());
         //		.setContentTitle(getString(R.string.v2andlib_dropbox_operation))
-        final Notification notification = new Notification(R.drawable.icon, text, System.currentTimeMillis());
+        final Notification notification = new Notification(android.R.drawable.ic_dialog_alert, text, System.currentTimeMillis());
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
         notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
         notification.contentView = new RemoteViews(getApplication().getPackageName(), 
                 R.layout.v2andlib_ongoing_notification);
-        notification.contentView.setImageViewResource(R.id.v2andlib_status_icon, R.drawable.icon);
+        notification.contentView.setImageViewResource(R.id.v2andlib_status_icon, android.R.drawable.ic_dialog_alert);
         notification.contentView.setTextViewText(R.id.v2andlib_status_text, text);
         notification.contentView.setProgressBar(R.id.v2andlib_status_progress, 100, 0, false);
 
