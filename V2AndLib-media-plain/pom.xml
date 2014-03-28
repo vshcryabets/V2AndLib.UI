@@ -1,0 +1,30 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.v2soft.AndLib</groupId>
+  <artifactId>commondata</artifactId>
+  <version>1.1.2</version>
+  <packaging>jar</packaging>
+  <name>commondata</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <src.dir>src</src.dir>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <internal.repo.path>file://${basedir}/../V2AndLib-mvnrepo/</internal.repo.path>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>internal.repo</id>
+      <name>Internal Repository</name>
+      <url>${internal.repo.path}</url>
+    </repository>
+  </distributionManagement>
+
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+  </build>
+  
+</project>
