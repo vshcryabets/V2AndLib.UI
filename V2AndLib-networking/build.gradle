@@ -1,6 +1,6 @@
 apply plugin: 'android-library'
 
-version='1.2.1'
+version='1.2.1-api10'
 
 dependencies {
     compile project(':V2AndLib-commonandroid')

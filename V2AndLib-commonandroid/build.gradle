@@ -9,6 +9,7 @@ uploadArchives {
 
 dependencies {
     compile project(':V2AndLib-commondata')
+    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
     compile 'com.android.support:support-v4:19.0.0'
     compile 'com.squareup.dagger:dagger-compiler:1.2.0'
     compile 'com.squareup.dagger:dagger-parent:1.2.0'
@@ -34,4 +35,6 @@ android {
     lintOptions {
         abortOnError false
     }
-} 
+    
+    
+}

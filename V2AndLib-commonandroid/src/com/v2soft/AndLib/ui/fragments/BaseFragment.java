@@ -16,12 +16,13 @@
 package com.v2soft.AndLib.ui.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.ui.activities.IBaseActivity;
@@ -35,7 +36,7 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  * @param <S> settings class
  */
 public abstract class BaseFragment<T extends BaseApplication<S>, S extends BaseApplicationSettings<?>> 
-extends Fragment 
+extends SherlockFragment 
 implements OnClickListener {
     protected T mApp;
     protected S mSettings;

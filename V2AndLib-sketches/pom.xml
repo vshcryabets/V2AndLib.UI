@@ -12,14 +12,14 @@
 
     <artifactId>sketches</artifactId>
     <name>V2AndLib-sketches</name>
-    <version>1.2.4</version>
+    <version>1.2.4-api10</version>
     <packaging>apklib</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.v2soft.AndLib</groupId>
             <artifactId>commonandroid</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.4-api10</version>
             <type>apklib</type>
         </dependency>
     </dependencies>

@@ -15,10 +15,11 @@
  */
 package com.v2soft.AndLib.ui.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.v2soft.AndLib.application.BaseApplication;
 import com.v2soft.AndLib.application.BaseApplicationSettings;
 import com.v2soft.AndLib.ui.fonts.FontManager;
@@ -31,7 +32,7 @@ import com.v2soft.AndLib.ui.fonts.FontManager;
  * @param <S> settings class
  */
 public abstract class BaseActivity<T extends BaseApplication<S>, S extends BaseApplicationSettings<?>> 
-extends Activity implements IBaseActivity<T> {
+extends SherlockFragmentActivity implements IBaseActivity<T> {
     // =================================================================
     // Interfaces
     // =================================================================

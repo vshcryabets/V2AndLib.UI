@@ -15,10 +15,9 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Window;
 
 import com.v2soft.V2AndLib.demoapp.R;
@@ -33,16 +32,15 @@ public class EndlessListActivity extends DemoBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
             Fragment fragment = DemoEndlessList.newInstance();
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
         }
-        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
     /**
      * Return sample display name
@@ -53,13 +51,18 @@ public class EndlessListActivity extends DemoBaseActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case android.R.id.home:
-            finish();
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
+    public void showError(String message) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setLoadingProcess(boolean value, Object tag) {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void setBlockingProcess(boolean value, Object tag) {
+        // TODO Auto-generated method stub
+        
     }
 }

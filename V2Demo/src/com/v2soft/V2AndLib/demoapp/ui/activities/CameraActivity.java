@@ -15,11 +15,11 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoCamera;
 
@@ -36,7 +36,7 @@ public class CameraActivity extends DemoBaseActivity {
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
             Fragment fragment = DemoCamera.newInstance();
-            FragmentTransaction trans = getFragmentManager().beginTransaction();
+            FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
         }

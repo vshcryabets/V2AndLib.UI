@@ -18,16 +18,16 @@ package com.v2soft.V2AndLib.demoapp.ui.fragments;
 import java.io.File;
 import java.util.UUID;
 
-import android.app.Fragment;
 import android.media.CameraProfile;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.AndLib.ui.views.CameraView;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;

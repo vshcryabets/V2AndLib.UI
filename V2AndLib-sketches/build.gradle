@@ -1,5 +1,7 @@
 apply plugin: 'android-library'
 
+version = '1.2.4-api10'
+
 repositories {
     maven {
         url "http://mente.github.io/facebook-api-android-aar"
@@ -28,3 +30,4 @@ android {
         abortOnError false
     }
 }
+

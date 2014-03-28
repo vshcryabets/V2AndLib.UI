@@ -15,10 +15,10 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
-import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.v2soft.AndLib.media.CustomizableMediaPlayer;
 import com.v2soft.AndLib.media.CustomizableMediaPlayerListener;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
-import com.v2soft.AndLib.ui.views.TextViewWithFont;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;

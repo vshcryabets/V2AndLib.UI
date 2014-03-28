@@ -27,9 +27,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.support.v4.content.Loader;
 
 /**
  * WiFi device discovery loader

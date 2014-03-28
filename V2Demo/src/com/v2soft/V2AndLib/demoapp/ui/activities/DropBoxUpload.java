@@ -55,7 +55,7 @@ public class DropBoxUpload extends DemoBaseActivity implements OnClickListener {
             frag = DropboxUploadFragment.newInstance(this, "/sdcard/res1.wav", "cloc",
                     APP_KEY, APP_SECRET,
                     ACTION_DROPBOX_UPLOAD);
-            frag.show(getFragmentManager(), "dialog");
+            frag.show(getSupportFragmentManager(), "dialog");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
