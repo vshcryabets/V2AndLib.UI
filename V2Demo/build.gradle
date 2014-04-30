@@ -19,8 +19,12 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "19.0"
+    buildToolsVersion "19.0.3"
     compileSdkVersion 19
+    lintOptions {
+        abortOnError false
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -33,11 +37,6 @@ android {
             java.srcDirs = ['instrumentTest/java']
         }
     }
-
-    lintOptions {
-        abortOnError false
-    }
-
 }
 
 // Task to run ndk-build
