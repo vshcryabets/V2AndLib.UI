@@ -1,3 +1,6 @@
+Something new in May 2014
+- InjectionAdapter - allows to inject some views into the existing Adapter.
+
 Something new in March 2014
 - SpeedControlInputStream/SpeedControlOutptuStream was added to library
 - ResourceTimeController
