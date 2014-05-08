@@ -9,14 +9,18 @@ uploadArchives {
 
 dependencies {
     compile project(':V2AndLib-commondata')
-    compile 'com.android.support:support-v4:19.0.0'
+    compile 'com.android.support:support-v4:19.1.0'
     compile 'com.squareup.dagger:dagger-compiler:1.2.0'
     compile 'com.squareup.dagger:dagger-parent:1.2.0'
 }
 
 android {
-    buildToolsVersion "19.0"
+    buildToolsVersion "19.0.3"
     compileSdkVersion 19
+    lintOptions {
+        abortOnError false
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -30,8 +34,4 @@ android {
             java.srcDirs = ['instrumentTest/java']
         }
     }
-
-    lintOptions {
-        abortOnError false
-    }
-} 
+}

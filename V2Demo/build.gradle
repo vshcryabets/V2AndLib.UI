@@ -12,15 +12,19 @@ dependencies {
     compile 'com.facebook:facebook-android-sdk:3.5.2@aar'
     compile project(":V2AndLib-networking")
     compile project(":V2AndLib-media")
-    compile project(":V2AndLib-other")
-    compile project(":V2AndLib-depredecated")
+//    compile project(":V2AndLib-other")
+//    compile project(":V2AndLib-depredecated")
     compile project(":V2AndLib-sketches")
     compile files('libs/native-libs.jar')
 }
 
 android {
-    buildToolsVersion "19.0"
+    buildToolsVersion "19.0.3"
     compileSdkVersion 19
+    lintOptions {
+        abortOnError false
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -33,11 +37,6 @@ android {
             java.srcDirs = ['instrumentTest/java']
         }
     }
-
-    lintOptions {
-        abortOnError false
-    }
-
 }
 
 // Task to run ndk-build
