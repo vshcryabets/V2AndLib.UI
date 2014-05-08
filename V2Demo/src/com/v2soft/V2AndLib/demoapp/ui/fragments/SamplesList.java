@@ -34,7 +34,6 @@ import com.v2soft.V2AndLib.demoapp.R;
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
 import com.v2soft.V2AndLib.demoapp.ui.activities.CameraActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DialogsActivity;
-import com.v2soft.V2AndLib.demoapp.ui.activities.DropBoxUpload;
 import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
 import com.v2soft.V2AndLib.demoapp.ui.activities.NavigationDrawerActivity;
@@ -59,7 +58,6 @@ public class SamplesList
 			BluetoothList.class,
 			CameraActivity.class,
 			UDPDiscoveryList.class,
-			DropBoxUpload.class,
 			OpenSLSample.class,
 			GCPDemo.class,
 			EndlessListActivity.class,
