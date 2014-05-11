@@ -8,9 +8,7 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "19.0.1"
-    compileSdkVersion 19
-     sourceSets {
+    sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
@@ -19,8 +17,5 @@ android {
         }
 
         instrumentTest.setRoot('tests')
-    }
-    lintOptions {
-        abortOnError false
     }
 }
