@@ -1,8 +1,11 @@
 package com.v2soft.AndLib.ui.adapters;
 
+import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 
 /**
  * Created by V.Shcryabets on 5/7/14.
@@ -12,10 +15,23 @@ import android.widget.BaseAdapter;
 public abstract class InjectionAdapter extends BaseAdapter {
     protected BaseAdapter mWrappedAdapter;
     protected int mInjectViewType;
+    protected DataSetObserver mDataSetObserver;
 
     public InjectionAdapter(BaseAdapter wrappedAdapter) {
-        mWrappedAdapter = wrappedAdapter;
+        setAdapter(wrappedAdapter);
         mInjectViewType = mWrappedAdapter.getViewTypeCount();
+    }
+
+    protected void setAdapter(BaseAdapter adapter) {
+        if (mWrappedAdapter != null && mDataSetObserver != null) {
+            mWrappedAdapter.unregisterDataSetObserver(mDataSetObserver);
+        }
+
+        mWrappedAdapter = adapter;
+        if ( mWrappedAdapter != null ) {
+            mDataSetObserver = new InjectionDataSetObserver();
+            mWrappedAdapter.registerDataSetObserver(mDataSetObserver);
+        }
     }
 
     @Override
@@ -62,6 +78,14 @@ public abstract class InjectionAdapter extends BaseAdapter {
             return super.getItemViewType(position);
         }
     }
+
+    private class InjectionDataSetObserver extends DataSetObserver {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            notifyDataSetChanged();
+        }
+    };
 
     protected abstract boolean isInjectedView(int position);
     protected abstract int getAdditionalCount(int innerCount);
