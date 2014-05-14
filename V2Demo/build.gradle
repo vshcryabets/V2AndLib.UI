@@ -16,6 +16,7 @@ dependencies {
     compile project(":V2AndLib-depredecated")
     compile project(":V2AndLib-sketches")
     compile files('libs/native-libs.jar')
+    compile 'com.joanzapata.pdfview:android-pdfview:1.0.+@aar'
 }
 
 android {

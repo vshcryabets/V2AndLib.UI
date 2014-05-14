@@ -67,7 +67,8 @@ public class SamplesList
 			NavigationDrawerActivity.class,
 			SynchronizationFragment.class,
 			OpenHelpersFragment.class,
-            AudioStreamClientFragment.class
+            AudioStreamClientFragment.class,
+            DemoPDF.class
 	};
 	private static final String TAG = SamplesList.class.getSimpleName();
 
@@ -116,6 +117,9 @@ public class SamplesList
 						true, TAG, 0, 0, 0, 0);
 			} else if ( clazz.equals(AudioStreamClientFragment.class)) {
                 startFragment(R.id.content, AudioStreamClientFragment.newInstance(),
+                        true, TAG, 0, 0, 0, 0);
+            } else if ( clazz.equals(DemoPDF.class)) {
+                startFragment(R.id.content, DemoPDF.newInstance(),
                         true, TAG, 0, 0, 0, 0);
             }
 		}
