@@ -7,14 +7,18 @@
 
 namespace AudioHelpers {
 class MP3InputStream : public PCMInputStream {
-private:
+protected:
     static const char* TAG;
     mpg123_handle * mHandle;
+    long mSampleRate;
+    int mChannels;
+    int mEncoding;
 public:
     MP3InputStream(const char* filePath);
     ~MP3InputStream();
     size_t read(void* buffer, size_t count);
     size_t getSampleRate();
+    size_t getChannelsCount();
 };
 
 }

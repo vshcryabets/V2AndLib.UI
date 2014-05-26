@@ -27,5 +27,7 @@ size_t FilePCMInputStream::read(void* buffer, size_t count) {
 size_t FilePCMInputStream::getSampleRate() {
     return 48000;
 }
-
+size_t FilePCMInputStream::getChannelsCount() {
+    return 1;
+}
 }
