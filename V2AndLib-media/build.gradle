@@ -3,6 +3,7 @@ apply plugin: 'android-library'
 
 dependencies {
     compile project(':V2AndLib-commonandroid')
+    compile project(':V2AndLib-media-plain')
     compile files('libs/native-libs.jar')
 }
 

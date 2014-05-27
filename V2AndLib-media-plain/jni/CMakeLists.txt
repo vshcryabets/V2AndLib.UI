@@ -1,0 +1,8 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+PROJECT(V2StyxLib)
+INCLUDE_DIRECTORIES(mpg123) 
+ADD_DEFINITIONS(-g -O2 -fsigned-char -Wall)
+
+ADD_SUBDIRECTORY( mpg123 ./out/mpg123 )
+ADD_SUBDIRECTORY( audiostreams ./out/audiostreams )

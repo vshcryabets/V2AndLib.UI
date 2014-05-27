@@ -36,10 +36,10 @@ static short sawtoothBuffers[sPlayerCounts][SAWTOOTH_FRAMES];
 // synthesize a mono sawtooth wave and place it into a buffer (called automatically on load)
 __attribute__((constructor)) static void onDlOpen(void) {
 	for (size_t i = 0; i < SAWTOOTH_FRAMES; ++i) {
-		sawtoothBuffers[0][i] = (short)(30000*sin(((double)i)));
-		sawtoothBuffers[1][i] = (short)(30000*sin(((double)i*1.2)));
-		sawtoothBuffers[2][i] = (short)(30000*sin(((double)i*1.4)));
-		sawtoothBuffers[3][i] = (short)(30000*sin(((double)i*1.6)));
+		sawtoothBuffers[0][i] = (short)(30000*sin(((double)i*0.8)));
+		sawtoothBuffers[1][i] = (short)(30000*sin(((double)i*0.6)));
+		sawtoothBuffers[2][i] = (short)(30000*sin(((double)i*0.5)));
+		sawtoothBuffers[3][i] = (short)(30000*sin(((double)i*0.4)));
 	}
 	for (size_t i = 0; i < 20; ++i) {
 		LOGI("%d ", sawtoothBuffers[0][i]);
@@ -97,9 +97,16 @@ void Java_com_v2soft_V2AndLib_demoapp_ui_activities_OpenSLSample_createPlayers(J
 	// configure audio source
 	SLDataLocator_AndroidSimpleBufferQueue loc_bufq =
 	{SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
-	SLDataFormat_PCM format_pcm = {SL_DATAFORMAT_PCM, 1, SL_SAMPLINGRATE_8,
-			SL_PCMSAMPLEFORMAT_FIXED_16, SL_PCMSAMPLEFORMAT_FIXED_16,
-			SL_SPEAKER_FRONT_CENTER, SL_BYTEORDER_LITTLEENDIAN};
+
+	SLDataFormat_PCM format_pcm;
+    format_pcm.formatType = SL_DATAFORMAT_PCM;
+    format_pcm.numChannels = 1;
+    format_pcm.samplesPerSec = SL_SAMPLINGRATE_48; //mHz
+    format_pcm.bitsPerSample = SL_PCMSAMPLEFORMAT_FIXED_16;
+    format_pcm.containerSize = SL_PCMSAMPLEFORMAT_FIXED_16;
+    format_pcm.channelMask = SL_SPEAKER_FRONT_CENTER;
+    format_pcm.endianness = SL_BYTEORDER_LITTLEENDIAN;
+
 	SLDataSource audioSrc = {&loc_bufq, &format_pcm};
 
 	// configure audio sink

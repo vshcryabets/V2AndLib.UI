@@ -1,6 +1,6 @@
 #include "MP3InputStream.h"
 #include "PCMInputStreamException.h"
-#include <android/log.h>
+// #include <android/log.h>
 
 namespace AudioHelpers {
 
@@ -15,12 +15,12 @@ MP3InputStream::MP3InputStream(const char* filePath) {
     }
     err = mpg123_open(mHandle, filePath);
     if ( err != MPG123_OK ) {
-        __android_log_print(ANDROID_LOG_DEBUG, TAG, "failed to open MP3 file %s", mpg123_strerror(mHandle));
+//        __android_log_print(ANDROID_LOG_DEBUG, TAG, "failed to open MP3 file %s", mpg123_strerror(mHandle));
         throw new PCMInputStreamException("Can't initialize MPG123");
     }
     err = mpg123_getformat(mHandle, &mSampleRate, &mChannels, &mEncoding);
     if ( err != MPG123_OK ) {
-        __android_log_print(ANDROID_LOG_DEBUG, TAG, "failed to get format MP3 file %s", mpg123_strerror(mHandle));
+//        __android_log_print(ANDROID_LOG_DEBUG, TAG, "failed to get format MP3 file %s", mpg123_strerror(mHandle));
         throw new PCMInputStreamException("Can't initialize MPG123");
     }
     mpg123_format_none(mHandle);

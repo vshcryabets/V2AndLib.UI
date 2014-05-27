@@ -1,5 +1,5 @@
-import com.v2soft.AndLib.media.JPEGHelper;
-import com.v2soft.AndLib.media.JPEGOptions;
+import com.v2soft.AndLib.medianative.JPEGHelper;
+import com.v2soft.AndLib.medianative.JPEGOptions;
 
 import org.junit.Test;
 

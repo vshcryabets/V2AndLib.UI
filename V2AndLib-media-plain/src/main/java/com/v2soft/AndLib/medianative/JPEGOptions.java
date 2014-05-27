@@ -1,4 +1,4 @@
-package com.v2soft.AndLib.media;
+package com.v2soft.AndLib.medianative;
 
 /**
  * @author V.Shcryabets (vshcryabets@gmail.com)

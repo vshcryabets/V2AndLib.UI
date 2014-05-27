@@ -1,5 +1,9 @@
 package com.v2soft.AndLib.demotest;
 
+import android.content.Context;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -19,6 +23,27 @@ import java.util.Random;
  */
 public class AudioOperationsTests extends AndroidTestCase {
 	public static final String ASSET_SOURCE_FILE_PATH = "file:///android_asset/sample.wav";
+
+    @SmallTest
+    public void testPCMPlayback() throws IOException, NoSuchAlgorithmException, InterruptedException {
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+//        String sampleRate = am.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
+//        String framesPerBuffer = am.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER);
+
+        Random random = new Random();
+        int sourceFrequency = random.nextInt(8000)+1000;
+        int sourceDuration = 1000;
+        int sourceSampleRate = 48000;
+        byte[] data = sineGenerator(true, sourceSampleRate, sourceDuration, sourceFrequency);
+        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, sourceSampleRate, AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT, data.length, AudioTrack.MODE_STREAM);
+        int i = 10;
+        track.play();
+        while ( i-- > 0 ) {
+            int written = track.write(data, 0, data.length);
+        }
+    }
+
 
 	@SmallTest
 	public void testMP3Encoder() throws IOException, NoSuchAlgorithmException, InterruptedException {

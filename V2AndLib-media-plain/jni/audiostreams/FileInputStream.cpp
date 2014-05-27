@@ -1,6 +1,6 @@
 #include "FileInputStream.h"
 
-#include <android/log.h>
+//#include <android/log.h>
 
 namespace AudioHelpers {
 
@@ -19,7 +19,7 @@ size_t FilePCMInputStream::read(void* buffer, size_t count) {
     if ( mFile == NULL ) {
         return 0;
     }
-    __android_log_print(ANDROID_LOG_INFO, TAG, "Read buffer %d", count);
+//    __android_log_print(ANDROID_LOG_INFO, TAG, "Read buffer %d", count);
     size_t result = fread(buffer, sizeof(char), count, mFile);
     return result;
 }
