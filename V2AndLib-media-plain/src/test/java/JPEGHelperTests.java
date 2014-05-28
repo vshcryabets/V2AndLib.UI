@@ -18,18 +18,10 @@ public class JPEGHelperTests {
 
 	@Test
 	public void testGetOptions() throws IOException, NoSuchAlgorithmException, InterruptedException {
-//        URI uri = URI.create(BitmapOperationsTests.ASSET_LARGE_FILE_PATH);
-//        FileCache cache = new AndroidFileCache.Builder(getContext()).build();
-//        cache.clear();
-//        File file = cache.getFileByURI(uri);
-//        StreamHelper stream = AndroidStreamHelper.getStream(getContext(), uri);
-//        FileOutputStream output = new FileOutputStream(file);
-//        stream.copyToOutputStream(output);
-//        output.close();
         java.net.URL url = JPEGHelperTests.class.getResource("/large.jpg");
         File current = new File(".");
         System.out.println("QQ="+current.getAbsolutePath());
-        File file = new File("resources/large.jpg");
+        File file = new File("V2Demo/assets/large.jpg");
         assertTrue("Can't read large.jpg file", file.exists());
         JPEGHelper helper = new JPEGHelper();
         JPEGOptions options = helper.getImageOptions(file);

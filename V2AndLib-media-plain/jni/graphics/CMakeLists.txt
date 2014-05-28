@@ -14,7 +14,8 @@ AUX_SOURCE_DIRECTORY( . SOURCES )
 
 include_directories(${JNI_INCLUDE_DIRS})
 
-ADD_LIBRARY( audiostreams SHARED ${SOURCES} )
-TARGET_LINK_LIBRARIES(audiostreams mpg123)
+ADD_LIBRARY( graphics SHARED ${SOURCES} )
+TARGET_LINK_LIBRARIES(graphics jpeg)
 
-INSTALL(TARGETS audiostreams DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../../libs/host/)
+INSTALL(TARGETS graphics DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../../libs/host/)
+
