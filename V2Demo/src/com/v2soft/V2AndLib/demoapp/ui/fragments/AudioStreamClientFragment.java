@@ -27,12 +27,9 @@ import android.widget.TextView;
 import com.v2soft.AndLib.media.CustomizableMediaPlayer;
 import com.v2soft.AndLib.media.CustomizableMediaPlayerListener;
 import com.v2soft.AndLib.ui.fragments.BaseFragment;
-import com.v2soft.AndLib.ui.views.TextViewWithFont;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
-
-import java.io.IOException;
 
 /**
  * Audio-Video streaming client sample.

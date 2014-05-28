@@ -18,3 +18,15 @@ test {
         events 'passed'
     }
 }
+
+//apply plugin: 'cpp'
+//sources {
+//    main {
+//        cpp {
+//            source {
+//                srcDir "jni/audiostreams"
+//                include "**/*.cpp"
+//            }
+//        }
+//    }
+//}

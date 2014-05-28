@@ -22,9 +22,6 @@ import android.media.AudioTrack;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.v2soft.AndLib.media.CustomizableRecorder.CustomizableRecorderChannels;
-import com.v2soft.AndLib.media.CustomizableRecorder.CustomizableRecorderPCMEncoding;
-
 /**
  * Customizable PCM audio player
  * @author V.Shcriyabets (vshcryabets@gmail.com)
@@ -52,8 +49,8 @@ public abstract class CustomizableRawPlayer {
     }
 
     public void prepare(StreamType streamType, int samplerate, 
-            CustomizableRecorderChannels channels,
-            CustomizableRecorderPCMEncoding encoding) {
+            CustomizableRecorder.CustomizableRecorderChannels channels,
+            CustomizableRecorder.CustomizableRecorderPCMEncoding encoding) {
         int streamTypeint = 0;
         switch (streamType) {
         case VOICE_CALL:
@@ -76,9 +73,9 @@ public abstract class CustomizableRawPlayer {
             streamTypeint = AudioManager.STREAM_MUSIC;
             break;
         }
-        int channelConfig = ( channels == CustomizableRecorderChannels.MONO ? AudioFormat.CHANNEL_OUT_MONO :
+        int channelConfig = ( channels == CustomizableRecorder.CustomizableRecorderChannels.MONO ? AudioFormat.CHANNEL_OUT_MONO :
             AudioFormat.CHANNEL_OUT_STEREO );
-        int audioFormat = ( encoding == CustomizableRecorderPCMEncoding.SIGNED_16BPS ?
+        int audioFormat = ( encoding == CustomizableRecorder.CustomizableRecorderPCMEncoding.SIGNED_16BPS ?
                 AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT);
         mMinimalBufferSize = AudioTrack.getMinBufferSize(samplerate, channelConfig, audioFormat);
         mPlayer = new AudioTrack(streamTypeint, 

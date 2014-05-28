@@ -36,6 +36,6 @@ public class MP3DecoderStream extends InputStream {
     /**
      * Native routines.
      */
-    protected native int nativeLoad(String data);
+    protected native int nativeLoad(String path);
     protected native int nativeRelease();
 }
