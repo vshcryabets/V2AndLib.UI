@@ -25,7 +25,7 @@ import java.io.File;
 public class JPEGHelper {
 
 	static {
-		System.loadLibrary("jpegwrapper");
+		System.loadLibrary("graphics");
 	}
 
 

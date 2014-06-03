@@ -9,8 +9,16 @@ const char* MP3InputStream::TAG = "MP3InputStream";
 MP3InputStream::MP3InputStream(const char* filePath) {
     int err;
     mHandle = mpg123_new(NULL, &err);
+    if ( err == MPG123_NOT_INITIALIZED ) {
+        err = mpg123_init();
+        if ( err != MPG123_OK ) {
+            PCMInputStreamException* exc = new PCMInputStreamException("Can't initialize MPG123 library");
+            throw exc;
+        }
+        mHandle = mpg123_new(NULL, &err);
+    }
     if ( err != MPG123_OK || mHandle == NULL ) {
-        PCMInputStreamException* exc = new PCMInputStreamException("Can't initialize MPG123");
+        PCMInputStreamException* exc = new PCMInputStreamException("Can't initialize MPG123 handler");
         throw exc;
     }
     err = mpg123_open(mHandle, filePath);
@@ -32,15 +40,22 @@ MP3InputStream::~MP3InputStream() {
         mpg123_delete(mHandle);
         mHandle = NULL;
     }
-    // mpg123_exit()
+    //mpg123_exit()
 }
 size_t MP3InputStream::read(void* buffer, size_t count) {
-//    if ( mFile == NULL ) {
-//        return 0;
-//    }
-//    __android_log_print(ANDROID_LOG_INFO, TAG, "Read buffer %d", count);
-//    size_t result = fread(buffer, sizeof(char), count, mFile);
-    return 0;
+    if ( mHandle == NULL ) {
+        return AudioHelpers::NO_DATA;
+    }
+    size_t read;
+    int result = mpg123_read(mHandle, (unsigned char*)buffer, count, &read);
+    if ( result == MPG123_DONE ) {
+        throw new PCMInputStreamException("End of MP3 stream reached.");
+    }
+    if ( result != MPG123_OK ) {
+//        __android_log_print(ANDROID_LOG_DEBUG, TAG, "failed to get format MP3 file %s", mpg123_strerror(mHandle));
+        throw new PCMInputStreamException("Error during read");
+    }
+    return read;
 }
 
 size_t MP3InputStream::getSampleRate() {

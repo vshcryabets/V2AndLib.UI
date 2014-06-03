@@ -8,7 +8,7 @@ __attribute__((constructor)) static void onDlOpen(void) {
 }
 
 const int S_OK = 0;
-const int S_UNINITIALIZED = 100;
+//const int S_UNINITIALIZED = 100;
 
 static AudioHelpers::PCMInputStream *gFileStream = NULL;
 
@@ -17,6 +17,7 @@ jint nativeRelease() {
         delete gFileStream;
         gFileStream = NULL;
     }
+    return S_OK;
 }
 
 jint nativeLoad(JNIEnv *env, jobject clazz, jstring path) {
@@ -31,9 +32,24 @@ jint nativeLoad(JNIEnv *env, jobject clazz, jstring path) {
     return S_OK;
 }
 
+jint nativeRead(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, jint count) {
+    try {
+        jboolean isCopy = false;
+        jbyte* array = env->GetByteArrayElements(buffer, &isCopy);
+        jint read = gFileStream->read(array+offset, count);
+        env->ReleaseByteArrayElements(buffer, array, 0);
+        return read;
+    } catch (AudioHelpers::PCMInputStreamException* err) {
+        printf("ERR: %s\n", err->what());
+    }
+    return -1;
+}
+
+
 static JNINativeMethod method_table[] = {
   { "nativeLoad", "(Ljava/lang/String;)I", (void *) nativeLoad },
-  { "nativeRelease", "()I", (void *) nativeRelease }
+  { "nativeRelease", "()I", (void *) nativeRelease },
+  { "nativeRead", "([BII)I", (void *) nativeRead }
 };
 
 static int method_table_size = sizeof(method_table) / sizeof(method_table[0]);

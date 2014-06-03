@@ -30,7 +30,7 @@ public class MP3DecoderStream extends InputStream {
 
     @Override
     public int read(byte[] bytes, int i, int i2) throws IOException {
-        return super.read(bytes, i, i2);
+        return nativeRead(bytes, i, i2);
     }
 
     /**
@@ -38,4 +38,5 @@ public class MP3DecoderStream extends InputStream {
      */
     protected native int nativeLoad(String path);
     protected native int nativeRelease();
+    protected native int nativeRead(byte[] buffer, int offset, int count);
 }

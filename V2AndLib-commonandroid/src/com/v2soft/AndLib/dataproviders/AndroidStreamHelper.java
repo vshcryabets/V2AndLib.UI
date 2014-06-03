@@ -41,6 +41,12 @@ public class AndroidStreamHelper extends StreamHelper {
 	}
 
 	public static StreamHelper getStream(Context context, URI uri) throws IOException {
+		if ( context == null ) {
+		    throw new NullPointerException("context is null");
+		}
+		if ( uri == null ) {
+		    throw new NullPointerException("uri is null");
+		}
 		StreamHelper result;
 		String path = uri.getPath();
 		if ( uri.getScheme().equalsIgnoreCase(ContentResolver.SCHEME_FILE) && path.startsWith(ANDROID_ASSETS)) {
