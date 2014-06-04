@@ -30,3 +30,11 @@ test {
 //        }
 //    }
 //}
+
+// Task to run cmake
+task ndkBuild(type: Exec) {
+    commandLine 'cmake', './jni/'
+    commandLine 'make', '-C', './jni/'
+}
+
+tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn ndkBuild }
