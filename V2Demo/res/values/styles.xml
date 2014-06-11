@@ -1,12 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="android:Theme.Light">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:textViewStyle">@style/TextView</item>
-        <item name="android:windowSoftInputMode">adjustPan</item>
-        <!-- <item name="android:editTextStyle">@style/EditText</item> -->
-    </style>
-
     <style name="Layout">
         <item name="android:orientation">vertical</item>
     </style>

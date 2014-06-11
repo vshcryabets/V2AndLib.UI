@@ -33,6 +33,7 @@
     <application
         android:name=".DemoApplication"
         android:icon="@drawable/ic_launcher"
+        android:theme="@style/Theme.V2Demo"
         android:label="@string/app_name" >
         <activity
             android:name=".V2DemoActivity"
@@ -49,29 +50,13 @@
         <activity android:name=".ui.activities.OpenSLSample" />
         <activity android:name=".ui.activities.GCPDemo" />
         <activity android:name=".ui.activities.PrintDialogActivity" />
-        <activity android:name=".ui.activities.CameraActivity" />
+        <activity android:name=".ui.activities.CameraActivity"
+            android:screenOrientation="landscape"/>
         <activity android:name=".ui.activities.DialogsActivity" />
         <activity android:name=".ui.activities.WiFiList" />
         <activity android:name=".ui.activities.TricksActivity" />
         <activity android:name=".ui.activities.NavigationDrawerActivity" />
-        <!-- DropBox authentication activity -->
-        <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:configChanges="orientation|keyboard"
-            android:launchMode="singleTask" >
-            <intent-filter>
 
-                <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="db-01ljvjlj0pbrow6" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <service android:name="com.v2soft.AndLib.services.DropboxService" />
         <service
             android:name=".services.SyncService"
             android:exported="true" >

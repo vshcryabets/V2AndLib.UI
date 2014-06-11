@@ -19,9 +19,11 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.v2soft.V2AndLib.demoapp.R;
-import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoCamera;
+import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoCameraFragment;
 
 /**
  * 
@@ -33,9 +35,14 @@ public class CameraActivity extends DemoBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // TODO use https://developer.android.com/training/system-ui/immersive.html
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
-            Fragment fragment = DemoCamera.newInstance();
+            Fragment fragment = DemoCameraFragment.newInstance();
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();

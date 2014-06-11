@@ -15,14 +15,8 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.activities;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.ImageView;
-
-import com.v2soft.V2AndLib.demoapp.R;
-import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoCamera;
 
 /**
  * Sample of working with render script.
