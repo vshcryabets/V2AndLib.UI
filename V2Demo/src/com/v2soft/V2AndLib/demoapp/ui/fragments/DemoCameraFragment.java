@@ -98,11 +98,10 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
     private void startVideoRecorder() {
         stopVideoRecorder();
         isVideoRecording = true;
-        mCameraView.getSupportedVideoProfiles();
         UUID uuid = UUID.randomUUID();
         File path = new File(mCache.getCacheFolder(), uuid.toString()+".mp4");
         try {
-            mCameraView.startVideoRecorder(path, CameraProfile.QUALITY_LOW);
+            mCameraView.startVideoRecorder(path);
         } catch (IOException e) {
             Log.d(TAG, e.toString(), e);
         }
