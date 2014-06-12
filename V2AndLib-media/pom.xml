@@ -12,7 +12,7 @@
 
   <artifactId>media</artifactId>
   <name>V2AndLib-media</name>
-  <version>1.2.4</version>
+  <version>1.2.5</version>
   <packaging>apklib</packaging>
 
   <build>
@@ -70,7 +70,7 @@
                 </artifact>
                 <artifact>
                   <type>aar</type>
-                  <file>${project.basedir}/build/libs/${project.name}-${project.version}.aar</file>
+                  <file>${project.basedir}/build/outputs/aar/${project.name}-${project.version}.aar</file>
                 </artifact>
               </artifacts>
             </configuration>
