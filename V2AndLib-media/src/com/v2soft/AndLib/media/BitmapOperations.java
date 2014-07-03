@@ -31,7 +31,11 @@ import java.net.URI;
  * @author V.Shcriyabets (vshcryabets@gmail.com)
  */
 public class BitmapOperations {
-	public enum ScaleType {CENTER_CROP, FIT_CENTER, NONE}
+    public enum ScaleType {CENTER_CROP,
+        FIT_CENTER,
+        SCALE_HORIZONTAL,
+        SCALE_VERTICAL,
+        NONE}
 	protected Context mContext;
 
 	public BitmapOperations(Context context) {
@@ -85,32 +89,43 @@ public class BitmapOperations {
 		Rect destRect = scaleRect(options, margins, scaleType);
 		options = getBitmapScaleOptions(uri, destRect, scaleType);
 		Bitmap bitmap = loadBitmap(uri, options);
-		Bitmap result = Bitmap.createScaledBitmap(bitmap, destRect.width(), destRect.height(), filter);
-		bitmap.recycle();
-		return result;
+        if ( bitmap != null ) {
+            Bitmap result = Bitmap.createScaledBitmap(bitmap, destRect.width(), destRect.height(), filter);
+            if ( result != bitmap ) {
+                bitmap.recycle();
+            }
+            return result;
+        } else {
+            throw new IOException("Can't read bitmap");
+        }
 	}
 
 	/**
 	 * Calculate scale factor.
 	 * @param scaleType scale type
 	 * @param destRect margins.
-	 * @param sourceRect
+	 * @param sourceRect source bitmap rectangle.
 	 * @return scale factor.
 	 */
-	public float getScaleFactor(ScaleType scaleType, Rect destRect, Rect sourceRect) {
-		float verticalScaleFactor = (float)destRect.width()/(float)sourceRect.width();
-		float horizontalScaleFactor = (float)destRect.height()/(float)sourceRect.height();
-		float maxFactor = Math.max(verticalScaleFactor, horizontalScaleFactor);
-		float minFactor = Math.min(verticalScaleFactor, horizontalScaleFactor);
-		if ( scaleType == ScaleType.FIT_CENTER ) {
-			return minFactor;
-		} else if ( scaleType == ScaleType.CENTER_CROP ) {
-			return maxFactor;
-		}
-		return 1.0f;
-	}
+    public float getScaleFactor(ScaleType scaleType, Rect destRect, Rect sourceRect) {
+        float horizontalScaleFactor = (float)destRect.width()/(float)sourceRect.width();
+        float verticalScaleFactor = (float)destRect.height()/(float)sourceRect.height();
+        float maxFactor = Math.max(verticalScaleFactor, horizontalScaleFactor);
+        float minFactor = Math.min(verticalScaleFactor, horizontalScaleFactor);
+        if ( scaleType == ScaleType.FIT_CENTER ) {
+            return minFactor;
+        } else if ( scaleType == ScaleType.CENTER_CROP ) {
+            return maxFactor;
+        } else if ( scaleType == ScaleType.SCALE_HORIZONTAL ) {
+            return horizontalScaleFactor;
+        } else if ( scaleType == ScaleType.SCALE_VERTICAL ) {
+            return verticalScaleFactor;
+        }
+        return 1.0f;
+    }
 
-	/**
+
+    /**
 	 * Calculate BitmapFactory.Options::inScaleSize value to fit bitmap in specified margins.
 	 * @param uri bitmap source uri.
 	 * @param destRect destination margins.
