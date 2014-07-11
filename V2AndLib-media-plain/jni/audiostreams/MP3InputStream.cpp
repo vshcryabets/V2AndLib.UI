@@ -64,4 +64,11 @@ size_t MP3InputStream::getSampleRate() {
 size_t MP3InputStream::getChannelsCount() {
     return mChannels;
 }
+size_t MP3InputStream::getDurationInSamples() {
+    if ( mHandle != NULL ) {
+        return mpg123_length(mHandle);
+    } else {
+        throw new PCMInputStreamException("MPG123 input stream not initialized (handle is NULL)");
+    }
+}
 }

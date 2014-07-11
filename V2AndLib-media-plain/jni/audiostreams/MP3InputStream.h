@@ -19,6 +19,7 @@ public:
     size_t read(void* buffer, size_t count);
     size_t getSampleRate();
     size_t getChannelsCount();
+    size_t getDurationInSamples();
 };
 
 }
