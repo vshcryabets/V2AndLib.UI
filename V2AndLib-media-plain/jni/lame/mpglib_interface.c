@@ -28,7 +28,7 @@
 # include <config.h>
 #endif
 
-//#ifdef HAVE_MPGLIB
+#ifdef HAVE_MPGLIB
 #define hip_global_struct mpstr_tag 
 #include "lame.h"
 #include "machine.h"
@@ -39,7 +39,7 @@
 
 
 
-//#if DEPRECATED_OR_OBSOLETE_CODE_REMOVED
+#if DEPRECATED_OR_OBSOLETE_CODE_REMOVED
 /*
  * OBSOLETE:
  * - kept to let it link
@@ -77,7 +77,7 @@ int CDECL lame_decode1_headersB(
         int              *enc_delay,
         int              *enc_padding );
 int CDECL lame_decode_exit(void);
-//#endif
+#endif
 
 
 static MPSTR   mp;
@@ -471,6 +471,6 @@ void hip_set_msgf  (hip_t hip, lame_report_function func)
     }
 }
 
-//#endif
+#endif
 
 /* end of mpglib_interface.c */
