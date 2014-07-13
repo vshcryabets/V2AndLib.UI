@@ -22,7 +22,7 @@ import java.io.OutputStream;
 /**
  * @author V.Shcryabets (vshcryabets@gmail.com)
  */
-public class MP3EncodingOutputStream extends BufferedOutputStream {
+public class MP3EncoderStream extends BufferedOutputStream {
 	private static final int BUFFER_SIZE = 8192;
 	protected OutputStream mInternalStream;
 	/**
@@ -31,11 +31,11 @@ public class MP3EncodingOutputStream extends BufferedOutputStream {
 	 * @param inSampleRate input sample rate in Hz
 	 * @param mode stereo, jstereo, dual channel (not supported), mono default: lame picks based on compression ration and input channels
 	 */
-	public MP3EncodingOutputStream(final OutputStream output,
-								   int numberOfChannels,
-								   int inSampleRate,
-								   int outSampleRate,
-								   MP3Helper.LAMEMode mode) {
+	public MP3EncoderStream(final OutputStream output,
+                            int numberOfChannels,
+                            int inSampleRate,
+                            int outSampleRate,
+                            MP3Helper.LAMEMode mode) {
 		super(new InternallStream(output, inSampleRate, outSampleRate, numberOfChannels, mode), BUFFER_SIZE);
 		mInternalStream = output;
 	}

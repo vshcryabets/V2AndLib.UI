@@ -13,14 +13,23 @@ public class MP3DecoderStream extends InputStream {
         System.loadLibrary("audiostreams");
     }
 
+    private int mHandlerId = 0;
+
     public MP3DecoderStream(String filepath) {
-        nativeLoad(filepath);
+        int handler = nativeOpen(filepath);
+        if ( handler ==  0 ) {
+            throw new IllegalStateException("Can't open "+filepath);
+        }
+        mHandlerId = handler;
     }
 
     @Override
     public void close() throws IOException {
         super.close();
-        nativeRelease();
+        if ( mHandlerId ==  0 ) {
+            throw new IllegalStateException("Decoder wasn't initialized");
+        }
+        int result = nativeRelease(mHandlerId);
     }
 
     @Override
@@ -30,13 +39,16 @@ public class MP3DecoderStream extends InputStream {
 
     @Override
     public int read(byte[] bytes, int i, int i2) throws IOException {
-        return nativeRead(bytes, i, i2);
+        if ( mHandlerId ==  0 ) {
+            throw new IllegalStateException("Decoder wasn't initialized");
+        }
+        return nativeRead(bytes, i, i2, mHandlerId);
     }
 
     /**
      * Native routines.
      */
-    protected native int nativeLoad(String path);
-    protected native int nativeRelease();
-    protected native int nativeRead(byte[] buffer, int offset, int count);
+    protected native int nativeOpen(String path);
+    protected native int nativeRelease(int handler);
+    protected native int nativeRead(byte[] buffer, int offset, int count, int handler);
 }

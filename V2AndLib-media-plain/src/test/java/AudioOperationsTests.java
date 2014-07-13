@@ -19,7 +19,7 @@ public class AudioOperationsTests {
 //		FileCache cache = new AndroidFileCache.Builder(getContext()).useExternalCacheFolder("audio").build();
 
 //		OutputStream output = cache.getFileOutputStream(URI.create(ASSET_SOURCE_FILE_PATH));
-//		MP3EncodingOutputStream encoderStream = new MP3EncodingOutputStream(
+//		MP3EncoderStream encoderStream = new MP3EncoderStream(
 //				output, 1, 8000, 44100, MP3Helper.LAMEMode.stereo);
 //		wrapper.copyToOutputStream(encoderStream);
 //		wrapper.close();

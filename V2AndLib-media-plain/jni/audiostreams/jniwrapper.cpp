@@ -2,39 +2,58 @@
 #include "MP3InputStream.h"
 #include "PCMInputStream.h"
 #include "PCMInputStreamException.h"
+#include <map>
+
 
 __attribute__((constructor)) static void onDlOpen(void) {
 }
 
-const int S_OK = 0;
+const int S_OK = 1;
+const int S_ERR = 0;
+const int ERR_NO_SUCH_HANDLER = -2;
 
-static AudioHelpers::PCMInputStream *gFileStream = NULL;
+using namespace AudioHelpers;
+unsigned int g_lastHandler = 1;
+std::map<int, PCMInputStream*> g_Handlers;
 
-jint nativeRelease() {
-    if ( gFileStream != NULL ) {
-        delete gFileStream;
-        gFileStream = NULL;
+jint nativeRelease(jint handler) {
+    std::map<int, PCMInputStream*>::iterator iterator = g_Handlers.find(handler);
+    if ( iterator == g_Handlers.end() ) {
+        return ERR_NO_SUCH_HANDLER;
+    }
+
+    if ( iterator->second != NULL ) {
+        delete iterator->second;
+        g_Handlers.erase(handler);
     }
     return S_OK;
 }
 
-jint nativeLoad(JNIEnv *env, jobject clazz, jstring path) {
+jint nativeOpen(JNIEnv *env, jobject clazz, jstring path) {
     try {
-        nativeRelease();
         const char *nativeString = env->GetStringUTFChars(path, 0);
-        gFileStream = new AudioHelpers::MP3InputStream(nativeString);
+        PCMInputStream* fileStream = new MP3InputStream(nativeString);
         env->ReleaseStringUTFChars(path, nativeString);
+
+        int handler = g_lastHandler++;
+        g_Handlers.insert(std::pair<int, PCMInputStream*>(handler,fileStream));
+        return handler;
     } catch (AudioHelpers::PCMInputStreamException* err) {
         printf("ERR: %s\n", err->what());
     }
-    return S_OK;
+    return S_ERR;
 }
 
-jint nativeRead(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, jint count) {
+jint nativeRead(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, jint count, jint handler) {
+    std::map<int, PCMInputStream*>::iterator iterator = g_Handlers.find(handler);
+    if ( iterator == g_Handlers.end() ) {
+            return ERR_NO_SUCH_HANDLER;
+    }
     try {
         jboolean isCopy = false;
         jbyte* array = env->GetByteArrayElements(buffer, &isCopy);
-        jint read = gFileStream->read(array+offset, count);
+        PCMInputStream* fileStream = iterator->second;
+        jint read = fileStream->read(array+offset, count);
         env->ReleaseByteArrayElements(buffer, array, 0);
         return read;
     } catch (AudioHelpers::PCMInputStreamException* err) {
@@ -44,10 +63,10 @@ jint nativeRead(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, jint
 }
 
 
-static JNINativeMethod method_table[] = {
-  { "nativeLoad", "(Ljava/lang/String;)I", (void *) nativeLoad },
-  { "nativeRelease", "()I", (void *) nativeRelease },
-  { "nativeRead", "([BII)I", (void *) nativeRead }
+const JNINativeMethod method_table[] = {
+  { "nativeOpen", "(Ljava/lang/String;)I", (void *) nativeOpen },
+  { "nativeRelease", "(I)I", (void *) nativeRelease },
+  { "nativeRead", "([BIII)I", (void *) nativeRead }
 };
 
 static int method_table_size = sizeof(method_table) / sizeof(method_table[0]);

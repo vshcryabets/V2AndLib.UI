@@ -31,5 +31,4 @@ public class AudioStreamsTests  {
         assertEquals("Wrong read size", 22847488, summaryRead);
         decoder.close();
 	}
-
 }
