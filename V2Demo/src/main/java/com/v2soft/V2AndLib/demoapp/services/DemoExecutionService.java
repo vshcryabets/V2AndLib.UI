@@ -64,6 +64,6 @@ public class DemoExecutionService extends Service {
     }
 
     public int addTask(AbstractDataRequest<?,?,?> task) {
-
+        return 0;
     }
 }
