@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,14 +74,13 @@ extends BaseFragment<DemoApplication, DemoAppSettings>  {
             break;
         }
     }
-    
+
     @Override
-    public void onFragmentResult(Object data, int requestCode) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ( requestCode == DLG_SELECT_TIME ) {
-            mTime = (Date) data;
+            mTime = new Date(data.getLongExtra(TimePickerDialogFragment.EXTRA_TIME, 0));
             mSelectedTime.setText(SDF.format(mTime));
         }
-        super.onFragmentResult(data, requestCode);
+        super.onActivityResult(requestCode, resultCode, data);
     }
-
 }
