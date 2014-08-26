@@ -96,6 +96,7 @@ public class DownloadTask extends DummyTask<Boolean> {
                 mSuccess = true;
             } catch (InterruptedException e) {
                 mSuccess = false;
+                // task was canceled, we should remove file
                 mCachedFile.delete();
             }
             wrapper.close();

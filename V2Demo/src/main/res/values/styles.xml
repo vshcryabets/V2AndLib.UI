@@ -1,0 +1,142 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Layout">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Layout.Main">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="Layout.Main.Padding">
+        <item name="android:paddingLeft">@dimen/default_horiz_margin</item>
+        <item name="android:paddingTop">@dimen/default_vert_margin</item>
+        <item name="android:paddingBottom">@dimen/default_horiz_margin</item>
+        <item name="android:paddingRight">@dimen/default_vert_margin</item>
+    </style>
+
+    <style name="Layout.WrapVertical">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="TableItem">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:padding">@dimen/least_horiz_margin</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Cabinet">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/middle_horiz_margin</item>
+    </style>
+
+    <style name="Cabinet.Header">
+        <item name="android:background">#ff436ba2</item>
+    </style>
+
+    <style name="EditText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:gravity">left</item>
+        <item name="android:paddingLeft">@dimen/small_horiz_margin</item>
+        <item name="android:paddingRight">@dimen/small_horiz_margin</item>
+        <item name="android:paddingTop">@dimen/least_vert_margin</item>
+        <item name="android:paddingBottom">@dimen/least_vert_margin</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="EditText.Reg">
+        <item name="android:layout_marginTop">@dimen/small_vert_margin</item>
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="EditText.Dialog">
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+    </style>
+    
+    <style name="EditText.Settings">
+        <item name="android:layout_marginTop">@dimen/small_vert_margin</item>
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="EditText.Message">
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+    </style>
+    
+    <style name="Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="AnimPopUp">
+        <item name="@android:windowEnterAnimation">@anim/v2andlib_slidein_up</item>
+        <item name="@android:windowExitAnimation">@anim/v2andlib_slideout_up</item>
+    </style>
+
+    <!-- Text style -->
+    <style name="TextView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextView.Settings">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:layout_marginLeft">@dimen/default_horiz_margin</item>
+    </style>
+
+    <style name="TextView.DialogTitle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/default_h3_font_size</item>
+    </style>
+    
+    <!-- Settings fragment -->
+    <style name="SettingsButton">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SettingsButton.Single">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="SettingsButton.Top">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="SettingsButton.Middle">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="SettingsButton.Bottom">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="SettingsButton.Pink">
+        <item name="android:textColor">@android:color/primary_text_light</item>
+    </style>
+
+    <style name="ListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+    </style>
+
+</resources>

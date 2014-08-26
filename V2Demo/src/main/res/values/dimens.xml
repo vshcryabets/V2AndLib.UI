@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="default_font_size">12sp</dimen>
+    <dimen name="default_middle_font_size">15sp</dimen>
+    <dimen name="default_h3_font_size">17sp</dimen>
+    <dimen name="default_button_text_size">12sp</dimen>
+    
+    <dimen name="least_horiz_margin">5dp</dimen>
+    <dimen name="small_horiz_margin">7dp</dimen>
+    <dimen name="middle_horiz_margin">10dp</dimen>
+    <dimen name="default_horiz_margin">14dp</dimen>
+    <dimen name="least_vert_margin">5dp</dimen>
+    <dimen name="small_vert_margin">7dp</dimen>
+    <dimen name="middle_vert_margin">10dp</dimen>
+    <dimen name="default_vert_margin">14dp</dimen>
+    
+    <!-- Header margins -->
+
+</resources>
