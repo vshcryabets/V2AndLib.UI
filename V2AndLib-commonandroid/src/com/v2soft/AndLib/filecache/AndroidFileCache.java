@@ -77,5 +77,17 @@ public class AndroidFileCache extends FileCache {
             }
             super.preBuildCheck();
         }
-	}
+
+        public void useExternalFilesFolder(String type) {
+            mCacheFolder = mContext.getExternalFilesDir(type);
+        }
+
+        public void useInternalFilesFolder(String type) {
+            if ( type != null ) {
+                mCacheFolder = new File(mContext.getFilesDir(), type);
+            } else {
+                mCacheFolder = mContext.getFilesDir();
+            }
+        }
+    }
 }
