@@ -13,6 +13,9 @@ dependencies {
 }
 
 test {
+    // set JVM arguments for the test JVM(s)
+    jvmArgs '-Djava.library.path="./libs/host/"'
+    
     testLogging {
         // Show that tests are run in the command-line output
         events 'passed'

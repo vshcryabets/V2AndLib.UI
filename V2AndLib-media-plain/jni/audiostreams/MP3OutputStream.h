@@ -10,7 +10,7 @@ protected:
     static const char* TAG;
 public:
     MP3OutputStream(const char* filePath);
-    ~MP3OutputStream();
+    virtual ~MP3OutputStream();
     void write(void* buffer, size_t count);
     void setSampleRate();
     void setChannelsCount();

@@ -12,7 +12,7 @@ protected:
     const char* mText;
 public:
     PCMInputStreamException(const char* text);
-    const char* what();
+    virtual const char* what();
 };
 }
 

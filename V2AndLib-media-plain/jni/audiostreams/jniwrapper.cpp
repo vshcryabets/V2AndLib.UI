@@ -13,10 +13,11 @@ const int S_ERR = 0;
 const int ERR_NO_SUCH_HANDLER = -2;
 
 using namespace AudioHelpers;
-unsigned int g_lastHandler = 1;
-std::map<int, PCMInputStream*> g_Handlers;
 
-jint nativeRelease(jint handler) {
+static size_t g_lastHandler = 1;
+static std::map<int, PCMInputStream*> g_Handlers;
+
+jint nativeReleaseMP3(jint handler) {
     std::map<int, PCMInputStream*>::iterator iterator = g_Handlers.find(handler);
     if ( iterator == g_Handlers.end() ) {
         return ERR_NO_SUCH_HANDLER;
@@ -29,7 +30,7 @@ jint nativeRelease(jint handler) {
     return S_OK;
 }
 
-jint nativeOpen(JNIEnv *env, jobject clazz, jstring path) {
+jint nativeOpenMP3(JNIEnv *env, jobject clazz, jstring path) {
     try {
         const char *nativeString = env->GetStringUTFChars(path, 0);
         PCMInputStream* fileStream = new MP3InputStream(nativeString);
@@ -44,7 +45,7 @@ jint nativeOpen(JNIEnv *env, jobject clazz, jstring path) {
     return S_ERR;
 }
 
-jint nativeRead(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, jint count, jint handler) {
+jint nativeReadMP3(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, jint count, jint handler) {
     std::map<int, PCMInputStream*>::iterator iterator = g_Handlers.find(handler);
     if ( iterator == g_Handlers.end() ) {
             return ERR_NO_SUCH_HANDLER;
@@ -64,9 +65,9 @@ jint nativeRead(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, jint
 
 
 const JNINativeMethod method_table[] = {
-  { "nativeOpen", "(Ljava/lang/String;)I", (void *) nativeOpen },
-  { "nativeRelease", "(I)I", (void *) nativeRelease },
-  { "nativeRead", "([BIII)I", (void *) nativeRead }
+  { "nativeOpen", "(Ljava/lang/String;)I", (void *) nativeOpenMP3 },
+  { "nativeRelease", "(I)I", (void *) nativeReleaseMP3 },
+  { "nativeRead", "([BIII)I", (void *) nativeReadMP3 }
 };
 
 static int method_table_size = sizeof(method_table) / sizeof(method_table[0]);

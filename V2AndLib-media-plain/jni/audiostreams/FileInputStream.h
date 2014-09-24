@@ -11,10 +11,10 @@ private:
     FILE* mFile;
 public:
     FilePCMInputStream(const char* filePath);
-    ~FilePCMInputStream();
-    size_t read(void* buffer, size_t count);
-    size_t getSampleRate();
-    size_t getChannelsCount();
+    virtual ~FilePCMInputStream();
+    virtual size_t read(void* buffer, size_t count);
+    virtual size_t getSampleRate();
+    virtual size_t getChannelsCount();
 };
 
 }

@@ -19,8 +19,11 @@ public class AudioStreamsTests  {
         byte[] block = new byte[8192];
         String current = new java.io.File( "." ).getCanonicalPath();
         System.out.println("Current dir:"+current);
-        MP3DecoderStream decoder = new MP3DecoderStream(current+"/V2AndLib-media-plain/sample/audiosample.mp3");
-        FileOutputStream out = new FileOutputStream(current+"/V2AndLib-media-plain/temp.raw");
+        if ( !current.endsWith("V2AndLib-media-plain") ) {
+            current = current + "/V2AndLib-media-plain";
+        }
+        MP3DecoderStream decoder = new MP3DecoderStream(current+"/sample/audiosample.mp3");
+        FileOutputStream out = new FileOutputStream(current+"/temp.raw");
         int read;
         int summaryRead = 0;
         while ( (read = decoder.read(block)) > 0 ) {

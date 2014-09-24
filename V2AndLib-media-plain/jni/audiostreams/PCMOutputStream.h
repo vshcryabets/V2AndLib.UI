@@ -9,7 +9,7 @@ const int NO_DATA = -1;
 class PCMOutputStream {
 public:
     PCMOutputStream() {}
-    ~PCMOutputStream() {};
+    virtual ~PCMOutputStream() {};
     virtual void write(void* buffer, size_t count) = 0;
     virtual void setSampleRate() = 0;
     virtual void setChannelsCount() = 0;

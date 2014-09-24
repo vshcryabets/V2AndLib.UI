@@ -9,7 +9,7 @@ const int NO_DATA = -1;
 class PCMInputStream {
 public:
     PCMInputStream() {}
-    ~PCMInputStream() {};
+    virtual ~PCMInputStream() {};
     virtual size_t read(void* buffer, size_t count) = 0;
     virtual size_t getSampleRate() = 0;
     virtual size_t getChannelsCount() = 0;

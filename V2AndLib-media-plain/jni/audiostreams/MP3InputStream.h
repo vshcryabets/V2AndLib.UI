@@ -15,11 +15,11 @@ protected:
     int mEncoding;
 public:
     MP3InputStream(const char* filePath);
-    ~MP3InputStream();
-    size_t read(void* buffer, size_t count);
-    size_t getSampleRate();
-    size_t getChannelsCount();
-    size_t getDurationInSamples();
+    virtual ~MP3InputStream();
+    virtual size_t read(void* buffer, size_t count);
+    virtual size_t getSampleRate();
+    virtual size_t getChannelsCount();
+    virtual size_t getDurationInSamples();
 };
 
 }
