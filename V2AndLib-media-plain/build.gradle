@@ -14,7 +14,7 @@ dependencies {
 
 test {
     // set JVM arguments for the test JVM(s)
-    jvmArgs '-Djava.library.path="./libs/host/"'
+    jvmArgs '-Djava.library.path=./libs/host/'
     
     testLogging {
         // Show that tests are run in the command-line output
@@ -37,7 +37,13 @@ test {
 // Task to run cmake
 task ndkBuild(type: Exec) {
     commandLine 'cmake', './jni/'
-    commandLine 'make', '-C', './jni/'
+    commandLine 'make', '-C', './jni/', 'install'
 }
 
 tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn ndkBuild }
+
+task cleanNative(type: Exec) {
+    commandLine 'make', '-C', './jni/', 'clean'
+}
+
+clean.dependsOn 'cleanNative'
