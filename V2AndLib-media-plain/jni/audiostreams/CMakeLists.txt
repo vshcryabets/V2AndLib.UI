@@ -16,5 +16,6 @@ include_directories(${JNI_INCLUDE_DIRS})
 
 ADD_LIBRARY( audiostreams SHARED ${SOURCES} )
 TARGET_LINK_LIBRARIES(audiostreams mpg123)
+TARGET_LINK_LIBRARIES(audiostreams lame)
 
 INSTALL(TARGETS audiostreams DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../../libs/host/)

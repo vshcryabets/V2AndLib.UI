@@ -3,17 +3,29 @@
 
 #include <stdio.h>
 #include "PCMOutputStream.h"
+#include "lame.h"
 
 namespace AudioHelpers {
 class MP3OutputStream : public PCMOutputStream {
 protected:
     static const char* TAG;
+    PCMOutputStream* mOutput;
+    lame_t  mLameHandler;
+
+    void checkHandle();
 public:
-    MP3OutputStream(const char* filePath);
+    MP3OutputStream(PCMOutputStream* outstream);
     virtual ~MP3OutputStream();
-    void write(void* buffer, size_t count);
-    void setSampleRate();
-    void setChannelsCount();
+    virtual void write(void* buffer, size_t count);
+    virtual void configure(size_t channelsCount, size_t samplerate);
+
+    virtual void flush();
+    virtual void close();
+    virtual void setInputSampleRate(size_t samplerate);
+    virtual void setInputChannelsCount(size_t channelsCount);
+    virtual void setOutputSampleRate(size_t samplerate);
+    virtual void setOutputChannelsCount(size_t channelsCount);
+
 };
 
 }

@@ -11,8 +11,12 @@ public:
     PCMOutputStream() {}
     virtual ~PCMOutputStream() {};
     virtual void write(void* buffer, size_t count) = 0;
-    virtual void setSampleRate() = 0;
-    virtual void setChannelsCount() = 0;
+    virtual void flush() = 0;
+    virtual void close() = 0;
+    virtual void setInputSampleRate(size_t samplerate) = 0;
+    virtual void setInputChannelsCount(size_t channelsCount) = 0;
+    virtual void setOutputSampleRate(size_t samplerate) = 0;
+    virtual void setOutputChannelsCount(size_t channelsCount) = 0;
 };
 
 }

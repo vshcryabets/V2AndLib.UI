@@ -1,7 +1,7 @@
 #include <jni.h>
 #include "MP3InputStream.h"
 #include "PCMInputStream.h"
-#include "PCMInputStreamException.h"
+#include "AudioStreamException.h"
 #include <map>
 
 
@@ -39,7 +39,7 @@ jint nativeOpenMP3(JNIEnv *env, jobject clazz, jstring path) {
         int handler = g_lastHandler++;
         g_Handlers.insert(std::pair<int, PCMInputStream*>(handler,fileStream));
         return handler;
-    } catch (AudioHelpers::PCMInputStreamException* err) {
+    } catch (AudioHelpers::AudioStreamException* err) {
         printf("ERR: %s\n", err->what());
     }
     return S_ERR;
@@ -57,7 +57,7 @@ jint nativeReadMP3(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, j
         jint read = fileStream->read(array+offset, count);
         env->ReleaseByteArrayElements(buffer, array, 0);
         return read;
-    } catch (AudioHelpers::PCMInputStreamException* err) {
+    } catch (AudioHelpers::AudioStreamException* err) {
         printf("ERR: %s\n", err->what());
     }
     return -1;
