@@ -18,57 +18,66 @@ package com.v2soft.AndLib.medianative;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 /**
  * @author V.Shcryabets (vshcryabets@gmail.com)
  */
 public class MP3EncoderStream extends BufferedOutputStream {
-	private static final int BUFFER_SIZE = 8192;
-	protected OutputStream mInternalStream;
-	/**
-	 *
-	 * @param output
-	 * @param inSampleRate input sample rate in Hz
-	 * @param mode stereo, jstereo, dual channel (not supported), mono default: lame picks based on compression ration and input channels
-	 */
-	public MP3EncoderStream(final OutputStream output,
+    private static final int BUFFER_SIZE = 8192;
+
+    public interface Callback {
+        void processEncodedBuffer(ByteBuffer buffer);
+    }
+
+    public enum LAMEMode {
+        stereo,
+        jstereo,
+        dualchannel, // LAME doesn't supports this!
+        mono,
+        not_set,
+        max_indicator // Don't use this! It's used for sanity checks.
+    };
+
+    protected OutputStream mInternalStream;
+    protected int mEncoderHandle;
+    protected ByteBuffer mBuffer;
+
+    /**
+     * @param output
+     * @param inSampleRate input sample rate in Hz
+     * @param mode         stereo, jstereo, dual channel (not supported), mono default: lame picks based on compression ration and input channels
+     */
+    public MP3EncoderStream(final OutputStream output,
                             int numberOfChannels,
                             int inSampleRate,
                             int outSampleRate,
-                            MP3Helper.LAMEMode mode) {
-		super(new InternallStream(output, inSampleRate, outSampleRate, numberOfChannels, mode), BUFFER_SIZE);
-		mInternalStream = output;
-	}
+                            LAMEMode mode) {
+        super(output, BUFFER_SIZE);
+        mInternalStream = output;
+        mEncoderHandle = nativeOpenEncoder();
+        mBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
 
-	@Override
-	public synchronized void close() throws IOException {
-		super.close();
-		mInternalStream.close();
-	}
+    }
 
-	private static class InternallStream extends OutputStream {
-		private byte[] mEncodedBuffer;
-		private MP3Helper mHelper;
-		private OutputStream mEncodedStream;
+    @Override
+    public synchronized void close() throws IOException {
+        super.close();
+        mInternalStream.close();
+        nativeReleaseEncoder(mEncoderHandle);
+    }
 
-		InternallStream(OutputStream output, int inSampleRate,
-						int outSampleRate,
-						int numberOfCahnnels,
-						MP3Helper.LAMEMode mode) {
-			mEncodedStream = output;
-			mHelper = new MP3Helper(numberOfCahnnels, inSampleRate, outSampleRate, mode);
-			mEncodedBuffer = new byte[BUFFER_SIZE];
-		}
+    @Override
+    public void write(byte[] buffer, int offset, int count) throws IOException {
+        mBuffer.clear();
+        mBuffer.put(buffer, offset, count);
+        // send data to encoder
+        nativeWriteEncoder(mEncoderHandle, mBuffer);
+    }
 
-		@Override
-		public void write(int oneByte) throws IOException {
-		}
-		@Override
-		public void write(byte[] buffer, int offset, int count) throws IOException {
-			// send data to encoder
-			int encoded = mHelper.encodeBuffer(buffer, offset, count, mEncodedBuffer);
-			// write encoded data to main output stream
-			mEncodedStream.write(mEncodedBuffer, 0, encoded);
-		}
-	}
+    private native int nativeOpenEncoder();
+
+    private native int nativeReleaseEncoder(int handle);
+
+    private native int nativeWriteEncoder(int handle, ByteBuffer buffer);
 }

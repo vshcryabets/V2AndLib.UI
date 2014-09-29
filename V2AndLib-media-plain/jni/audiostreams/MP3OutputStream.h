@@ -25,7 +25,7 @@ public:
     virtual void setInputChannelsCount(size_t channelsCount);
     virtual void setOutputSampleRate(size_t samplerate);
     virtual void setOutputChannelsCount(size_t channelsCount);
-
+    virtual PCMOutputStream* getSubStream();
 };
 
 }

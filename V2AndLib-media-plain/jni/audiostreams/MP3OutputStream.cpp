@@ -76,6 +76,10 @@ void MP3OutputStream::setOutputChannelsCount(size_t channelsCount) {
 
 void MP3OutputStream::checkHandle() {
     if ( mLameHandler == NULL ) {
-        throw new AudioStreamException("Not initialized");
+        throw new AudioStreamException("Encoder wasn't initialized");
     }
+}
+
+PCMOutputStream* MP3OutputStream::getSubStream() {
+    return mOutput;
 }
