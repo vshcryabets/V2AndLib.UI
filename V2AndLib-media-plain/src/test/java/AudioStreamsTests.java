@@ -1,4 +1,5 @@
 import com.v2soft.AndLib.medianative.MP3DecoderStream;
+import com.v2soft.AndLib.medianative.MP3EncoderStream;
 
 import org.junit.Test;
 
@@ -18,11 +19,12 @@ public class AudioStreamsTests {
     public void testMP3DecoderStream() throws IOException, NoSuchAlgorithmException, InterruptedException {
         byte[] block = new byte[8192];
         String current = new java.io.File(".").getCanonicalPath();
-        System.out.println("Current dir:" + current);
         if (!current.endsWith("V2AndLib-media-plain")) {
             current = current + "/V2AndLib-media-plain";
         }
         MP3DecoderStream decoder = new MP3DecoderStream(current + "/sample/audiosample.mp3");
+        assertEquals(1, decoder.getChannelsCount());
+        assertEquals(48000, decoder.getSampleRate());
         FileOutputStream out = new FileOutputStream(current + "/temp.raw");
         int read;
         int summaryRead = 0;
@@ -31,6 +33,28 @@ public class AudioStreamsTests {
             out.write(block, 0, read);
         }
         out.close();
+        assertEquals("Wrong read size", 22847488, summaryRead);
+        decoder.close();
+    }
+
+    @Test
+    public void testMP3EncoderStream() throws IOException, NoSuchAlgorithmException, InterruptedException {
+        byte[] block = new byte[8192];
+        String current = new java.io.File(".").getCanonicalPath();
+        if (!current.endsWith("V2AndLib-media-plain")) {
+            current = current + "/V2AndLib-media-plain";
+        }
+        MP3DecoderStream decoder = new MP3DecoderStream(current + "/sample/audiosample.mp3");
+        FileOutputStream out = new FileOutputStream(current + "/temp.mp3");
+        MP3EncoderStream encoder = new MP3EncoderStream(out, decoder.getChannelsCount(), decoder.getSampleRate(),
+                decoder.getSampleRate(), MP3EncoderStream.LAMEMode.mono);
+        int read;
+        int summaryRead = 0;
+        while (( read = decoder.read(block) ) > 0) {
+            summaryRead += read;
+            encoder.write(block, 0, read);
+        }
+        encoder.close();
         assertEquals("Wrong read size", 22847488, summaryRead);
         decoder.close();
     }

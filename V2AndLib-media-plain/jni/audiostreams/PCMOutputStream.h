@@ -9,7 +9,7 @@ class PCMOutputStream {
 public:
     PCMOutputStream() {}
     virtual ~PCMOutputStream() {};
-    virtual void write(void* buffer, size_t count) = 0;
+    virtual size_t write(void* buffer, size_t count) = 0;
     virtual void flush() = 0;
     virtual void close() = 0;
     virtual void setInputSampleRate(size_t samplerate) = 0;

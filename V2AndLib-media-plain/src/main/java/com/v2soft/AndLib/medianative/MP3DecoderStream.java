@@ -46,10 +46,20 @@ public class MP3DecoderStream extends InputStream {
         return nativeRead(bytes, i, i2, mHandlerId);
     }
 
+    public int getChannelsCount() {
+        return nativeDecoderGetChannelsCount(mHandlerId);
+    }
+
+    public int getSampleRate() {
+        return nativeDecoderGetGetSampleRate(mHandlerId);
+    }
+
     /**
      * Native routines.
      */
     protected native int nativeOpen(String path);
     protected native int nativeRelease(int handler);
     protected native int nativeRead(byte[] buffer, int offset, int count, int handler);
+    protected native int nativeDecoderGetChannelsCount(int handlerId);
+    protected native int nativeDecoderGetGetSampleRate(int handlerId);
 }

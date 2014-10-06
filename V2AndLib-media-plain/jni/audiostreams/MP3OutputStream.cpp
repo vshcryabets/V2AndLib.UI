@@ -5,30 +5,68 @@ using namespace AudioHelpers;
 
 const char* MP3OutputStream::TAG = "MP3OutputStream";
 
-MP3OutputStream::MP3OutputStream(PCMOutputStream* outstream)
-    : mOutput(outstream), mLameHandler(NULL) {
+MP3OutputStream::MP3OutputStream(PCMOutputStream* outstream, size_t maxBuffer)
+    : mOutput(outstream), mLameHandler(NULL), mMaxBuffer(maxBuffer) {
     if ( mOutput == NULL ) {
         throw new AudioStreamException("Output stream is null");
     }
     mLameHandler = lame_init();
+    mEncodedBuffer = new char[getEncodedBufferSize()/2+7200];
 }
 
 MP3OutputStream::~MP3OutputStream() {
     close();
+    if ( mEncodedBuffer != NULL ) {
+        delete [] mEncodedBuffer;
+        mEncodedBuffer = NULL;
+    }
 }
 
-void MP3OutputStream::write(void* buffer, size_t count) {
+size_t MP3OutputStream::write(void* buffer, size_t count) {
     checkHandle();
-    // lame_encode_buffer_interleaved(gfp, (short *) encbuf, chunk_samples, buf, max_len);
+    int res = 0;
+    if ( mChannelsCount == 1 ) {
+        res = lame_encode_buffer(mLameHandler, (short*)buffer,
+                    NULL,
+                    count / mChannelsCount / 2,
+                    (unsigned char*)mEncodedBuffer,
+                    getEncodedBufferSize());
+    } else {
+        res = lame_encode_buffer_interleaved(mLameHandler, (short*)buffer,
+                    count / mChannelsCount / 2,
+                    (unsigned char*)mEncodedBuffer,
+                    getEncodedBufferSize());
+    }
+//    printf("A.1.1 %d\n", res);
+    /**
+     return code     number of bytes output in mp3buf. Can be 0
+                     -1:  mp3buf was too small
+                     -2:  malloc() problem
+                     -3:  lame_init_params() not called
+                     -4:  psycho acoustic problems
+                     */
+    switch (res) {
+        case -1:
+            throw new AudioStreamException("mp3buf was too small");
+        case -2:
+            throw new AudioStreamException("malloc() problem");
+        case -3:
+            throw new AudioStreamException("lame_init_params() not called");
+        case -4:
+            throw new AudioStreamException("psycho acoustic problems");
+        default:
+            mOutput->write(mEncodedBuffer, res);
+            return res;
+    }
 }
 
-void MP3OutputStream::configure(size_t channelsCount, size_t samplerate) {
+void MP3OutputStream::configure(size_t channelsCount, size_t samplerate, size_t outSampleRate) {
     checkHandle();
 
     setOutputChannelsCount(channelsCount);
     setInputChannelsCount(channelsCount);
     setInputSampleRate(samplerate);
-    setOutputSampleRate(samplerate);
+    setOutputSampleRate(outSampleRate);
 
     // lame_set_VBR(lame, vbr_default);
     // lame_set_VBR_quality(lame, 2);
@@ -71,6 +109,7 @@ void MP3OutputStream::setOutputSampleRate(size_t samplerate) {
 
 void MP3OutputStream::setOutputChannelsCount(size_t channelsCount) {
     checkHandle();
+    mChannelsCount = channelsCount;
     lame_set_num_channels(mLameHandler, channelsCount);
 }
 
@@ -82,4 +121,8 @@ void MP3OutputStream::checkHandle() {
 
 PCMOutputStream* MP3OutputStream::getSubStream() {
     return mOutput;
+}
+
+size_t MP3OutputStream::getEncodedBufferSize() {
+    return mMaxBuffer;
 }

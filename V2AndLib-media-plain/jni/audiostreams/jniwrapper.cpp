@@ -11,11 +11,13 @@ __attribute__((constructor)) static void onDlOpen(void) {
 const int S_OK = 1;
 const int S_ERR = 0;
 const int ERR_NO_SUCH_HANDLER = -2;
+const int ERR_EXCEPTION = -3;
+const int ERR_NOT_IMPLEMENTED = -4;
 
 using namespace AudioHelpers;
 
 static size_t g_lastHandler = 1;
-static std::map<int, PCMInputStream*> g_Handlers;
+static std::map<int, PCMInputStream*> g_Decoders;
 static std::map<int, MP3OutputStream*> g_Encoders;
 
 jint nativeOpenMP3(JNIEnv *env, jobject clazz, jstring path) {
@@ -25,7 +27,7 @@ jint nativeOpenMP3(JNIEnv *env, jobject clazz, jstring path) {
         env->ReleaseStringUTFChars(path, nativeString);
 
         int handler = g_lastHandler++;
-        g_Handlers.insert(std::pair<int, PCMInputStream*>(handler,fileStream));
+        g_Decoders.insert(std::pair<int, PCMInputStream*>(handler,fileStream));
         return handler;
     } catch (AudioHelpers::AudioStreamException* err) {
         printf("ERR: %s\n", err->what());
@@ -34,11 +36,11 @@ jint nativeOpenMP3(JNIEnv *env, jobject clazz, jstring path) {
 }
 
 jint nativeReleaseMP3(jint handler) {
-    std::map<int, PCMInputStream*>::iterator iterator = g_Handlers.find(handler);
-    if ( iterator == g_Handlers.end() ) {
+    std::map<int, PCMInputStream*>::iterator iterator = g_Decoders.find(handler);
+    if ( iterator == g_Decoders.end() ) {
         return ERR_NO_SUCH_HANDLER;
     }
-    g_Handlers.erase(iterator);
+    g_Decoders.erase(iterator);
 
     if ( iterator->second != NULL ) {
         delete iterator->second;
@@ -47,9 +49,9 @@ jint nativeReleaseMP3(jint handler) {
 }
 
 jint nativeReadMP3(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, jint count, jint handler) {
-    std::map<int, PCMInputStream*>::iterator iterator = g_Handlers.find(handler);
-    if ( iterator == g_Handlers.end() ) {
-            return ERR_NO_SUCH_HANDLER;
+    std::map<int, PCMInputStream*>::iterator iterator = g_Decoders.find(handler);
+    if ( iterator == g_Decoders.end() ) {
+        return ERR_NO_SUCH_HANDLER;
     }
     try {
         jboolean isCopy = false;
@@ -61,8 +63,34 @@ jint nativeReadMP3(JNIEnv *env, jobject clazz, jbyteArray buffer, jint offset, j
     } catch (AudioHelpers::AudioStreamException* err) {
         printf("ERR: %s\n", err->what());
     }
-    return -1;
+    return ERR_EXCEPTION;
 }
+
+jint nativeDecoderGetChannelsCount(JNIEnv *env, jobject clazz, jint handler) {
+    std::map<int, PCMInputStream*>::iterator iterator = g_Decoders.find(handler);
+    if ( iterator == g_Decoders.end() ) {
+        return ERR_NO_SUCH_HANDLER;
+    }
+    return iterator->second->getChannelsCount();
+}
+
+jint nativeDecoderGetGetSampleRate(JNIEnv *env, jobject clazz, jint handler) {
+    std::map<int, PCMInputStream*>::iterator iterator = g_Decoders.find(handler);
+    if ( iterator == g_Decoders.end() ) {
+        return ERR_NO_SUCH_HANDLER;
+    }
+    return iterator->second->getSampleRate();
+}
+
+const JNINativeMethod method_decoder_table[] = {
+  { "nativeOpen", "(Ljava/lang/String;)I", (void *) nativeOpenMP3 },
+  { "nativeRelease", "(I)I", (void *) nativeReleaseMP3 },
+  { "nativeRead", "([BIII)I", (void *) nativeReadMP3 },
+  { "nativeDecoderGetChannelsCount", "(I)I", (void *) nativeDecoderGetChannelsCount },
+  { "nativeDecoderGetGetSampleRate", "(I)I", (void *) nativeDecoderGetGetSampleRate }
+};
+static int method_decoder_table_size = sizeof(method_decoder_table) / sizeof(method_decoder_table[0]);
+
 
 class CallBackOutputStream : public PCMOutputStream {
 protected:
@@ -94,9 +122,9 @@ public:
             mCallbackObject = NULL;
         }
     };
-    virtual void write(void* buffer, size_t count) {
+    virtual size_t write(void* buffer, size_t count) {
         if ( mCallbackObject == NULL ) {
-            return;
+            return 0;
         }
         JNIEnv *env;
         int getEnvStat = mVM->GetEnv((void **)&env, JNI_VERSION_1_6);
@@ -107,6 +135,7 @@ public:
         }
         jobject byteBuffer = env->NewDirectByteBuffer(buffer, count);
         env->CallVoidMethod(mCallbackObject, mMethod, byteBuffer);
+        return count;
     };
     virtual void flush() {};
     virtual void close() {};
@@ -116,16 +145,11 @@ public:
     virtual void setOutputChannelsCount(size_t channelsCount) {};
 };
 
-const JNINativeMethod method_decoder_table[] = {
-  { "nativeOpen", "(Ljava/lang/String;)I", (void *) nativeOpenMP3 },
-  { "nativeRelease", "(I)I", (void *) nativeReleaseMP3 },
-  { "nativeRead", "([BIII)I", (void *) nativeReadMP3 }
-};
-static int method_decoder_table_size = sizeof(method_decoder_table) / sizeof(method_decoder_table[0]);
-
-jint nativeOpenEncoder(JNIEnv *env, jobject clazz, jobject callback) {
+jint nativeOpenEncoder(JNIEnv *env, jobject clazz, jobject callback, jint maxBufferSize, jint channelsCount,
+                       jint samplerate, jint outSamplerate) {
     try {
-        MP3OutputStream* out = new MP3OutputStream(new CallBackOutputStream(env, callback));
+        MP3OutputStream* out = new MP3OutputStream(new CallBackOutputStream(env, callback), maxBufferSize);
+        out->configure(channelsCount, samplerate, outSamplerate);
         int handler = g_lastHandler++;
         g_Encoders.insert(std::pair<int, MP3OutputStream*>(handler,out));
         return handler;
@@ -143,6 +167,8 @@ jint nativeReleaseEncoder(JNIEnv *env, jobject clazz, jint handler) {
     g_Encoders.erase(iterator);
     MP3OutputStream *encoder = iterator->second;
     if ( encoder != NULL ) {
+        encoder->flush();
+        encoder->close();
         PCMOutputStream* substream = encoder->getSubStream();
         delete encoder;
         if ( substream != NULL ) {
@@ -152,30 +178,56 @@ jint nativeReleaseEncoder(JNIEnv *env, jobject clazz, jint handler) {
     return S_ERR;
 }
 
-jint nativeWriteEncoder(JNIEnv *env, jobject clazz, jint handler) {
+jint nativeWriteEncoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBuffer) {
+    std::map<int, MP3OutputStream*>::iterator iterator = g_Encoders.find(handler);
+    if ( iterator == g_Encoders.end() ) {
+            return ERR_NO_SUCH_HANDLER;
+    }
+    void *bufferAddr = (void *)env->GetDirectBufferAddress(byteBuffer);
+    jlong size = env->GetDirectBufferCapacity(byteBuffer);
+    try {
+        iterator->second->write(bufferAddr, size);
+    } catch (AudioStreamException *err) {
+        printf("ERR: %s\n", err->what());
+        return ERR_EXCEPTION;
+    }
     return S_ERR;
 }
 
 const JNINativeMethod method_encoder_table[] = {
-  { "nativeOpenEncoder", "(Lcom/v2soft/AndLib/medianative/MP3EncoderStream$Callback;)I", (void *) nativeOpenEncoder },
-  { "nativeReleaseEncoder", "(I)I", (void *) nativeReleaseEncoder },
-  { "nativeWriteEncoder", "(I)I", (void *) nativeWriteEncoder }
+  { "nativeOpenEncoder", "(Lcom/v2soft/AndLib/medianative/MP3EncoderStream$Callback;IIII)I", (void*) nativeOpenEncoder},
+  { "nativeReleaseEncoder", "(I)I", (void*) nativeReleaseEncoder },
+  { "nativeWriteEncoder", "(ILjava/nio/ByteBuffer;)I", (void*) nativeWriteEncoder }
 };
 static int method_encoder_table_size = sizeof(method_encoder_table) / sizeof(method_encoder_table[0]);
 
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-  JNIEnv* env;
-  if ( vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
-    return JNI_ERR;
-  } else {
+    JNIEnv* env;
+    if ( vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
+        return JNI_ERR;
+    }
     jclass clazz = env->FindClass( "com/v2soft/AndLib/medianative/MP3DecoderStream");
     if (clazz) {
-      jint ret = env->RegisterNatives(clazz, method_decoder_table, method_decoder_table_size);
-      env->DeleteLocalRef(clazz);
-      return ret == 0 ? JNI_VERSION_1_6 : JNI_ERR;
+        jint ret = env->RegisterNatives(clazz, method_decoder_table, method_decoder_table_size);
+        env->DeleteLocalRef(clazz);
+        if (  ret != 0 ) {
+            return JNI_ERR;
+        }
     } else {
-      return JNI_ERR;
+        return JNI_ERR;
     }
-  }
+
+    clazz = env->FindClass( "com/v2soft/AndLib/medianative/MP3EncoderStream");
+    if (clazz) {
+        jint ret = env->RegisterNatives(clazz, method_encoder_table, method_encoder_table_size);
+        env->DeleteLocalRef(clazz);
+        if (  ret != 0 ) {
+            return JNI_ERR;
+        }
+    } else {
+        return JNI_ERR;
+    }
+
+    return  JNI_VERSION_1_6;
 }

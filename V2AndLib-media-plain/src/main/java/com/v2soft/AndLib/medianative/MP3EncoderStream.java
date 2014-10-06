@@ -27,7 +27,7 @@ public class MP3EncoderStream extends BufferedOutputStream {
     private static final int BUFFER_SIZE = 8192;
 
     public interface Callback {
-        void processEncodedBuffer(ByteBuffer buffer);
+        void processEncodedBuffer(ByteBuffer buffer) throws IOException;
     }
 
     public enum LAMEMode {
@@ -55,7 +55,7 @@ public class MP3EncoderStream extends BufferedOutputStream {
                             LAMEMode mode) {
         super(output, BUFFER_SIZE);
         mInternalStream = output;
-        mEncoderHandle = nativeOpenEncoder();
+        mEncoderHandle = nativeOpenEncoder(mCallback, BUFFER_SIZE, numberOfChannels, inSampleRate, outSampleRate);
         mBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
 
     }
@@ -64,7 +64,8 @@ public class MP3EncoderStream extends BufferedOutputStream {
     public synchronized void close() throws IOException {
         super.close();
         mInternalStream.close();
-        nativeReleaseEncoder(mEncoderHandle);
+        int res = nativeReleaseEncoder(mEncoderHandle);
+        checkError(res);
     }
 
     @Override
@@ -72,12 +73,38 @@ public class MP3EncoderStream extends BufferedOutputStream {
         mBuffer.clear();
         mBuffer.put(buffer, offset, count);
         // send data to encoder
-        nativeWriteEncoder(mEncoderHandle, mBuffer);
+        int res = nativeWriteEncoder(mEncoderHandle, mBuffer);
+        checkError(res);
     }
 
-    private native int nativeOpenEncoder();
+    private void checkError(int res) throws IOException {
+        switch (res) {
+            case -2:
+                throw new IllegalStateException("Wrong decoder handler (-2)");
+            case -3:
+                throw new IOException("Internal decoder exception (-3)");
+            case -4:
+                throw new IOException("Not implemented (-4)");
+            case 0:
+            default:
+                break;
+        }
+    }
 
+    private final Callback mCallback = new Callback() {
+        @Override
+        public void processEncodedBuffer(ByteBuffer buffer) throws IOException {
+            byte[] bytebuffer = new byte[buffer.remaining()];
+            buffer.get(bytebuffer);
+            mInternalStream.write(bytebuffer);
+        }
+    };
+
+    /**
+     * Native routines.
+     */
+    private native int nativeOpenEncoder(MP3EncoderStream.Callback callback, int maxBufferSize, int channelsCount,
+                                         int sampleRate, int outSamplerate);
     private native int nativeReleaseEncoder(int handle);
-
     private native int nativeWriteEncoder(int handle, ByteBuffer buffer);
 }
