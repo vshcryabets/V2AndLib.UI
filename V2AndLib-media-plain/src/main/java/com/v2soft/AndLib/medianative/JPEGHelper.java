@@ -23,15 +23,13 @@ import java.io.File;
  *
  */
 public class JPEGHelper {
+    static {
+        System.loadLibrary("graphics");
+    }
 
-	static {
-		System.loadLibrary("graphics");
-	}
-
-
-	public JPEGHelper() {
+    public JPEGHelper() {
         getVersion();
-	}
+    }
 
     /**
      * Read header information from local jpeg-file.
@@ -39,10 +37,22 @@ public class JPEGHelper {
      * @return
      */
     public JPEGOptions getImageOptions(File file) {
-        JPEGOptions result = getJPEGInfo(file.getAbsolutePath());
+        JPEGOptions result = new JPEGOptions();
+        int errorCode = nativeGetJPEGInfo(file.getAbsolutePath(), result);
+        checkErrorCode(errorCode);
         return result;
     }
+    
+    public String getVersion() {
+        return nativeGetVersion();
+    }
+    
+    private void checkErrorCode(int code) {
+        if ( code != 0 ) {
+            throw new IllegalStateException("Error code "+code);
+        }
+    }
 
-	public native String getVersion();
-    private native JPEGOptions getJPEGInfo(String localFilePath);
+    protected native String nativeGetVersion();
+    protected native int nativeGetJPEGInfo(String localFilePath, JPEGOptions options);
 }

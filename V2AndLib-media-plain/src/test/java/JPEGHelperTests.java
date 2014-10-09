@@ -16,20 +16,19 @@ import static junit.framework.Assert.assertTrue;
  */
 public class JPEGHelperTests {
 
-	@Test
-	public void testGetOptions() throws IOException, NoSuchAlgorithmException, InterruptedException {
-        java.net.URL url = JPEGHelperTests.class.getResource("/large.jpg");
-        File current = new File(".");
-        System.out.println("QQ="+current.getAbsolutePath());
-        File file = new File("V2Demo/assets/large.jpg");
+    @Test
+    public void testGetOptions() throws IOException, NoSuchAlgorithmException, InterruptedException {
+        String current = new java.io.File(".").getCanonicalPath();
+        if (!current.endsWith("V2AndLib-media-plain")) {
+            current = current + "/V2AndLib-media-plain";
+        }
+        File file = new File(current + "/sample/large.jpg");
+
         assertTrue("Can't read large.jpg file", file.exists());
         JPEGHelper helper = new JPEGHelper();
         JPEGOptions options = helper.getImageOptions(file);
         assertNotNull("Options wasn't read", options);
         assertEquals("Wrong width", 3508, options.mWidth);
         assertEquals("Wrong height", 4960, options.mHeight);
-	}
-
-
-
+    }
 }

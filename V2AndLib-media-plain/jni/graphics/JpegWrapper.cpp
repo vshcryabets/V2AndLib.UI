@@ -6,6 +6,9 @@
 
 const char* TAG = "jpegwrapper";
 
+__attribute__((constructor)) static void onDlOpen(void) {
+}
+
 struct my_error_mgr {
     struct jpeg_error_mgr pub;
     jmp_buf setjmp_buffer;
@@ -19,14 +22,14 @@ METHODDEF(void) my_error_exit(j_common_ptr cinfo) {
     longjmp(myerr->setjmp_buffer, 1);
 }
 
-JNIEXPORT jstring JNICALL Java_com_v2soft_AndLib_media_JPEGHelper_getVersion(JNIEnv * env, jclass c) {
+JNIEXPORT jstring JNICALL nativeGetVersion(JNIEnv * env, jclass c) {
     return env->NewStringUTF("9.0");
 }
 
 
-JNIEXPORT jobject JNICALL Java_com_v2soft_AndLib_media_JPEGHelper_getJPEGInfo(JNIEnv* env,
+JNIEXPORT jint JNICALL nativeGetJPEGInfo(JNIEnv* env,
     jclass c,
-    jstring jniFileName) {
+    jstring jniFileName, jobject result) {
 
     const char* fileName = env->GetStringUTFChars(jniFileName, 0);
 
@@ -34,7 +37,7 @@ JNIEXPORT jobject JNICALL Java_com_v2soft_AndLib_media_JPEGHelper_getJPEGInfo(JN
     env->ReleaseStringUTFChars(jniFileName, fileName);
 
     if ( file == NULL ) {
-        return NULL;
+        return ERR_NO_FILE;
     }
 
     struct jpeg_decompress_struct cinfo;
@@ -43,9 +46,8 @@ JNIEXPORT jobject JNICALL Java_com_v2soft_AndLib_media_JPEGHelper_getJPEGInfo(JN
     cinfo.err = jpeg_std_error(&jerr.pub);
     jerr.pub.error_exit = my_error_exit;
     if (setjmp(jerr.setjmp_buffer)) {
-//            __android_log_print(ANDROID_LOG_VERBOSE, TAG, "A1.E");
             jpeg_destroy_decompress(&cinfo);
-            return NULL;
+            return ERR_JPEG_DECODER;
         }
 
     jpeg_create_decompress(&cinfo);
@@ -54,41 +56,46 @@ JNIEXPORT jobject JNICALL Java_com_v2soft_AndLib_media_JPEGHelper_getJPEGInfo(JN
     //reading JPEG header
     jpeg_read_header(&cinfo, TRUE);
 
-//    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "A1.6 %d x %d", cinfo.image_width, cinfo.image_height);
     // get class
-    jclass optionsClass = env->FindClass("android/graphics/BitmapFactory$Options");
+    jclass optionsClass = env->FindClass("com/v2soft/AndLib/medianative/JPEGOptions");
     if (env->ExceptionCheck()) {
         env->ExceptionDescribe();
-//        env->ExceptionClear();
-//        __android_log_print(ANDROID_LOG_VERBOSE, TAG, "Got exception 1");
-       return NULL;
+        env->ExceptionClear();
+       return ERR_CANT_GET_RESULT_CLASS;
     }
-//    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "A1.7 %p", optionsClass);
-    // get contructor
-    jmethodID midConstructor = env->GetMethodID(optionsClass, "<init>", "()V");
-    if (env->ExceptionCheck()) {
-        env->ExceptionDescribe();
-//        env->ExceptionClear();
-//        __android_log_print(ANDROID_LOG_VERBOSE, TAG, "Got exception 2");
-       return NULL;
-    }
-//    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "A1.8 %p", midConstructor);
-    jobject result = env->NewObject(optionsClass, midConstructor);
-    if (env->ExceptionCheck()) {
-        env->ExceptionDescribe();
-//        env->ExceptionClear();
-//        __android_log_print(ANDROID_LOG_VERBOSE, TAG, "Got exception 3");
-       return NULL;
-    }
-    jfieldID fieldWidth = env->GetFieldID(optionsClass, "outWidth", "I");
-    jfieldID fieldHeight = env->GetFieldID(optionsClass, "outHeight", "I");
+
+    jfieldID fieldWidth = env->GetFieldID(optionsClass, "mWidth", "I");
+    jfieldID fieldHeight = env->GetFieldID(optionsClass, "mHeight", "I");
     env->SetIntField(result, fieldWidth, cinfo.image_width);
     env->SetIntField(result, fieldHeight, cinfo.image_height);
 
-//    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "A1.9 %p aaa", result);
     //free resources
     jpeg_destroy_decompress(&cinfo);
-//    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "A1.10 %p", result);
-    return result;
+    return ERR_OK;
 }
 
+const JNINativeMethod method_jpeghelper_table[] = {
+  { "nativeGetVersion", "()Ljava/lang/String;", (void*) nativeGetVersion},
+  { "nativeGetJPEGInfo", "(Ljava/lang/String;Lcom/v2soft/AndLib/medianative/JPEGOptions;)I", (void*) nativeGetJPEGInfo},
+};
+static int method_jpeghelper_table_size = sizeof(method_jpeghelper_table) / sizeof(method_jpeghelper_table[0]);
+
+
+jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+    JNIEnv* env;
+    if ( vm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
+        return JNI_ERR;
+    }
+    jclass clazz = env->FindClass( "com/v2soft/AndLib/medianative/JPEGHelper");
+    if (clazz) {
+        jint ret = env->RegisterNatives(clazz, method_jpeghelper_table, method_jpeghelper_table_size);
+        env->DeleteLocalRef(clazz);
+        if (  ret != 0 ) {
+            return JNI_ERR;
+        }
+    } else {
+        return JNI_ERR;
+    }
+
+    return  JNI_VERSION_1_6;
+}
