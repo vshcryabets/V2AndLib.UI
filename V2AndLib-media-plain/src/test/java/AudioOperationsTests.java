@@ -21,7 +21,7 @@ public class AudioOperationsTests {
         System.out.println("Current dir:" + current);
         FileOutputStream output = new FileOutputStream(current + "/temp.mp3");
         MP3EncoderStream encoderStream = new MP3EncoderStream(
-                output, 1, 8000, 44100, MP3EncoderStream.LAMEMode.stereo);
+                output, 1, 8000, 44100, MP3EncoderStream.EncodingMode.stereo);
 //		wrapper.copyToOutputStream(encoderStream);
 //		wrapper.close();
 //		encoderStream.close();

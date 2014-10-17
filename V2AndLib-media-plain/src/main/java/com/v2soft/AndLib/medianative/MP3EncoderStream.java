@@ -30,7 +30,7 @@ public class MP3EncoderStream extends BufferedOutputStream {
         void processEncodedBuffer(ByteBuffer buffer) throws IOException;
     }
 
-    public enum LAMEMode {
+    public enum EncodingMode {
         stereo,
         jstereo,
         dualchannel, // LAME doesn't supports this!
@@ -52,7 +52,7 @@ public class MP3EncoderStream extends BufferedOutputStream {
                             int numberOfChannels,
                             int inSampleRate,
                             int outSampleRate,
-                            LAMEMode mode) {
+                            EncodingMode mode) {
         super(output, BUFFER_SIZE);
         mInternalStream = output;
         mEncoderHandle = nativeOpenEncoder(mCallback, BUFFER_SIZE, numberOfChannels, inSampleRate, outSampleRate);
@@ -103,7 +103,7 @@ public class MP3EncoderStream extends BufferedOutputStream {
     /**
      * Native routines.
      */
-    private native int nativeOpenEncoder(MP3EncoderStream.Callback callback, int maxBufferSize, int channelsCount,
+    private native int nativeOpenEncoder(Callback callback, int maxBufferSize, int channelsCount,
                                          int sampleRate, int outSamplerate);
     private native int nativeReleaseEncoder(int handle);
     private native int nativeWriteEncoder(int handle, ByteBuffer buffer);

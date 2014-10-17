@@ -1,65 +1,106 @@
 package com.v2soft.AndLib.medianative;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 /**
  * Created by V.Shcryabets on 5/27/14.
  *
  * @author V.Shcryabets (vshcryabets@gmail.com)
  */
-public class MP3DecoderStream extends InputStream {
+public class MP3DecoderStream extends BufferedOutputStream {
+    private static final int BUFFER_SIZE = 8192;
+
+    public interface Callback {
+        void handleBuffer(ByteBuffer buffer) throws IOException;
+        void setChannelsCount(int count);
+        void setSampleRate(int sampleRate);
+    }
 
     static {
         System.loadLibrary("audiostreams");
     }
 
     private int mHandlerId = 0;
+    protected OutputStream mInternalStream;
+    protected ByteBuffer mBuffer;
+    protected int mChannelsCount;
+    protected int mSampleRate;
 
-    public MP3DecoderStream(String filepath) {
-        int handler = nativeOpen(filepath);
-        if ( handler ==  0 ) {
-            throw new IllegalStateException("Can't open "+filepath);
-        }
-        mHandlerId = handler;
+    public MP3DecoderStream(OutputStream output) {
+        super(output, BUFFER_SIZE);
+        mInternalStream = output;
+        mHandlerId = nativeOpenDecoder(mCallback, BUFFER_SIZE);
+        mBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
     }
 
-    @Override
-    public void close() throws IOException {
+     @Override
+    public synchronized void close() throws IOException {
         super.close();
-        if ( mHandlerId ==  0 ) {
-            throw new IllegalStateException("Decoder wasn't initialized");
-        }
-        int result = nativeRelease(mHandlerId);
+        mInternalStream.close();
+        int res = nativeReleaseDecoder(mHandlerId);
+        checkError(res);
     }
 
     @Override
-    public int read() throws IOException {
-        return 0;
+    public void write(byte[] buffer, int offset, int count) throws IOException {
+        mBuffer.clear();
+        mBuffer.put(buffer, offset, count);
+        // send data to encoder
+        int res = nativeWriteDecoder(mHandlerId, mBuffer);
+        checkError(res);
     }
 
-    @Override
-    public int read(byte[] bytes, int i, int i2) throws IOException {
-        if ( mHandlerId ==  0 ) {
-            throw new IllegalStateException("Decoder wasn't initialized");
+    private void checkError(int res) throws IOException {
+        switch (res) {
+            case -2:
+                throw new IllegalStateException("Wrong decoder/encoder handler (-2)");
+            case -3:
+                throw new IOException("Internal decoder/encoder exception (-3)");
+            case -4:
+                throw new IOException("Not implemented (-4)");
+            case 0:
+            default:
+                break;
         }
-        return nativeRead(bytes, i, i2, mHandlerId);
     }
 
     public int getChannelsCount() {
-        return nativeDecoderGetChannelsCount(mHandlerId);
+        return mChannelsCount;
     }
 
     public int getSampleRate() {
-        return nativeDecoderGetGetSampleRate(mHandlerId);
+        return mSampleRate;
     }
+
+    private final Callback mCallback = new Callback() {
+        @Override
+        public void handleBuffer(ByteBuffer buffer) throws IOException {
+            byte[] bytebuffer = new byte[buffer.remaining()];
+            buffer.get(bytebuffer);
+            mInternalStream.write(bytebuffer);
+        }
+
+        @Override
+        public void setChannelsCount(int count) {
+            mChannelsCount = count;
+        }
+
+        @Override
+        public void setSampleRate(int sampleRate) {
+            mSampleRate = sampleRate;
+        }
+    };
 
     /**
      * Native routines.
      */
-    protected native int nativeOpen(String path);
-    protected native int nativeRelease(int handler);
-    protected native int nativeRead(byte[] buffer, int offset, int count, int handler);
-    protected native int nativeDecoderGetChannelsCount(int handlerId);
-    protected native int nativeDecoderGetGetSampleRate(int handlerId);
+    protected native int nativeOpenDecoder(Callback callback, int maxBufferSize);
+    protected native int nativeReleaseDecoder(int handler);
+    protected native int nativeWriteDecoder(int handler, ByteBuffer buffer);
+//    protected native int nativeDecoderGetChannelsCount(int handlerId);
+//    protected native int nativeDecoderGetGetSampleRate(int handlerId);
 }

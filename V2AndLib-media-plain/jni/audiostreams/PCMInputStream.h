@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 namespace AudioHelpers {
-const int NO_DATA = -1;
 
 class PCMInputStream {
 public:

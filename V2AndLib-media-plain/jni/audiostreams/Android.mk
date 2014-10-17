@@ -7,7 +7,9 @@ LOCAL_ARM_MODE := arm
 APP_ABI := all
 
 LOCAL_SRC_FILES := FileInputStream.cpp MP3InputStream.cpp AudioStreamException.cpp \
-    jniwrapper.cpp
+    Wrapper.cpp EncoderWrapper.cpp DecoderWrapper.cpp \
+    MP3EncoderStream.cpp
+
 LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog
 LOCAL_STATIC_LIBRARIES := mpg123 lame
 

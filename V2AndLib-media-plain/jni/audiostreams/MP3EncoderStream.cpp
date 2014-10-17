@@ -1,11 +1,11 @@
-#include "MP3OutputStream.h"
+#include "MP3EncoderStream.h"
 #include "AudioStreamException.h"
 
 using namespace AudioHelpers;
 
-const char* MP3OutputStream::TAG = "MP3OutputStream";
+const char* MP3EncoderStream::TAG = "MP3EncoderStream";
 
-MP3OutputStream::MP3OutputStream(PCMOutputStream* outstream, size_t maxBuffer)
+MP3EncoderStream::MP3EncoderStream(PCMOutputStream* outstream, size_t maxBuffer)
     : mOutput(outstream), mLameHandler(NULL), mMaxBuffer(maxBuffer) {
     if ( mOutput == NULL ) {
         throw new AudioStreamException("Output stream is null");
@@ -14,7 +14,7 @@ MP3OutputStream::MP3OutputStream(PCMOutputStream* outstream, size_t maxBuffer)
     mEncodedBuffer = new char[getEncodedBufferSize()/2+7200];
 }
 
-MP3OutputStream::~MP3OutputStream() {
+MP3EncoderStream::~MP3EncoderStream() {
     close();
     if ( mEncodedBuffer != NULL ) {
         delete [] mEncodedBuffer;
@@ -22,7 +22,7 @@ MP3OutputStream::~MP3OutputStream() {
     }
 }
 
-size_t MP3OutputStream::write(void* buffer, size_t count) {
+size_t MP3EncoderStream::write(void* buffer, size_t count) {
     checkHandle();
     int res = 0;
     if ( mChannelsCount == 1 ) {
@@ -60,7 +60,7 @@ size_t MP3OutputStream::write(void* buffer, size_t count) {
     }
 }
 
-void MP3OutputStream::configure(size_t channelsCount, size_t samplerate, size_t outSampleRate) {
+void MP3EncoderStream::configure(size_t channelsCount, size_t samplerate, size_t outSampleRate) {
     checkHandle();
 
     setOutputChannelsCount(channelsCount);
@@ -81,48 +81,48 @@ void MP3OutputStream::configure(size_t channelsCount, size_t samplerate, size_t 
     }
 }
 
-void MP3OutputStream::flush() {
+void MP3EncoderStream::flush() {
     checkHandle();
 }
 
-void MP3OutputStream::close() {
+void MP3EncoderStream::close() {
     if ( mLameHandler != NULL ) {
         flush();
         lame_close(mLameHandler);
         mLameHandler = NULL;
     }
 }
-void MP3OutputStream::setInputSampleRate(size_t samplerate) {
+void MP3EncoderStream::setInputSampleRate(size_t samplerate) {
     checkHandle();
     lame_set_in_samplerate(mLameHandler, samplerate);
 }
 
-void MP3OutputStream::setInputChannelsCount(size_t channelsCount) {
+void MP3EncoderStream::setInputChannelsCount(size_t channelsCount) {
     checkHandle();
     lame_set_num_channels(mLameHandler, channelsCount);
 }
 
-void MP3OutputStream::setOutputSampleRate(size_t samplerate) {
+void MP3EncoderStream::setOutputSampleRate(size_t samplerate) {
     checkHandle();
     lame_set_out_samplerate(mLameHandler, samplerate);
 }
 
-void MP3OutputStream::setOutputChannelsCount(size_t channelsCount) {
+void MP3EncoderStream::setOutputChannelsCount(size_t channelsCount) {
     checkHandle();
     mChannelsCount = channelsCount;
     lame_set_num_channels(mLameHandler, channelsCount);
 }
 
-void MP3OutputStream::checkHandle() {
+void MP3EncoderStream::checkHandle() {
     if ( mLameHandler == NULL ) {
         throw new AudioStreamException("Encoder wasn't initialized");
     }
 }
 
-PCMOutputStream* MP3OutputStream::getSubStream() {
+PCMOutputStream* MP3EncoderStream::getSubStream() {
     return mOutput;
 }
 
-size_t MP3OutputStream::getEncodedBufferSize() {
+size_t MP3EncoderStream::getEncodedBufferSize() {
     return mMaxBuffer;
 }
