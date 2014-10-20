@@ -10,7 +10,7 @@ const int ERR_EXCEPTION = -3;
 const int ERR_NOT_IMPLEMENTED = -4;
 
 jint nativeOpenDecoder(JNIEnv *env, jobject clazz, jobject callback, jint maxBufferSize);
-jint nativeReleaseDecoder(jint handler);
+jint nativeReleaseDecoder(JNIEnv *env, jobject clazz, jint handler);
 jint nativeWriteDecoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBuffer);
 
 const JNINativeMethod method_decoder_table[] = {

@@ -14,6 +14,8 @@ protected:
     jobject mCallbackObject;
     JavaVM *mVM;
     jmethodID mMethod;
+    jmethodID mSetSampleRate;
+    jmethodID mSetChannelsCount;
 public:
     CallBackDecoderStream(JNIEnv *env, jobject callback) {
         env->GetJavaVM(&mVM);
@@ -25,7 +27,15 @@ public:
             }
             mMethod = env->GetMethodID(clazz, "handleBuffer", "(Ljava/nio/ByteBuffer;)V");
             if (mMethod == NULL) {
-                throw new AudioStreamException("Can't find callback method \"phandleBufferr\"");
+                throw new AudioStreamException("Can't find callback method \"handleBuffer\"");
+            }
+            mSetSampleRate = env->GetMethodID(clazz, "setSampleRate", "(I)V");
+            if (mSetSampleRate == NULL) {
+                throw new AudioStreamException("Can't find callback method \"setSampleRate\"");
+            }
+            mSetChannelsCount = env->GetMethodID(clazz, "setChannelsCount", "(I)V");
+            if (mSetChannelsCount == NULL) {
+                throw new AudioStreamException("Can't find callback method \"setChannelsCount\"");
             }
         } else {
             mCallbackObject = NULL;
@@ -43,6 +53,28 @@ public:
         if ( mCallbackObject == NULL ) {
             return 0;
         }
+        JNIEnv *env = prepareEnv();
+        jobject byteBuffer = env->NewDirectByteBuffer(buffer, count);
+        env->CallVoidMethod(mCallbackObject, mMethod, byteBuffer);
+        return count;
+    };
+    virtual void flush() {};
+    virtual void close() {};
+    virtual void setInputSampleRate(size_t samplerate) {
+        if ( mCallbackObject != NULL ) {
+            JNIEnv *env = prepareEnv();
+            env->CallVoidMethod(mCallbackObject, mSetSampleRate, samplerate);
+        }
+    };
+    virtual void setInputChannelsCount(size_t channelsCount) {
+        if ( mCallbackObject != NULL ) {
+            JNIEnv *env = prepareEnv();
+            env->CallVoidMethod(mCallbackObject, mSetChannelsCount, channelsCount);
+        }
+    };
+    virtual void setOutputSampleRate(size_t samplerate) {};
+    virtual void setOutputChannelsCount(size_t channelsCount) {};
+    JNIEnv* prepareEnv() {
         JNIEnv *env;
         int getEnvStat = mVM->GetEnv((void **)&env, JNI_VERSION_1_6);
         if (getEnvStat == JNI_EDETACHED) {
@@ -50,16 +82,8 @@ public:
         } else if (getEnvStat == JNI_EVERSION) {
             throw new AudioStreamException("Unsupported VM version");
         }
-        jobject byteBuffer = env->NewDirectByteBuffer(buffer, count);
-        env->CallVoidMethod(mCallbackObject, mMethod, byteBuffer);
-        return count;
-    };
-    virtual void flush() {};
-    virtual void close() {};
-    virtual void setInputSampleRate(size_t samplerate) {};
-    virtual void setInputChannelsCount(size_t channelsCount) {};
-    virtual void setOutputSampleRate(size_t samplerate) {};
-    virtual void setOutputChannelsCount(size_t channelsCount) {};
+        return env;
+    }
 };
 
 jint nativeOpenDecoder(JNIEnv *env, jobject clazz, jobject callback, jint maxBufferSize) {
@@ -74,9 +98,10 @@ jint nativeOpenDecoder(JNIEnv *env, jobject clazz, jobject callback, jint maxBuf
     return S_ERR;
 }
 
-jint nativeReleaseDecoder(jint handler) {
+jint nativeReleaseDecoder(JNIEnv *env, jobject clazz, jint handler) {
     std::map<int, MP3DecoderStream*>::iterator iterator = g_Decoders.find(handler);
     if ( iterator == g_Decoders.end() ) {
+        printf("No such handler %d\n\n", handler);
         return ERR_NO_SUCH_HANDLER;
     }
     g_Decoders.erase(iterator);
@@ -90,7 +115,7 @@ jint nativeReleaseDecoder(jint handler) {
 jint nativeWriteDecoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBuffer) {
     std::map<int, MP3DecoderStream*>::iterator iterator = g_Decoders.find(handler);
     if ( iterator == g_Decoders.end() ) {
-            return ERR_NO_SUCH_HANDLER;
+        return ERR_NO_SUCH_HANDLER;
     }
     void *bufferAddr = (void *)env->GetDirectBufferAddress(byteBuffer);
     jlong size = env->GetDirectBufferCapacity(byteBuffer);

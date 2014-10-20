@@ -101,6 +101,4 @@ public class MP3DecoderStream extends BufferedOutputStream {
     protected native int nativeOpenDecoder(Callback callback, int maxBufferSize);
     protected native int nativeReleaseDecoder(int handler);
     protected native int nativeWriteDecoder(int handler, ByteBuffer buffer);
-//    protected native int nativeDecoderGetChannelsCount(int handlerId);
-//    protected native int nativeDecoderGetGetSampleRate(int handlerId);
 }

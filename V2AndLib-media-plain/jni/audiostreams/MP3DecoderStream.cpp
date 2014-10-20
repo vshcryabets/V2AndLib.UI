@@ -1,5 +1,6 @@
 #include "MP3DecoderStream.h"
 #include "AudioStreamException.h"
+#include "mpg123.h"
 
 using namespace AudioHelpers;
 
@@ -44,27 +45,37 @@ void MP3DecoderStream::init() {
 }
 
 MP3DecoderStream::~MP3DecoderStream() {
-    if ( mHandle != NULL ) {
-        mpg123_close(mHandle);
-        mpg123_delete(mHandle);
-        mHandle = NULL;
-    }
+    close();
     //mpg123_exit()
 }
 size_t MP3DecoderStream::write(void* buffer, size_t count) {
     if ( mHandle == NULL ) {
         return AudioHelpers::NO_DATA;
     }
-//    size_t read;
-//    int result = mpg123_read(mHandle, (unsigned char*)buffer, count, &read);
-//    if ( result == MPG123_DONE ) {
-//        throw new AudioStreamException("End of MP3 stream reached.");
-//    }
-//    if ( result != MPG123_OK ) {
-////        __android_log_print(ANDROID_LOG_DEBUG, TAG, "failed to get format MP3 file %s", mpg123_strerror(mHandle));
-//        throw new AudioStreamException("Error during read");
-//    }
-//    return read;
+    int err = mpg123_feed(mHandle, (const unsigned char*)buffer, count);
+    if ( err != MPG123_OK ) {
+            throw new AudioStreamException("Error at mpg123_feed");
+    }
+
+    size_t decoded = 0;
+    do {
+        off_t frameNumber;
+        unsigned char *internalBuffer;
+
+        err = mpg123_decode_frame(mHandle, &frameNumber, &internalBuffer, &decoded);
+        if ( err == MPG123_NEW_FORMAT ) {
+            long samplerate;
+            int channelsCount;
+            int encodings;
+            mpg123_getformat(mHandle, &samplerate, &channelsCount, &encodings);
+            // notify about format change
+            mOutput->setInputSampleRate(samplerate);
+            mOutput->setInputChannelsCount(channelsCount);
+        } else if ( err == MPG123_OK ) {
+            mOutput->write(internalBuffer, decoded);
+        }
+    } while ( decoded > 0 );
+    return count;
 }
 
 void MP3DecoderStream::flush() {
@@ -73,7 +84,11 @@ void MP3DecoderStream::flush() {
 
 
 void MP3DecoderStream::close() {
-
+    if ( mHandle != NULL ) {
+        mpg123_close(mHandle);
+        mpg123_delete(mHandle);
+        mHandle = NULL;
+    }
 }
 //
 //size_t MP3DecoderStream::getSampleRate() {
