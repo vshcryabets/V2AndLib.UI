@@ -16,10 +16,15 @@ public class MP3DecoderStream extends BufferedOutputStream {
 
     public interface Callback {
         void handleBuffer(ByteBuffer buffer) throws IOException;
+
         void setChannelsCount(int count);
+
         void setSampleRate(int sampleRate);
     }
 
+    public interface DecoderStateListener {
+        void onInitialized(MP3DecoderStream decoder);
+    }
     static {
         System.loadLibrary("audiostreams");
     }
@@ -29,17 +34,26 @@ public class MP3DecoderStream extends BufferedOutputStream {
     protected ByteBuffer mBuffer;
     protected int mChannelsCount;
     protected int mSampleRate;
+    protected boolean isInitialized;
+    protected int mHandledBuffersCount;
+    protected DecoderStateListener mStateListener;
 
     public MP3DecoderStream(OutputStream output) {
         super(output, BUFFER_SIZE);
         mInternalStream = output;
         mHandlerId = nativeOpenDecoder(mCallback, BUFFER_SIZE);
         mBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+        isInitialized = false;
     }
 
-     @Override
+    public void setListener(DecoderStateListener listener) {
+        mStateListener = listener;
+    }
+
+    @Override
     public synchronized void close() throws IOException {
         super.close();
+        isInitialized = false;
         mInternalStream.close();
         int res = nativeReleaseDecoder(mHandlerId);
         checkError(res);
@@ -79,7 +93,8 @@ public class MP3DecoderStream extends BufferedOutputStream {
     private final Callback mCallback = new Callback() {
         @Override
         public void handleBuffer(ByteBuffer buffer) throws IOException {
-            byte[] bytebuffer = new byte[buffer.remaining()];
+            mHandledBuffersCount++;
+            byte[] bytebuffer = new byte[buffer.remaining()]; // TODO reuse buffer
             buffer.get(bytebuffer);
             mInternalStream.write(bytebuffer);
         }
@@ -87,18 +102,41 @@ public class MP3DecoderStream extends BufferedOutputStream {
         @Override
         public void setChannelsCount(int count) {
             mChannelsCount = count;
+            if ( mSampleRate > 0 ) {
+                setIsInitialized();
+            }
         }
 
         @Override
         public void setSampleRate(int sampleRate) {
             mSampleRate = sampleRate;
+            if (mChannelsCount > 0) {
+                setIsInitialized();
+            }
         }
     };
+
+    private void setIsInitialized() {
+        isInitialized = true;
+        if (mStateListener != null) {
+            mStateListener.onInitialized(this);
+        }
+    }
+
+    public boolean isInitialized() {
+        return isInitialized;
+    }
+
+    public int getHandledBuffersCount() {
+        return mHandledBuffersCount;
+    }
 
     /**
      * Native routines.
      */
     protected native int nativeOpenDecoder(Callback callback, int maxBufferSize);
+
     protected native int nativeReleaseDecoder(int handler);
+
     protected native int nativeWriteDecoder(int handler, ByteBuffer buffer);
 }

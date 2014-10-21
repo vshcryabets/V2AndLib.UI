@@ -21,12 +21,12 @@ const JNINativeMethod method_decoder_table[] = {
 static int method_decoder_table_size = sizeof(method_decoder_table) / sizeof(method_decoder_table[0]);
 
 jint nativeOpenEncoder(JNIEnv *env, jobject clazz, jobject callback, jint maxBufferSize, jint channelsCount,
-                       jint samplerate, jint outSamplerate);
+                       jint samplerate, jint outSamplerate, jint encodingMode);
 jint nativeReleaseEncoder(JNIEnv *env, jobject clazz, jint handler);
 jint nativeWriteEncoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBuffer);
 
 const JNINativeMethod method_encoder_table[] = {
-  { "nativeOpenEncoder", "(Lcom/v2soft/AndLib/medianative/MP3EncoderStream$Callback;IIII)I", (void*) nativeOpenEncoder},
+  { "nativeOpenEncoder", "(Lcom/v2soft/AndLib/medianative/MP3EncoderStream$Callback;IIIII)I",(void*)nativeOpenEncoder},
   { "nativeReleaseEncoder", "(I)I", (void*) nativeReleaseEncoder },
   { "nativeWriteEncoder", "(ILjava/nio/ByteBuffer;)I", (void*) nativeWriteEncoder }
 };

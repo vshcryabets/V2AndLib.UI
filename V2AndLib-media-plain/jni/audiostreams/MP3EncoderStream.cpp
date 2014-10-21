@@ -60,18 +60,19 @@ size_t MP3EncoderStream::write(void* buffer, size_t count) {
     }
 }
 
-void MP3EncoderStream::configure(size_t channelsCount, size_t samplerate, size_t outSampleRate) {
+void MP3EncoderStream::configure(size_t channelsCount, size_t samplerate, size_t outSampleRate,
+                                MPEG_mode encodingMode) {
     checkHandle();
 
     setOutputChannelsCount(channelsCount);
     setInputChannelsCount(channelsCount);
     setInputSampleRate(samplerate);
     setOutputSampleRate(outSampleRate);
+    lame_set_mode(mLameHandler, encodingMode);
 
     // lame_set_VBR(lame, vbr_default);
     // lame_set_VBR_quality(lame, 2);
 //    lame_set_brate(gfp, br_level[quality]);
-//    lame_set_mode(gfp, JOINT_STEREO);
 //    lame_set_disable_reservoir(gfp, TRUE);
 //    lame_set_quality(gfp, ql_level[quality]);   /* 7=low  5=medium  2=high */
 

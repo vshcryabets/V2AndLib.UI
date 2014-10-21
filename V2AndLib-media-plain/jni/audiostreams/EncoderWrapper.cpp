@@ -66,10 +66,10 @@ public:
 };
 
 jint nativeOpenEncoder(JNIEnv *env, jobject clazz, jobject callback, jint maxBufferSize, jint channelsCount,
-                       jint samplerate, jint outSamplerate) {
+                       jint samplerate, jint outSamplerate, jint encodingMode) {
     try {
         MP3EncoderStream* out = new MP3EncoderStream(new CallBackOutputStream(env, callback), maxBufferSize);
-        out->configure(channelsCount, samplerate, outSamplerate);
+        out->configure(channelsCount, samplerate, outSamplerate, static_cast<MPEG_mode>(encodingMode));
         int handler = g_lastEncoderHandler++;
         g_Encoders.insert(std::pair<int, MP3EncoderStream*>(handler,out));
         return handler;

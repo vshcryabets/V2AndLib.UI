@@ -21,7 +21,7 @@ public:
     MP3EncoderStream(PCMOutputStream* outstream, size_t maxBuffer);
     virtual ~MP3EncoderStream();
     virtual size_t write(void* buffer, size_t count);
-    virtual void configure(size_t channelsCount, size_t samplerate, size_t outSampleRate);
+    virtual void configure(size_t channelsCount, size_t samplerate, size_t outSampleRate, MPEG_mode encodingMode);
     virtual void flush();
     virtual void close();
     virtual void setInputSampleRate(size_t samplerate);

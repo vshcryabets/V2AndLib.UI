@@ -26,6 +26,8 @@ import java.nio.ByteBuffer;
 public class MP3EncoderStream extends BufferedOutputStream {
     private static final int BUFFER_SIZE = 8192;
 
+
+
     public interface Callback {
         void processEncodedBuffer(ByteBuffer buffer) throws IOException;
     }
@@ -44,28 +46,55 @@ public class MP3EncoderStream extends BufferedOutputStream {
     protected ByteBuffer mBuffer;
 
     /**
-     * @param output
+     * @param output output stream
+     * @param numberOfChannels number of channels
      * @param inSampleRate input sample rate in Hz
-     * @param mode         stereo, jstereo, dual channel (not supported), mono default: lame picks based on compression ration and input channels
+     * @param outSampleRate output sample rate
+     * @param mode stereo, jstereo, dual channel (not supported), mono default: lame picks based on
+     *             compression ration and input channels
      */
     public MP3EncoderStream(final OutputStream output,
                             int numberOfChannels,
                             int inSampleRate,
                             int outSampleRate,
                             EncodingMode mode) {
+        this(output);
+        setEncodingParams(numberOfChannels, inSampleRate, outSampleRate, mode);
+    }
+
+    /**
+     * @param output           output stream
+     */
+    public MP3EncoderStream(final OutputStream output) {
         super(output, BUFFER_SIZE);
         mInternalStream = output;
-        mEncoderHandle = nativeOpenEncoder(mCallback, BUFFER_SIZE, numberOfChannels, inSampleRate, outSampleRate);
         mBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+    }
 
+    /**
+     * @param numberOfChannels number of channels
+     * @param inSampleRate input sample rate in Hz
+     * @param outSampleRate output sample rate
+     * @param mode stereo, jstereo, dual channel (not supported), mono default: lame picks based on
+     *             compression ration and input channels
+     */
+    public void setEncodingParams(int numberOfChannels,
+                                  int inSampleRate,
+                                  int outSampleRate,
+                                  EncodingMode mode) {
+        mEncoderHandle = nativeOpenEncoder(mCallback, BUFFER_SIZE, numberOfChannels, inSampleRate, outSampleRate,
+            mode.ordinal());
     }
 
     @Override
     public synchronized void close() throws IOException {
         super.close();
-        mInternalStream.close();
-        int res = nativeReleaseEncoder(mEncoderHandle);
-        checkError(res);
+        if ( mEncoderHandle != 0 ) {
+            mInternalStream.close();
+            int res = nativeReleaseEncoder(mEncoderHandle);
+            checkError(res);
+        }
+        mEncoderHandle = 0;
     }
 
     @Override
@@ -94,7 +123,7 @@ public class MP3EncoderStream extends BufferedOutputStream {
     private final Callback mCallback = new Callback() {
         @Override
         public void processEncodedBuffer(ByteBuffer buffer) throws IOException {
-            byte[] bytebuffer = new byte[buffer.remaining()];
+            byte[] bytebuffer = new byte[buffer.remaining()]; // TODO reuse buffer
             buffer.get(bytebuffer);
             mInternalStream.write(bytebuffer);
         }
@@ -104,7 +133,7 @@ public class MP3EncoderStream extends BufferedOutputStream {
      * Native routines.
      */
     private native int nativeOpenEncoder(Callback callback, int maxBufferSize, int channelsCount,
-                                         int sampleRate, int outSamplerate);
+                                         int sampleRate, int outSamplerate, int encodingMode);
     private native int nativeReleaseEncoder(int handle);
     private native int nativeWriteEncoder(int handle, ByteBuffer buffer);
 }
