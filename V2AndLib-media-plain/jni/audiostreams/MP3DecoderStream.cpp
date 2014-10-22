@@ -73,6 +73,8 @@ size_t MP3DecoderStream::write(void* buffer, size_t count) {
             mOutput->setInputChannelsCount(channelsCount);
         } else if ( err == MPG123_OK ) {
             mOutput->write(internalBuffer, decoded);
+        } else {
+//            printf("mpg123_decode_frame return %d\n", err);
         }
     } while ( decoded > 0 );
     return count;

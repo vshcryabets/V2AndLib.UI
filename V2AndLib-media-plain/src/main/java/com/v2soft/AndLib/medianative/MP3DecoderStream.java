@@ -64,7 +64,7 @@ public class MP3DecoderStream extends BufferedOutputStream {
         mBuffer.clear();
         mBuffer.put(buffer, offset, count);
         // send data to encoder
-        int res = nativeWriteDecoder(mHandlerId, mBuffer);
+        int res = nativeWriteDecoder(mHandlerId, mBuffer, count);
         checkError(res);
     }
 
@@ -138,5 +138,5 @@ public class MP3DecoderStream extends BufferedOutputStream {
 
     protected native int nativeReleaseDecoder(int handler);
 
-    protected native int nativeWriteDecoder(int handler, ByteBuffer buffer);
+    protected native int nativeWriteDecoder(int handler, ByteBuffer buffer, int size);
 }

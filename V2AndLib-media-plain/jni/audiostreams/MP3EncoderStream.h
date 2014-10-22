@@ -13,10 +13,12 @@ protected:
     lame_t  mLameHandler;
     char*   mEncodedBuffer;
     size_t mChannelsCount;
-    size_t mMaxBuffer;
+    size_t mMaxInputBuffer;
+    size_t mMaxOutputBuffer;
 
     void checkHandle();
     size_t getEncodedBufferSize();
+    size_t getInputBufferSize();
 public:
     MP3EncoderStream(PCMOutputStream* outstream, size_t maxBuffer);
     virtual ~MP3EncoderStream();

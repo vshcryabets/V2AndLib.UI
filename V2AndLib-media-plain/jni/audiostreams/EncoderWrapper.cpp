@@ -46,6 +46,7 @@ public:
         if ( mCallbackObject == NULL ) {
             return 0;
         }
+//        printf("Push %d bytes\n", count);
         JNIEnv *env;
         int getEnvStat = mVM->GetEnv((void **)&env, JNI_VERSION_1_6);
         if (getEnvStat == JNI_EDETACHED) {
@@ -98,13 +99,12 @@ jint nativeReleaseEncoder(JNIEnv *env, jobject clazz, jint handler) {
     return S_ERR;
 }
 
-jint nativeWriteEncoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBuffer) {
+jint nativeWriteEncoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBuffer, jint size) {
     std::map<int, MP3EncoderStream*>::iterator iterator = g_Encoders.find(handler);
     if ( iterator == g_Encoders.end() ) {
             return ERR_NO_SUCH_HANDLER;
     }
     void *bufferAddr = (void *)env->GetDirectBufferAddress(byteBuffer);
-    jlong size = env->GetDirectBufferCapacity(byteBuffer);
     try {
         iterator->second->write(bufferAddr, size);
     } catch (AudioStreamException *err) {

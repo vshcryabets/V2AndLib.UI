@@ -99,11 +99,16 @@ public class MP3EncoderStream extends BufferedOutputStream {
 
     @Override
     public void write(byte[] buffer, int offset, int count) throws IOException {
-        mBuffer.clear();
-        mBuffer.put(buffer, offset, count);
-        // send data to encoder
-        int res = nativeWriteEncoder(mEncoderHandle, mBuffer);
-        checkError(res);
+        while ( count > 0 ) {
+            mBuffer.clear();
+            int blockSize = ( count > mBuffer.remaining() ? mBuffer.remaining() : count );
+            mBuffer.put(buffer, offset, blockSize);
+            // send data to encoder
+            int res = nativeWriteEncoder(mEncoderHandle, mBuffer, blockSize);
+            checkError(res);
+            count -= blockSize;
+            offset += blockSize;
+        }
     }
 
     private void checkError(int res) throws IOException {
@@ -135,5 +140,5 @@ public class MP3EncoderStream extends BufferedOutputStream {
     private native int nativeOpenEncoder(Callback callback, int maxBufferSize, int channelsCount,
                                          int sampleRate, int outSamplerate, int encodingMode);
     private native int nativeReleaseEncoder(int handle);
-    private native int nativeWriteEncoder(int handle, ByteBuffer buffer);
+    private native int nativeWriteEncoder(int handle, ByteBuffer buffer, int size);
 }

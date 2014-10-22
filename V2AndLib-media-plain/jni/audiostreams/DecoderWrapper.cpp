@@ -112,13 +112,12 @@ jint nativeReleaseDecoder(JNIEnv *env, jobject clazz, jint handler) {
     return S_OK;
 }
 
-jint nativeWriteDecoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBuffer) {
+jint nativeWriteDecoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBuffer, jint size) {
     std::map<int, MP3DecoderStream*>::iterator iterator = g_Decoders.find(handler);
     if ( iterator == g_Decoders.end() ) {
         return ERR_NO_SUCH_HANDLER;
     }
     void *bufferAddr = (void *)env->GetDirectBufferAddress(byteBuffer);
-    jlong size = env->GetDirectBufferCapacity(byteBuffer);
     try {
         iterator->second->write(bufferAddr, size);
     } catch (AudioStreamException *err) {

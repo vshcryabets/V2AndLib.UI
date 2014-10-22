@@ -6,12 +6,13 @@ using namespace AudioHelpers;
 const char* MP3EncoderStream::TAG = "MP3EncoderStream";
 
 MP3EncoderStream::MP3EncoderStream(PCMOutputStream* outstream, size_t maxBuffer)
-    : mOutput(outstream), mLameHandler(NULL), mMaxBuffer(maxBuffer) {
+    : mOutput(outstream), mLameHandler(NULL), mMaxInputBuffer(maxBuffer) {
     if ( mOutput == NULL ) {
         throw new AudioStreamException("Output stream is null");
     }
     mLameHandler = lame_init();
-    mEncodedBuffer = new char[getEncodedBufferSize()/2+7200];
+    mMaxOutputBuffer = mMaxInputBuffer;
+    mEncodedBuffer = new char[mMaxOutputBuffer];
 }
 
 MP3EncoderStream::~MP3EncoderStream() {
@@ -25,19 +26,20 @@ MP3EncoderStream::~MP3EncoderStream() {
 size_t MP3EncoderStream::write(void* buffer, size_t count) {
     checkHandle();
     int res = 0;
+    size_t inputSamplesCount = count / mChannelsCount / 2;
     if ( mChannelsCount == 1 ) {
         res = lame_encode_buffer(mLameHandler, (short*)buffer,
                     NULL,
-                    count / mChannelsCount / 2,
+                    inputSamplesCount,
                     (unsigned char*)mEncodedBuffer,
                     getEncodedBufferSize());
     } else {
         res = lame_encode_buffer_interleaved(mLameHandler, (short*)buffer,
-                    count / mChannelsCount / 2,
+                    inputSamplesCount,
                     (unsigned char*)mEncodedBuffer,
                     getEncodedBufferSize());
+        printf("A.1.1 %d %d\n", res, inputSamplesCount );
     }
-//    printf("A.1.1 %d\n", res);
     /**
      return code     number of bytes output in mp3buf. Can be 0
                      -1:  mp3buf was too small
@@ -70,9 +72,9 @@ void MP3EncoderStream::configure(size_t channelsCount, size_t samplerate, size_t
     setOutputSampleRate(outSampleRate);
     lame_set_mode(mLameHandler, encodingMode);
 
-    // lame_set_VBR(lame, vbr_default);
+    lame_set_VBR(mLameHandler, vbr_default);
     // lame_set_VBR_quality(lame, 2);
-//    lame_set_brate(gfp, br_level[quality]);
+    lame_set_brate(mLameHandler, 128);
 //    lame_set_disable_reservoir(gfp, TRUE);
 //    lame_set_quality(gfp, ql_level[quality]);   /* 7=low  5=medium  2=high */
 
@@ -125,5 +127,9 @@ PCMOutputStream* MP3EncoderStream::getSubStream() {
 }
 
 size_t MP3EncoderStream::getEncodedBufferSize() {
-    return mMaxBuffer;
+    return mMaxOutputBuffer;
+}
+
+size_t MP3EncoderStream::getInputBufferSize() {
+    return mMaxInputBuffer;
 }
