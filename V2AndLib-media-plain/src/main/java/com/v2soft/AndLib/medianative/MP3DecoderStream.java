@@ -60,6 +60,12 @@ public class MP3DecoderStream extends BufferedOutputStream {
     }
 
     @Override
+    public synchronized void flush() throws IOException {
+        super.flush();
+        nativeDecoderFlush(mHandlerId);
+    }
+
+    @Override
     public void write(byte[] buffer, int offset, int count) throws IOException {
         mBuffer.clear();
         mBuffer.put(buffer, offset, count);
@@ -88,6 +94,10 @@ public class MP3DecoderStream extends BufferedOutputStream {
 
     public int getSampleRate() {
         return mSampleRate;
+    }
+
+    public int getExpectedLength() {
+        return nativeDecoderGetExpectedLength(mHandlerId);
     }
 
     private final Callback mCallback = new Callback() {
@@ -139,4 +149,8 @@ public class MP3DecoderStream extends BufferedOutputStream {
     protected native int nativeReleaseDecoder(int handler);
 
     protected native int nativeWriteDecoder(int handler, ByteBuffer buffer, int size);
+
+    protected native int nativeDecoderGetExpectedLength(int handler);
+
+    protected native void nativeDecoderFlush(int handler);
 }

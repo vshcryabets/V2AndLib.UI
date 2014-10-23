@@ -56,6 +56,7 @@ public:
         JNIEnv *env = prepareEnv();
         jobject byteBuffer = env->NewDirectByteBuffer(buffer, count);
         env->CallVoidMethod(mCallbackObject, mMethod, byteBuffer);
+        env->DeleteLocalRef(byteBuffer);
         return count;
     };
     virtual void flush() {};
@@ -127,3 +128,30 @@ jint nativeWriteDecoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBu
     return S_ERR;
 }
 
+jint nativeDecoderGetExpectedLength(JNIEnv *env, jobject clazz, jint handler) {
+    std::map<int, MP3DecoderStream*>::iterator iterator = g_Decoders.find(handler);
+    if ( iterator == g_Decoders.end() ) {
+        return ERR_NO_SUCH_HANDLER;
+    }
+    try {
+        iterator->second->getExpectedLength();
+    } catch (AudioStreamException *err) {
+        printf("ERR: %s\n", err->what());
+        return ERR_EXCEPTION;
+    }
+    return S_ERR;
+}
+
+jint nativeDecoderFlush(JNIEnv *env, jobject clazz, jint handler) {
+    std::map<int, MP3DecoderStream*>::iterator iterator = g_Decoders.find(handler);
+    if ( iterator == g_Decoders.end() ) {
+        return ERR_NO_SUCH_HANDLER;
+    }
+    try {
+        iterator->second->flush();
+    } catch (AudioStreamException *err) {
+        printf("ERR: %s\n", err->what());
+        return ERR_EXCEPTION;
+    }
+    return S_ERR;
+}

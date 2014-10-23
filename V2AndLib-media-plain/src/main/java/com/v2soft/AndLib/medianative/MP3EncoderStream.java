@@ -98,6 +98,12 @@ public class MP3EncoderStream extends BufferedOutputStream {
     }
 
     @Override
+    public synchronized void flush() throws IOException {
+        nativeEncoderFlush(mEncoderHandle);
+        super.flush();
+    }
+
+    @Override
     public void write(byte[] buffer, int offset, int count) throws IOException {
         while ( count > 0 ) {
             mBuffer.clear();
@@ -141,4 +147,5 @@ public class MP3EncoderStream extends BufferedOutputStream {
                                          int sampleRate, int outSamplerate, int encodingMode);
     private native int nativeReleaseEncoder(int handle);
     private native int nativeWriteEncoder(int handle, ByteBuffer buffer, int size);
+    private native void nativeEncoderFlush(int handle);
 }

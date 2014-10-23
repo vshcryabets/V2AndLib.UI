@@ -56,6 +56,7 @@ public:
         }
         jobject byteBuffer = env->NewDirectByteBuffer(buffer, count);
         env->CallVoidMethod(mCallbackObject, mMethod, byteBuffer);
+        env->DeleteLocalRef(byteBuffer);
         return count;
     };
     virtual void flush() {};
@@ -107,6 +108,20 @@ jint nativeWriteEncoder(JNIEnv *env, jobject clazz, jint handler, jobject byteBu
     void *bufferAddr = (void *)env->GetDirectBufferAddress(byteBuffer);
     try {
         iterator->second->write(bufferAddr, size);
+    } catch (AudioStreamException *err) {
+        printf("ERR: %s\n", err->what());
+        return ERR_EXCEPTION;
+    }
+    return S_ERR;
+}
+
+jint nativeEncoderFlush(JNIEnv *env, jobject clazz, jint handler) {
+    std::map<int, MP3EncoderStream*>::iterator iterator = g_Encoders.find(handler);
+    if ( iterator == g_Encoders.end() ) {
+            return ERR_NO_SUCH_HANDLER;
+    }
+    try {
+        iterator->second->flush();
     } catch (AudioStreamException *err) {
         printf("ERR: %s\n", err->what());
         return ERR_EXCEPTION;

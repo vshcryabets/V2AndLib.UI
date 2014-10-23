@@ -123,3 +123,7 @@ void MP3DecoderStream::setOutputChannelsCount(size_t channelsCount) {
 PCMOutputStream* MP3DecoderStream::getSubStream() {
     return mOutput;
 }
+
+size_t MP3DecoderStream::getExpectedLength() {
+    return mpg123_length(mHandle);
+}

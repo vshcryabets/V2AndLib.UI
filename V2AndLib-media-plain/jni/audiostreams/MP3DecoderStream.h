@@ -28,6 +28,7 @@ public:
     virtual void setInputChannelsCount(size_t channelsCount);
     virtual void setOutputSampleRate(size_t samplerate);
     virtual void setOutputChannelsCount(size_t channelsCount);
+    virtual size_t getExpectedLength();
 };
 }
 #endif // MP3_DECODER_STREAM_H

@@ -47,6 +47,9 @@ public class AudioStreamsTests {
             summaryRead += read;
             decoder.write(block, 0, read);
         }
+        int expectedLength = decoder.getExpectedLength();
+        assertTrue("", expectedLength > 1000000);
+
         assertEquals("Wrong read size", 192000, counterOutStream.getPassedBytes());
         decoder.close();
     }
@@ -89,7 +92,8 @@ public class AudioStreamsTests {
         FileOutputStream out = new FileOutputStream(outputFile);
         CounterStream counterOutput = new CounterStream(out);
         final MP3EncoderStream encoder = new MP3EncoderStream(counterOutput);
-        MP3DecoderStream decoder = new MP3DecoderStream(encoder);
+        CounterStream counterDecoded = new CounterStream(encoder);
+        MP3DecoderStream decoder = new MP3DecoderStream(counterDecoded);
         decoder.setListener(new MP3DecoderStream.DecoderStateListener() {
             @Override
             public void onInitialized(MP3DecoderStream decoder) {
@@ -102,11 +106,15 @@ public class AudioStreamsTests {
         while (( read = input.read(block) ) > 0) {
             decoder.write(block, 0, read);
         }
-        decoder.flush();
-        encoder.close();
+        long decodedSamplesCount = counterDecoded.getPassedBytes()/2;
+        assertTrue("Got samples count " + decodedSamplesCount, decodedSamplesCount == 48000 );
+        int expectedLength = decoder.getExpectedLength();
+        assertTrue("Got length "+expectedLength, expectedLength == 48000 );
         decoder.close();
-        assertTrue("Wrong output size expected "+inputFile.length()+" got " + outputFile.length(),
-                Math.abs(outputFile.length() - inputFile.length()) < 1024);
+        encoder.close();
+        // TODO check output file duration
+//        assertTrue("Wrong output size expected "+inputFile.length()+" got " + outputFile.length(),
+//                Math.abs(outputFile.length() - inputFile.length()) < 1024);
     }
 
     private String getCurrentDir() throws IOException {
@@ -120,24 +128,41 @@ public class AudioStreamsTests {
     @Test
     public void testEncodeDecodeCheck() throws IOException, NoSuchAlgorithmException, InterruptedException {
         // generate sine
+        boolean bigEndianMode = false;
         boolean stereo = false;
         Random random = new Random();
-        int sourceFrequency = random.nextInt(3000) + 100;
+        int sourceFrequency = 440; //random.nextInt(3000) + 100;
         int sourceDuration = random.nextInt(1000)+1000;
         int sourceSampleRate = 44100;
 
-        byte source[] = sineGenerator(stereo, sourceSampleRate, sourceDuration, sourceFrequency);
-        int frequency = checkFrequency(source, stereo, sourceSampleRate);
+        byte source[] = sineGenerator(bigEndianMode, stereo, sourceSampleRate, sourceDuration, sourceFrequency, 0.8f);
+        int frequency = checkFrequency(bigEndianMode, source, stereo, sourceSampleRate);
         assertTrue("Wrong frequency 1 "+sourceFrequency+" expected but was "+ frequency, Math.abs(frequency - sourceFrequency) < 50 );
 
-        File outputFile = new File(getCurrentDir() + "/temp.mp3");
-        FileOutputStream out = new FileOutputStream(outputFile);
         ByteArrayOutputStream decodedBuffer = new ByteArrayOutputStream(source.length*2);
         MP3DecoderStream decoder = new MP3DecoderStream(decodedBuffer);
         MP3EncoderStream encoder = new MP3EncoderStream(decoder, (stereo?2:1), sourceSampleRate, sourceSampleRate,
                 (stereo ? MP3EncoderStream.EncodingMode.stereo : MP3EncoderStream.EncodingMode.mono) );
         encoder.write(source);
-        assertEquals(source.length, decodedBuffer.size());
+
+        File outputFile = new File(getCurrentDir() + "/source.dat");
+        FileOutputStream out = new FileOutputStream(outputFile);
+        out.write(source);
+        out.close();
+
+        outputFile = new File(getCurrentDir() + "/decoded.dat");
+        out = new FileOutputStream(outputFile);
+        decodedBuffer.writeTo(out);
+        out.close();
+
+        int resultFreqency = checkFrequency(bigEndianMode, decodedBuffer.toByteArray(), stereo, sourceSampleRate);
+        assertTrue("Wrong frequency of result " + sourceFrequency + " expected but was " + resultFreqency,
+                Math.abs(resultFreqency - sourceFrequency) < 50);
+
+
+        int sourceSamplesCount = source.length / (stereo ? 4 : 2);
+        int resultSamplesCount = decodedBuffer.size() / ( stereo ? 4 : 2 );
+        assertEquals("Wrong number of samples count", sourceSamplesCount, resultSamplesCount);
     }
 
     private class CounterStream extends OutputStream {
@@ -176,7 +201,8 @@ public class AudioStreamsTests {
         }
     }
 
-    private byte[] sineGenerator(boolean stereo, int sampleRate, int longInMs, int frequencyInHZ) {
+    private byte[] sineGenerator(boolean bigendian, boolean stereo, int sampleRate, int longInMs, int frequencyInHZ,
+                                 float amplitude) {
         int framesCount = sampleRate * longInMs / 1000;
         int bytesPerFrame = ( stereo ? 4 : 2 );
         byte dataArray[] = new byte[framesCount * bytesPerFrame];
@@ -185,15 +211,24 @@ public class AudioStreamsTests {
         double scale = frequencyInHZ / ( 1 / ( 2 * Math.PI ) );
         for (int i = 0; i < framesCount; i++) {
             double t = (double) i / (double) sampleRate;
-            short leftSample = (short) ( Short.MAX_VALUE * Math.sin(t * scale + left) );
-            short rightSample = (short) ( Short.MAX_VALUE * Math.sin(t * scale + right) );
+            short leftSample = (short) ( Short.MAX_VALUE * Math.sin(t * scale + left) * amplitude );
+            short rightSample = (short) ( Short.MAX_VALUE * Math.sin(t * scale + right) * amplitude );
             byte first = (byte) ( leftSample >> 8 );
             byte second = (byte) ( leftSample & 0xFF );
+            if ( !bigendian ) {
+                first = (byte) ( leftSample & 0xFF );
+                second = (byte) ( leftSample >> 8 );
+            }
             dataArray[i * bytesPerFrame] = first;
             dataArray[i * bytesPerFrame + 1] = second;
             if (stereo) {
-                first = (byte) ( rightSample >> 8 );
-                second = (byte) ( rightSample & 0xFF );
+                if (!bigendian) {
+                    first = (byte) ( leftSample & 0xFF );
+                    second = (byte) ( leftSample >> 8 );
+                } else {
+                    first = (byte) ( rightSample >> 8 );
+                    second = (byte) ( rightSample & 0xFF );
+                }
                 dataArray[i * bytesPerFrame + 2] = first;
                 dataArray[i * bytesPerFrame + 3] = second;
             }
@@ -201,7 +236,7 @@ public class AudioStreamsTests {
         return dataArray;
     }
 
-    private int checkFrequency(byte rawData[], boolean stereo, int sampleRate) {
+    private int checkFrequency(boolean bigendian, byte rawData[], boolean stereo, int sampleRate) {
         int zeroCount = 0;
         int offset = 0;
         int bytesPerFrame = ( stereo ? 4 : 2 );
@@ -209,6 +244,10 @@ public class AudioStreamsTests {
         while (offset < rawData.length) {
             short first = rawData[offset];
             short second = rawData[offset + 1];
+            if ( !bigendian ) {
+                first = rawData[offset + 1];
+                second = rawData[offset];
+            }
             short value = (short) ( ( first << 8 ) | ( second & 0xFF ) );
             if (prevValue < 0 && value >= 0) {
                 zeroCount++;

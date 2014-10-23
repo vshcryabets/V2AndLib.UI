@@ -62,6 +62,14 @@ size_t MP3EncoderStream::write(void* buffer, size_t count) {
     }
 }
 
+void MP3EncoderStream::flush() {
+    checkHandle();
+    size_t result = lame_encode_flush(mLameHandler, (unsigned char*)mEncodedBuffer, getEncodedBufferSize());
+    if ( result > 0 ) {
+        mOutput->write(mEncodedBuffer, result);
+    }
+}
+
 void MP3EncoderStream::configure(size_t channelsCount, size_t samplerate, size_t outSampleRate,
                                 MPEG_mode encodingMode) {
     checkHandle();
@@ -82,10 +90,6 @@ void MP3EncoderStream::configure(size_t channelsCount, size_t samplerate, size_t
     if (ret < 0) {
         throw new AudioStreamException("Error occurred during parameters initializing. Code = %d\n", ret);
     }
-}
-
-void MP3EncoderStream::flush() {
-    checkHandle();
 }
 
 void MP3EncoderStream::close() {
