@@ -27,10 +27,7 @@ public class AudioStreamsTests {
         byte[] block = new byte[8192];
         int summaryRead = 0;
 
-        String current = new java.io.File(".").getCanonicalPath();
-        if (!current.endsWith("V2AndLib-media-plain")) {
-            current = current + "/V2AndLib-media-plain";
-        }
+        String current = getCurrentDir();
         FileInputStream input = new FileInputStream(current + "/sample/sine440s2.mp3");
         FileOutputStream output = new FileOutputStream(current + "/sine440s2.data");
         CounterStream counterOutStream = new CounterStream(output);
@@ -47,11 +44,11 @@ public class AudioStreamsTests {
             summaryRead += read;
             decoder.write(block, 0, read);
         }
-        int expectedLength = decoder.getExpectedLength();
-        assertTrue("", expectedLength > 1000000);
+//        int expectedLength = decoder.getExpectedLength();
+//        assertTrue("", expectedLength > 1000000);
 
-        assertEquals("Wrong read size", 192000, counterOutStream.getPassedBytes());
         decoder.close();
+        assertEquals("Wrong decoded samples count", 48000 * 2 * 2, counterOutStream.getPassedBytes());
     }
 
     @Test
@@ -87,30 +84,22 @@ public class AudioStreamsTests {
     public void testMP3EncoderStream() throws IOException, NoSuchAlgorithmException, InterruptedException {
         byte[] block = new byte[8192];
         File outputFile = new File(getCurrentDir() + "/testMP3EncoderStream.mp3");
-        File inputFile = new File(getCurrentDir() + "/sample/dtmf.mp3");
+        File inputFile = new File(getCurrentDir() + "/sample/sine440s1.raw");
         FileInputStream input = new FileInputStream(inputFile);
         FileOutputStream out = new FileOutputStream(outputFile);
         CounterStream counterOutput = new CounterStream(out);
         final MP3EncoderStream encoder = new MP3EncoderStream(counterOutput);
         CounterStream counterDecoded = new CounterStream(encoder);
-        MP3DecoderStream decoder = new MP3DecoderStream(counterDecoded);
-        decoder.setListener(new MP3DecoderStream.DecoderStateListener() {
-            @Override
-            public void onInitialized(MP3DecoderStream decoder) {
-                encoder.setEncodingParams( decoder.getChannelsCount(), decoder.getSampleRate(),
-                    decoder.getSampleRate(), MP3EncoderStream.EncodingMode.mono);
-            }
-        });
+        encoder.setEncodingParams( 1, 48000, 48000, MP3EncoderStream.EncodingMode.mono);
 
         int read;
         while (( read = input.read(block) ) > 0) {
-            decoder.write(block, 0, read);
+            counterDecoded.write(block, 0, read);
         }
         long decodedSamplesCount = counterDecoded.getPassedBytes()/2;
         assertTrue("Got samples count " + decodedSamplesCount, decodedSamplesCount == 48000 );
-        int expectedLength = decoder.getExpectedLength();
-        assertTrue("Got length "+expectedLength, expectedLength == 48000 );
-        decoder.close();
+//        int expectedLength = decoder.getExpectedLength();
+//        assertTrue("Got length "+expectedLength, expectedLength == 48000 );
         encoder.close();
         // TODO check output file duration
 //        assertTrue("Wrong output size expected "+inputFile.length()+" got " + outputFile.length(),
@@ -148,6 +137,7 @@ public class AudioStreamsTests {
         File outputFile = new File(getCurrentDir() + "/source.dat");
         FileOutputStream out = new FileOutputStream(outputFile);
         out.write(source);
+        out.flush();
         out.close();
 
         outputFile = new File(getCurrentDir() + "/decoded.dat");

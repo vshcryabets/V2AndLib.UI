@@ -84,7 +84,6 @@ void MP3DecoderStream::flush() {
 
 }
 
-
 void MP3DecoderStream::close() {
     if ( mHandle != NULL ) {
         mpg123_close(mHandle);
@@ -92,20 +91,6 @@ void MP3DecoderStream::close() {
         mHandle = NULL;
     }
 }
-//
-//size_t MP3DecoderStream::getSampleRate() {
-//    return mSampleRate;
-//}
-//size_t MP3DecoderStream::getChannelsCount() {
-//    return mChannels;
-//}
-//size_t MP3DecoderStream::getDurationInSamples() {
-//    if ( mHandle != NULL ) {
-//        return mpg123_length(mHandle);
-//    } else {
-//        throw new AudioStreamException("MPG123 input stream not initialized (handle is NULL)");
-//    }
-//}
 
 void MP3DecoderStream::setInputSampleRate(size_t samplerate) {
     // we can ignore it
