@@ -12,7 +12,6 @@ dependencies {
     compile 'com.facebook:facebook-android-sdk:3.5.2@aar'
     compile project(":V2AndLib-networking")
     compile project(":V2AndLib-media")
-//    compile project(":V2AndLib-other")
     compile project(":V2AndLib-depredecated")
     compile project(":V2AndLib-sketches")
     compile files('libs/native-libs.jar')
@@ -25,25 +24,3 @@ android {
         abortOnError false
     }
 }
-
-// Task to run ndk-build
-task ndkBuild(type: Exec) {
-    commandLine 'ndk-build', '-j', Runtime.runtime.availableProcessors()
-}
-
-task nativeLibsToJar(
-        type: Zip,
-        description: 'create a jar archive of the native libs') {
-    destinationDir file("libs")
-    baseName 'native-libs'
-    extension 'jar'
-    version ''
-    from fileTree(dir: 'libs', include: '**/*.so') into 'lib/'
-}
-
-// Make copyNativeLibs depend on ndkBuild since we must build the libraries
-// before we can copy them.
-//nativeLibsToJar.dependsOn 'ndkBuild'
-
-tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn nativeLibsToJar }
-
