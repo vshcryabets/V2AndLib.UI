@@ -1,12 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: "file://../maven-repository/")
-    }
-}
-
 dependencies {
     compile project(':V2AndLib-commondata')
     compile 'com.android.support:support-v4:19.1.0'
@@ -32,6 +26,14 @@ android {
         }
         androidTest {
             java.srcDirs = ['instrumentTest/java']
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://${projectDir}/../myRepo/")
         }
     }
 }
