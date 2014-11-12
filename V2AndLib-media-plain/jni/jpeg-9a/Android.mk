@@ -2,9 +2,7 @@ LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := libjpegwrapper
-LOCAL_MODULE_FILENAME := libjpegwrapper
-LOCAL_CFLAGS := -ffast-math -DFPM_ARM -fexceptions -O2
+LOCAL_MODULE := libjpeg
 
 LOCAL_SRC_FILES := \
     jcapimin.c jcapistd.c jccoefct.c jccolor.c jcdctmgr.c jchuff.c \
@@ -19,9 +17,8 @@ LOCAL_SRC_FILES := \
 # Use the no backing store memory manager provided by
 # libjpeg. See install.txt
 LOCAL_SRC_FILES +=  jmemnobs.c
-
+LOCAL_CFLAGS= -std=c99
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 
-LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog
 include $(BUILD_STATIC_LIBRARY)
 

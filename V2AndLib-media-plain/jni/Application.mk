@@ -1,7 +1,6 @@
-APP_STL:=stlport_static
-MY_APP_PATH_FOR_OUTPUT := $(call my-dir)
-NDK_LIBS_OUT := $(MY_APP_PATH_FOR_OUTPUT)/../ndk-libs/
-APP_ABI := all
+APP_STL          := gnustl_shared
+APP_OPTIM        := release
+APP_ABI          := armeabi-v7a
+APP_PLATFORM     := android-15
 
-APP_STL:=stlport_static
-APP_CPPFLAGS += -frtti
+NDK_TOOLCHAIN_VERSION := 4.8
