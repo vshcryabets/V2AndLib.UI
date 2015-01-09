@@ -106,7 +106,7 @@ public class AudioStreamsTests {
 //                Math.abs(outputFile.length() - inputFile.length()) < 1024);
     }
 
-    private String getCurrentDir() throws IOException {
+    public static String getCurrentDir() throws IOException {
         String current = new java.io.File(".").getCanonicalPath();
         if (!current.endsWith("V2AndLib-media-plain")) {
             current = current + "/V2AndLib-media-plain";

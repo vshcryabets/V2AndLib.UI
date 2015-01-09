@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2014-2015 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,13 @@ import java.io.File;
  *
  */
 public class JPEGHelper {
+
+
+    public enum Rotate {
+        CW_90,
+        CW_180,
+        CW_270
+    }
     static {
         System.loadLibrary("graphics");
     }
@@ -33,8 +40,8 @@ public class JPEGHelper {
 
     /**
      * Read header information from local jpeg-file.
-     * @param file
-     * @return
+     * @param file JPEG file
+     * @return JPEGOptions structure
      */
     public JPEGOptions getImageOptions(File file) {
         JPEGOptions result = new JPEGOptions();
@@ -42,11 +49,22 @@ public class JPEGHelper {
         checkErrorCode(errorCode);
         return result;
     }
-    
+
     public String getVersion() {
         return nativeGetVersion();
     }
-    
+
+    public void rotate(File file, Rotate rotateAngle, File outfile) {
+        int errorCode = nativeRotateJPEG(file.getAbsolutePath(), rotateAngle.ordinal(), outfile.getAbsolutePath());
+        checkErrorCode(errorCode);
+    }
+
+    public void crop(File file, int[] cropArea, File outfile) {
+        int errorCode = nativeCropJPEG(file.getAbsolutePath(), cropArea, outfile.getAbsolutePath());
+        checkErrorCode(errorCode);
+    }
+
+
     private void checkErrorCode(int code) {
         if ( code != 0 ) {
             throw new IllegalStateException("Error code "+code);
@@ -55,4 +73,6 @@ public class JPEGHelper {
 
     protected native String nativeGetVersion();
     protected native int nativeGetJPEGInfo(String localFilePath, JPEGOptions options);
+    private native int nativeRotateJPEG(String inputPath, int ordinal, String outputPath);
+    private native int nativeCropJPEG(String input, int[] cropArea, String output);
 }
