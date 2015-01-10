@@ -18,12 +18,11 @@ package com.v2soft.AndLib.medianative;
 import java.io.File;
 
 /**
- * MP3 routines.
+ * JPEG routines.
  * @author V.Shcryabets (vshcryabets@gmail.com)
  *
  */
 public class JPEGHelper {
-
 
     public enum Rotate {
         CW_90,
@@ -43,7 +42,7 @@ public class JPEGHelper {
      * @param file JPEG file
      * @return JPEGOptions structure
      */
-    public JPEGOptions getImageOptions(File file) {
+    public JPEGOptions getImageOptions(File file) throws JPEGHelperException {
         JPEGOptions result = new JPEGOptions();
         int errorCode = nativeGetJPEGInfo(file.getAbsolutePath(), result);
         checkErrorCode(errorCode);
@@ -54,20 +53,20 @@ public class JPEGHelper {
         return nativeGetVersion();
     }
 
-    public void rotate(File file, Rotate rotateAngle, File outfile) {
+    public void rotate(File file, Rotate rotateAngle, File outfile) throws JPEGHelperException {
         int errorCode = nativeRotateJPEG(file.getAbsolutePath(), rotateAngle.ordinal(), outfile.getAbsolutePath());
         checkErrorCode(errorCode);
     }
 
-    public void crop(File file, int[] cropArea, File outfile) {
+    public void crop(File file, int[] cropArea, File outfile) throws JPEGHelperException {
         int errorCode = nativeCropJPEG(file.getAbsolutePath(), cropArea, outfile.getAbsolutePath());
         checkErrorCode(errorCode);
     }
 
 
-    private void checkErrorCode(int code) {
+    private void checkErrorCode(int code) throws JPEGHelperException {
         if ( code != 0 ) {
-            throw new IllegalStateException("Error code "+code);
+            throw new JPEGHelperException(code);
         }
     }
 
