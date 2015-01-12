@@ -2,17 +2,12 @@
 #include <stdio.h>
 #include <setjmp.h>
 #include "jpeglib.h"
-
-struct my_error_mgr {
-    struct jpeg_error_mgr pub;
-    jmp_buf setjmp_buffer;
-};
-typedef struct my_error_mgr * my_error_ptr;
+#include "CJPEGEncoder.h"
+#include "JPEGException.h"
 
 METHODDEF(void) my_error_exit(j_common_ptr cinfo) {
-    my_error_ptr myerr = (my_error_ptr) cinfo->err;
+    my_error_mgr* myerr = (my_error_mgr*) cinfo->err;
     (*cinfo->err->output_message)(cinfo);
-//    __android_log_print(ANDROID_LOG_VERBOSE, TAG, "A1.E2");
     longjmp(myerr->setjmp_buffer, 1);
 }
 
