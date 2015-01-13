@@ -1,13 +1,7 @@
-#include "CJPEGEncoder.h"
+#include "CJPEGDecoder.h"
 #include "JPEGException.h"
 
-void cjpeg_error_handler(j_common_ptr cinfo) {
-    my_error_mgr* myerr = (my_error_mgr*) cinfo->err;
-    (*cinfo->err->output_message)(cinfo);
-    longjmp(myerr->setjmp_buffer, 1);
-}
-
-CJPEGEncoder::CJPEGEncoder(const char* sourceFilePath) : mFile(NULL) {
+CJPEGDecoder::CJPEGDecoder(const char* sourceFilePath) : mFile(NULL) {
     mFile = fopen(sourceFilePath, "rb");
     if ( mFile == NULL ) {
         throw new JPEGException(ERR_NO_FILE);
@@ -29,7 +23,7 @@ CJPEGEncoder::CJPEGEncoder(const char* sourceFilePath) : mFile(NULL) {
     jpeg_read_header(mInfo, TRUE);
 }
 
-CJPEGEncoder::~CJPEGEncoder() {
+CJPEGDecoder::~CJPEGDecoder() {
     //free resources
     if ( mInfo != NULL ) {
         delete mInfo;

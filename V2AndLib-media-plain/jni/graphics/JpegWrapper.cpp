@@ -18,48 +18,22 @@ JNIEXPORT jstring JNICALL nativeGetVersion(JNIEnv * env, jclass c) {
 JNIEXPORT jint JNICALL nativeGetJPEGInfo(JNIEnv* env, jclass c, jstring jniFileName, jobject result) {
     int rescode = ERR_OK;
     const char* fileName = env->GetStringUTFChars(jniFileName, 0);
-    FILE* file = fopen(fileName, "rb");
+    CJPEGEncoder decoder(fileName);
     env->ReleaseStringUTFChars(jniFileName, fileName);
-    if ( file == NULL ) {
-        return ERR_NO_FILE;
+
+    // get class
+    jclass optionsClass = env->FindClass("com/v2soft/AndLib/medianative/JPEGOptions");
+    if (env->ExceptionCheck()) {
+        env->ExceptionDescribe();
+        env->ExceptionClear();
+       throw ERR_CANT_GET_RESULT_CLASS;
     }
 
-    struct jpeg_decompress_struct cinfo;
-    struct my_error_mgr jerr;
+    jfieldID fieldWidth = env->GetFieldID(optionsClass, "mWidth", "I");
+    jfieldID fieldHeight = env->GetFieldID(optionsClass, "mHeight", "I");
+    env->SetIntField(result, fieldWidth, decoder.getWidth());
+    env->SetIntField(result, fieldHeight, decoder.getHeight());
 
-    try {
-        cinfo.err = jpeg_std_error(&jerr.pub);
-        jerr.pub.error_exit = my_error_exit;
-        if (setjmp(jerr.setjmp_buffer)) {
-                jpeg_destroy_decompress(&cinfo);
-                throw ERR_JPEG_DECODER;
-        }
-
-        jpeg_create_decompress(&cinfo);
-        jpeg_stdio_src(&cinfo, file);
-
-        //reading JPEG header
-        jpeg_read_header(&cinfo, TRUE);
-
-        // get class
-        jclass optionsClass = env->FindClass("com/v2soft/AndLib/medianative/JPEGOptions");
-        if (env->ExceptionCheck()) {
-            env->ExceptionDescribe();
-            env->ExceptionClear();
-           throw ERR_CANT_GET_RESULT_CLASS;
-        }
-
-        jfieldID fieldWidth = env->GetFieldID(optionsClass, "mWidth", "I");
-        jfieldID fieldHeight = env->GetFieldID(optionsClass, "mHeight", "I");
-        env->SetIntField(result, fieldWidth, cinfo.image_width);
-        env->SetIntField(result, fieldHeight, cinfo.image_height);
-
-        //free resources
-        jpeg_destroy_decompress(&cinfo);
-    } catch (int error) {
-        rescode = error;
-    }
-    fclose(file);
     return rescode;
 }
 
