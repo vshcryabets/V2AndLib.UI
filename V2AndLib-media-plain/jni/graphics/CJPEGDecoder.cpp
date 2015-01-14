@@ -43,3 +43,11 @@ CJPEGDecoder::~CJPEGDecoder() {
         mFile = NULL;
     }
 }
+
+size_t CJPEGDecoder::getWidth() {
+    return mInfo->image_width;
+}
+
+size_t CJPEGDecoder::getHeight() {
+    return mInfo->image_height;
+}

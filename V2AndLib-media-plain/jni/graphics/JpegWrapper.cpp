@@ -3,6 +3,7 @@
 #include <setjmp.h>
 #include "jpeglib.h"
 #include "CJPEGEncoder.h"
+#include "CJPEGDecoder.h"
 #include "JPEGException.h"
 
 METHODDEF(void) my_error_exit(j_common_ptr cinfo) {
@@ -18,7 +19,7 @@ JNIEXPORT jstring JNICALL nativeGetVersion(JNIEnv * env, jclass c) {
 JNIEXPORT jint JNICALL nativeGetJPEGInfo(JNIEnv* env, jclass c, jstring jniFileName, jobject result) {
     int rescode = ERR_OK;
     const char* fileName = env->GetStringUTFChars(jniFileName, 0);
-    CJPEGEncoder decoder(fileName);
+    CJPEGDecoder decoder(fileName);
     env->ReleaseStringUTFChars(jniFileName, fileName);
 
     // get class

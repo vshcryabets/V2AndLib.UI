@@ -11,6 +11,8 @@ private:
 public:
     CJPEGDecoder(const char* sourceFilePath);
     virtual ~CJPEGDecoder();
+    virtual size_t getWidth();
+    virtual size_t getHeight();
 };
 
 #endif // _CJPEG_DECODER_H_
