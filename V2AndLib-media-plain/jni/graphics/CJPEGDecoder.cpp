@@ -1,7 +1,8 @@
 #include "CJPEGDecoder.h"
 #include "JPEGException.h"
 
-CJPEGDecoder::CJPEGDecoder(const char* sourceFilePath) : mFile(NULL) {
+CJPEGDecoder::CJPEGDecoder(const char* sourceFilePath, size_t maxMemCahceSize) : mFile(NULL), mRowBuffer(NULL),
+    mMaxMemCahceSize(maxMemCahceSize) {
     mFile = fopen(sourceFilePath, "rb");
     if ( mFile == NULL ) {
         throw new JPEGException(ERR_NO_FILE);
@@ -25,6 +26,10 @@ CJPEGDecoder::CJPEGDecoder(const char* sourceFilePath) : mFile(NULL) {
 
 CJPEGDecoder::~CJPEGDecoder() {
     //free resources
+    if ( mRowBuffer != NULL ) {
+        delete mRowBuffer;
+        mRowBuffer = NULL;
+    }
     if ( mInfo != NULL ) {
         delete mInfo;
         mInfo = NULL;
@@ -50,4 +55,22 @@ size_t CJPEGDecoder::getWidth() {
 
 size_t CJPEGDecoder::getHeight() {
     return mInfo->image_height;
+}
+
+void CJPEGDecoder::startDecompress() {
+    jpeg_start_decompress(mInfo);
+    size_t row_stride = mInfo->output_width * mInfo->output_components;
+    mRowBuffer = new uint8_t[row_stride];
+}
+
+void CJPEGDecoder::readLine() {
+    jpeg_read_scanlines(mInfo, &mRowBuffer, 1);
+}
+
+void CJPEGDecoder::finishDecompress() {
+    jpeg_finish_decompress(mInfo);
+    if ( mRowBuffer != NULL ) {
+        delete mRowBuffer;
+        mRowBuffer = NULL;
+    }
 }

@@ -5,8 +5,6 @@
 
 class CJPEGEncoder {
 private:
-    jpeg_handle *mInfo;
-    my_error_mgr *mErrHandler;
     FILE* mFile;
 public:
     CJPEGEncoder(const char* sourceFilePath);
