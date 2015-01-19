@@ -61,25 +61,29 @@ public class DefaultCameraInitializer implements CameraView.Initialize {
         // We need to make sure that our preview and recording video size are supported by the
         // camera. Query camera to find all the sizes and choose the optimal size given the
         // dimensions of our preview surface.
-        List<Camera.Size> mSupportedPreviewSizes = mParameters.getSupportedPreviewSizes();
-        Camera.Size optimalSize = getOptimalPreviewSize(mSupportedPreviewSizes,
+        List<Camera.Size> supportedPreviewSizes = mParameters.getSupportedPreviewSizes();
+        Camera.Size optimalSize = getOptimalPreviewSize(supportedPreviewSizes,
                 width, height);
+        return usePreviewSize(camera, optimalSize);
+    }
 
+    @Override
+    public CamcorderProfile getProfile() {
+        return mProfile;
+    }
+
+    @Override
+    public CamcorderProfile usePreviewSize(Camera camera, Camera.Size size) {
         // Use the same size for recording profile.
-        CamcorderProfile profile = CamcorderProfile.get( getCameraId(), CamcorderProfile.QUALITY_HIGH);
-        profile.videoFrameWidth = optimalSize.width;
-        profile.videoFrameHeight = optimalSize.height;
+        CamcorderProfile profile = CamcorderProfile.get(getCameraId(), CamcorderProfile.QUALITY_HIGH);
+        profile.videoFrameWidth = size.width;
+        profile.videoFrameHeight = size.height;
 
         // likewise for the camera object itself.
         mParameters.setPreviewSize(profile.videoFrameWidth, profile.videoFrameHeight);
         camera.setParameters(mParameters);
         mProfile = profile;
         return profile;
-    }
-
-    @Override
-    public CamcorderProfile getProfile() {
-        return mProfile;
     }
 
     /**

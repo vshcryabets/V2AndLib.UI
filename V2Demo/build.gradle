@@ -23,4 +23,11 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }

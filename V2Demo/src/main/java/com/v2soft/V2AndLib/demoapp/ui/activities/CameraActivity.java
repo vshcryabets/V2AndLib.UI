@@ -23,10 +23,11 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.v2soft.V2AndLib.demoapp.R;
+import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoCamera2Fragment;
 import com.v2soft.V2AndLib.demoapp.ui.fragments.DemoCameraFragment;
 
 /**
- * 
+ *
  * @author vshcryabets@gmail.com
  *
  */
@@ -42,7 +43,7 @@ public class CameraActivity extends DemoBaseActivity {
 
         setContentView(R.layout.v2andlib_single_fragment);
         if ( savedInstanceState == null ) {
-            Fragment fragment = DemoCameraFragment.newInstance();
+            Fragment fragment = DemoCamera2Fragment.newInstance();
             FragmentTransaction trans = getFragmentManager().beginTransaction();
             trans.replace(R.id.v2andLibFragment, fragment);
             trans.commit();
