@@ -6,7 +6,7 @@
 
 class CJPEGDecoder {
 private:
-    jpeg_handle *mInfo;
+    jpeg_decompress *mInfo;
     my_error_mgr *mErrHandler;
     FILE* mFile;
     uint8_t *mRowBuffer;

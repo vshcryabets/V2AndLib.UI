@@ -8,7 +8,7 @@ CJPEGDecoder::CJPEGDecoder(const char* sourceFilePath, size_t maxMemCahceSize) :
         throw new JPEGException(ERR_NO_FILE);
     }
 
-    mInfo = new jpeg_handle();
+    mInfo = new jpeg_decompress();
     mErrHandler = new my_error_mgr();
     mInfo->err = jpeg_std_error(&mErrHandler->pub);
     mErrHandler->pub.error_exit = cjpeg_error_handler;
@@ -26,18 +26,8 @@ CJPEGDecoder::CJPEGDecoder(const char* sourceFilePath, size_t maxMemCahceSize) :
 
 CJPEGDecoder::~CJPEGDecoder() {
     //free resources
-    if ( mRowBuffer != NULL ) {
-        delete mRowBuffer;
-        mRowBuffer = NULL;
-    }
-    if ( mInfo != NULL ) {
-        delete mInfo;
-        mInfo = NULL;
-    }
-    if ( mErrHandler != NULL ) {
-        delete mErrHandler;
-        mErrHandler = NULL;
-    }
+    CLEAN(mRowBuffer);
+    CLEAN(mErrHandler);
     if ( mInfo != NULL ) {
         jpeg_destroy_decompress(mInfo);
         delete mInfo;

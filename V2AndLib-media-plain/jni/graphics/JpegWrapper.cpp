@@ -41,16 +41,13 @@ JNIEXPORT jint JNICALL nativeGetJPEGInfo(JNIEnv* env, jclass c, jstring jniFileN
     return rescode;
 }
 
-JNIEXPORT jint JNICALL nativeCropJPEG(JNIEnv* env, jclass c, jstring input, jintArray cropArea, jstring output) {
+JNIEXPORT jint JNICALL nativeCropJPEG(JNIEnv* env, jclass c, jstring input, jintArray cropArea, jstring output,
+    jint quality) {
     jint result = ERR_OK;
     try {
         const char* fileName = env->GetStringUTFChars(input, 0);
         CJPEGDecoder decoder(fileName, 1024*64);
         env->ReleaseStringUTFChars(input, fileName);
-
-        fileName = env->GetStringUTFChars(output, 0);
-        CJPEGEncoder encoder(fileName);
-        env->ReleaseStringUTFChars(output, fileName);
 
         // get crop area
         jsize length = env->GetArrayLength(cropArea);
@@ -81,12 +78,22 @@ JNIEXPORT jint JNICALL nativeCropJPEG(JNIEnv* env, jclass c, jstring input, jint
             return ERR_INCORRECT_GEOMETRY_PARAMETER;
         }
 
+        fileName = env->GetStringUTFChars(output, 0);
+        CJPEGEncoder encoder(fileName, tillX - fromX, tillY - fromY, quality);
+        env->ReleaseStringUTFChars(output, fileName);
+
         decoder.startDecompress();
+        encoder.startCompress();
+
         size_t currentLine = 0;
         while (currentLine < imageHeight) {
             decoder.readLine();
+            if ( (currentLine >= fromY) && (currentLine < tillY)) {
+                encoder.writeLine(decoder.getLineBuffer(), decoder.getLineBufferStride());
+            }
             currentLine++;
         }
+        encoder.finishCompress();
         decoder.finishDecompress();
 
 

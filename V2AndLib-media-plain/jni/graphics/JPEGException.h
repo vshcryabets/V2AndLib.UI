@@ -15,6 +15,7 @@ const int ERR_NO_FILE = -1018;
 const int ERR_JPEG_DECODER = -1019;
 const int ERR_CANT_CREATE_FILE = -1020;
 const int ERR_INCORRECT_GEOMETRY_PARAMETER = -1021;
+const int ERR_JPEG_ENCODER = -1022;
 
 class JPEGException : public std::exception {
 private:
