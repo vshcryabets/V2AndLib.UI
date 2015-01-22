@@ -70,11 +70,11 @@ JNIEXPORT jint JNICALL nativeCropJPEG(JNIEnv* env, jclass c, jstring input, jint
 
         int imageHeight = decoder.getHeight();
 
-        if ( fromX >= decoder.getWidth() || tillX >= decoder.getWidth() ) {
+        if ( fromX >= decoder.getWidth() || tillX > decoder.getWidth() ) {
             return ERR_INCORRECT_GEOMETRY_PARAMETER;
         }
 
-        if ( fromY >= imageHeight || tillY >= imageHeight ) {
+        if ( fromY >= imageHeight || tillY > imageHeight ) {
             return ERR_INCORRECT_GEOMETRY_PARAMETER;
         }
 
@@ -89,7 +89,8 @@ JNIEXPORT jint JNICALL nativeCropJPEG(JNIEnv* env, jclass c, jstring input, jint
         while (currentLine < imageHeight) {
             decoder.readLine();
             if ( (currentLine >= fromY) && (currentLine < tillY)) {
-                encoder.writeLine(decoder.getLineBuffer(), decoder.getLineBufferStride());
+                void *buffer = decoder.getLineBuffer();
+                encoder.writeLine(&buffer, decoder.getLineBufferStride(), 1);
             }
             currentLine++;
         }

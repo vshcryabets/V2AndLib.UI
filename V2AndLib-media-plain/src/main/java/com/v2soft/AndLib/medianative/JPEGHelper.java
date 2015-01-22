@@ -59,7 +59,7 @@ public class JPEGHelper {
     }
 
     public void crop(File file, int[] cropArea, File outfile) throws JPEGHelperException {
-        int errorCode = nativeCropJPEG(file.getAbsolutePath(), cropArea, outfile.getAbsolutePath());
+        int errorCode = nativeCropJPEG(file.getAbsolutePath(), cropArea, outfile.getAbsolutePath(), 100);
         checkErrorCode(errorCode);
     }
 
@@ -73,5 +73,5 @@ public class JPEGHelper {
     protected native String nativeGetVersion();
     protected native int nativeGetJPEGInfo(String localFilePath, JPEGOptions options);
     private native int nativeRotateJPEG(String inputPath, int ordinal, String outputPath);
-    private native int nativeCropJPEG(String input, int[] cropArea, String output);
+    private native int nativeCropJPEG(String input, int[] cropArea, String output, int jpegOutputQuality);
 }

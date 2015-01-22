@@ -13,6 +13,7 @@ public:
     virtual ~CJPEGEncoder();
     virtual void startCompress();
     virtual void finishCompress();
+    virtual void writeLine(void **rowPointers, size_t rowStride, size_t rowsCount);
 };
 
 #endif // _CJPEG_ENCODER_H_

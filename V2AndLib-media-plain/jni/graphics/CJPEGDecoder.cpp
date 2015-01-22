@@ -49,7 +49,7 @@ size_t CJPEGDecoder::getHeight() {
 
 void CJPEGDecoder::startDecompress() {
     jpeg_start_decompress(mInfo);
-    size_t row_stride = mInfo->output_width * mInfo->output_components;
+    size_t row_stride = getLineBufferStride();
     mRowBuffer = new uint8_t[row_stride];
 }
 
@@ -63,4 +63,12 @@ void CJPEGDecoder::finishDecompress() {
         delete mRowBuffer;
         mRowBuffer = NULL;
     }
+}
+
+void* CJPEGDecoder::getLineBuffer() {
+    return mRowBuffer;
+}
+
+size_t CJPEGDecoder::getLineBufferStride() {
+    return mInfo->output_width * mInfo->output_components;
 }

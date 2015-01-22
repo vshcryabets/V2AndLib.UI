@@ -92,19 +92,34 @@ public class JPEGHelperTests {
         assertEquals("Wrong width", 4096, options.mWidth);
         assertEquals("Wrong height", 4096, options.mHeight);
 
+        // black
         helper.crop(file, cropAreaTopLeft, outfile);
-
         options = helper.getImageOptions(outfile);
         assertNotNull("Options wasn't read", options);
         assertEquals("Wrong width", 10, options.mWidth);
         assertEquals("Wrong height", 10, options.mHeight);
 
+        // blue
         helper.crop(file, cropAreaBottomRight, outfile);
-
         options = helper.getImageOptions(outfile);
         assertNotNull("Options wasn't read", options);
         assertEquals("Wrong width", 20, options.mWidth);
         assertEquals("Wrong height", 20, options.mHeight);
+
+        // red
+        helper.crop(file, new int[]{4076, 0, 4096, 12}, outfile);
+        options = helper.getImageOptions(outfile);
+        assertNotNull("Options wasn't read", options);
+        assertEquals("Wrong width", 20, options.mWidth);
+        assertEquals("Wrong height", 12, options.mHeight);
+
+        // green
+        helper.crop(file, new int[]{0, 4076, 15, 4096}, outfile);
+        options = helper.getImageOptions(outfile);
+        assertNotNull("Options wasn't read", options);
+        assertEquals("Wrong width", 15, options.mWidth);
+        assertEquals("Wrong height", 20, options.mHeight);
+
 
         outfile.delete();
     }

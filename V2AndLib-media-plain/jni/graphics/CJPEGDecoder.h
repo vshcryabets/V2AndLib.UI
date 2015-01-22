@@ -19,6 +19,8 @@ public:
     virtual void startDecompress();
     virtual void readLine();
     virtual void finishDecompress();
+    virtual void* getLineBuffer();
+    virtual size_t getLineBufferStride();
 };
 
 #endif // _CJPEG_DECODER_H_

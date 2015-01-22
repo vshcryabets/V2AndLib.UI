@@ -56,3 +56,7 @@ void CJPEGEncoder::startCompress() {
 void CJPEGEncoder::finishCompress() {
     jpeg_finish_compress(mInfo);
 }
+
+void CJPEGEncoder::writeLine(void **rowPointers, size_t rowStride, size_t rowsCount) {
+    jpeg_write_scanlines(mInfo, (JSAMPARRAY)rowPointers, rowsCount);
+}
