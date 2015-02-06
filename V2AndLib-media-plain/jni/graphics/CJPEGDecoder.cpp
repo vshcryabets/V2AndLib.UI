@@ -72,3 +72,7 @@ void* CJPEGDecoder::getLineBuffer() {
 size_t CJPEGDecoder::getLineBufferStride() {
     return mInfo->output_width * mInfo->output_components;
 }
+
+size_t CJPEGDecoder::getOutputComponents() {
+    return mInfo->output_components;
+}

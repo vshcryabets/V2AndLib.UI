@@ -21,6 +21,7 @@ public:
     virtual void finishDecompress();
     virtual void* getLineBuffer();
     virtual size_t getLineBufferStride();
+    virtual size_t getOutputComponents();
 };
 
 #endif // _CJPEG_DECODER_H_

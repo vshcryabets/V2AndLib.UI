@@ -16,6 +16,7 @@
 package com.v2soft.AndLib.medianative;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 
 /**
  * JPEG routines.
@@ -58,11 +59,18 @@ public class JPEGHelper {
         checkErrorCode(errorCode);
     }
 
-    public void crop(File file, int[] cropArea, File outfile) throws JPEGHelperException {
-        int errorCode = nativeCropJPEG(file.getAbsolutePath(), cropArea, outfile.getAbsolutePath(), 100);
+    public void crop(File file, Rect cropArea, File outfile) throws JPEGHelperException {
+        int errorCode = nativeCropJPEG(file.getAbsolutePath(), cropArea.toArray(), outfile.getAbsolutePath(), 100);
         checkErrorCode(errorCode);
     }
 
+    public byte[] load(File file, Rect cropArea) {
+        return nativeLoadJPEG(file.getAbsolutePath(), cropArea.toArray());
+    }
+
+    public byte[] load(File file) {
+        return nativeLoadJPEG(file.getAbsolutePath(), null);
+    }
 
     private void checkErrorCode(int code) throws JPEGHelperException {
         if ( code != 0 ) {
@@ -74,4 +82,5 @@ public class JPEGHelper {
     protected native int nativeGetJPEGInfo(String localFilePath, JPEGOptions options);
     private native int nativeRotateJPEG(String inputPath, int ordinal, String outputPath);
     private native int nativeCropJPEG(String input, int[] cropArea, String output, int jpegOutputQuality);
+    private native byte[] nativeLoadJPEG(String input, int[] cropArea);
 }
