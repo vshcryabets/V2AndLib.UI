@@ -144,6 +144,7 @@ JNIEXPORT jbyteArray JNICALL nativeLoadJPEG(JNIEnv* env, jclass c, jstring input
 
         decoder.startDecompress();
         size_t bufferSize = (tillX-fromX)*(tillY-fromY)*decoder.getOutputComponents();
+        printf("Buffer size %lu\n", bufferSize);
         jbyte *outputBuffer = new jbyte[bufferSize];
 
         size_t currentLine = 0;
@@ -155,15 +156,16 @@ JNIEXPORT jbyteArray JNICALL nativeLoadJPEG(JNIEnv* env, jclass c, jstring input
             decoder.readLine();
             if ( (currentLine >= fromY) && (currentLine < tillY)) {
                 void *buffer = ((char*)decoder.getLineBuffer() + cropOffset);
-                memcpy(outputBuffer + outputPosition, buffer, decoder.getLineBufferStride());
-                outputPosition += decoder.getLineBufferStride();
+                printf("Buffer size %lu\n", outputPosition);
+                memcpy(outputBuffer + outputPosition, buffer, croppedLineSize);
+                outputPosition += croppedLineSize;
             }
             currentLine++;
         }
         decoder.finishDecompress();
         jbyteArray result = env->NewByteArray(bufferSize);
         env->SetByteArrayRegion (result, 0, bufferSize, outputBuffer);
-        delete outputBuffer;
+        delete [] outputBuffer;
         return result;
     } catch (JPEGException* error) {
 

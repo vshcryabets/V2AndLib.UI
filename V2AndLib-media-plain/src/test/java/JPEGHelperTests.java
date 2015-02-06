@@ -33,6 +33,26 @@ public class JPEGHelperTests {
     }
 
     @Test
+    public void testRegionLoader() throws IOException, NoSuchAlgorithmException, InterruptedException,
+            JPEGHelperException {
+        String current = AudioStreamsTests.getCurrentDir();
+        File file = new File(current + "/sample/test_pal_large.jpeg");
+        assertTrue("Can't read test_pal_large.jpeg file", file.exists());
+
+        // black
+        checkColor(file, 0xFF000000, new Rect(2036, 2036, 2046, 2046));
+
+        // blue
+        checkColor(file, 0xFF0000FF, new Rect(2046, 2046, 2056, 2056));
+
+        // red
+        checkColor(file, 0xFFFF0000, new Rect(2046, 2036, 2056, 2046));
+
+        // green
+        checkColor(file, 0xFF00FF00, new Rect(2036, 2046, 2046, 2056));
+    }
+
+    @Test
     public void testCrop() throws IOException, NoSuchAlgorithmException, InterruptedException, JPEGHelperException {
         String current = AudioStreamsTests.getCurrentDir();
         File file = new File(current + "/sample/test_pal_large.jpeg");
@@ -91,7 +111,7 @@ public class JPEGHelperTests {
         assertNotNull("Options wasn't read", options);
         assertEquals("Wrong width", 10, options.mWidth);
         assertEquals("Wrong height", 10, options.mHeight);
-        checkColor(outfile, 0xFF000000);
+        checkColor(outfile, 0xFF000000, null);
 
         // blue
         helper.crop(file, cropAreaBottomRight, outfile);
@@ -99,7 +119,7 @@ public class JPEGHelperTests {
         assertNotNull("Options wasn't read", options);
         assertEquals("Wrong width", 20, options.mWidth);
         assertEquals("Wrong height", 20, options.mHeight);
-        checkColor(outfile, 0xFF0000FF);
+        checkColor(outfile, 0xFF0000FF, null);
 
         // red
         helper.crop(file, new Rect(4076, 0, 4096, 12), outfile);
@@ -107,7 +127,7 @@ public class JPEGHelperTests {
         assertNotNull("Options wasn't read", options);
         assertEquals("Wrong width", 20, options.mWidth);
         assertEquals("Wrong height", 12, options.mHeight);
-        checkColor(outfile, 0xFFFF0000);
+        checkColor(outfile, 0xFFFF0000, null);
 
         // green
         helper.crop(file, new Rect(0, 4076, 15, 4096), outfile);
@@ -115,16 +135,15 @@ public class JPEGHelperTests {
         assertNotNull("Options wasn't read", options);
         assertEquals("Wrong width", 15, options.mWidth);
         assertEquals("Wrong height", 20, options.mHeight);
-        checkColor(outfile, 0xFF00FF00);
-
+        checkColor(outfile, 0xFF00FF00, null);
 
         outfile.delete();
     }
 
-    private void checkColor(File infile, int color) throws JPEGHelperException {
+    private void checkColor(File infile, int color, Rect region) throws JPEGHelperException {
         JPEGHelper helper = new JPEGHelper();
         JPEGOptions options = helper.getImageOptions(infile);
-        byte [] pixel = helper.load(infile);
+        byte [] pixel = helper.load(infile, region);
         int count = pixel.length;
         assertTrue("Wrong padding "+count, count % 3 == 0);
         count = count / 3;
@@ -135,9 +154,9 @@ public class JPEGHelperTests {
             int ir = color >> 16 & 0xFF;
             int ig = color >> 8 & 0xFF;
             int ib = color >> 0 & 0xFF;
-            assertTrue("Wrong r " + ir + "="+rr, Math.abs(rr-ir)<2);
-            assertTrue("Wrong g " + ig + "=" + rg, Math.abs(rg - ig) < 2);
-            assertTrue("Wrong b " + ib + "=" + rb, Math.abs(rb - ib) < 2);
+            assertTrue("Wrong r " + ir + "="+rr + " " + i, Math.abs(rr-ir)<5);
+            assertTrue("Wrong g " + ig + "=" + rg + " " + i, Math.abs(rg - ig) < 5);
+            assertTrue("Wrong b " + ib + "=" + rb + " " + i, Math.abs(rb - ib) < 5);
         }
     }
 
