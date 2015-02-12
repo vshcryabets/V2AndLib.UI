@@ -56,8 +56,7 @@ JNIEXPORT jint JNICALL nativeCropJPEG(JNIEnv* env, jclass c, jstring input, jint
         if ( length != 4 ) {
             return ERR_INCORRECT_GEOMETRY_PARAMETER;
         }
-        jboolean isCopy;
-        int *cropAreaInt= env->GetIntArrayElements(cropArea, &isCopy);
+        int *cropAreaInt= env->GetIntArrayElements(cropArea, NULL);
         int fromX = cropAreaInt[0];
         int fromY = cropAreaInt[1];
         int tillX = cropAreaInt[2];
@@ -121,8 +120,7 @@ JNIEXPORT jbyteArray JNICALL nativeLoadJPEG(JNIEnv* env, jclass c, jstring input
         int tillX = decoder.getWidth();
         int tillY = decoder.getHeight();
         if (cropArea != NULL) {
-            jboolean isCopy;
-            int *cropAreaInt= env->GetIntArrayElements(cropArea, &isCopy);
+            int *cropAreaInt= env->GetIntArrayElements(cropArea, NULL);
             fromX = cropAreaInt[0];
             fromY = cropAreaInt[1];
             tillX = cropAreaInt[2];
@@ -144,7 +142,6 @@ JNIEXPORT jbyteArray JNICALL nativeLoadJPEG(JNIEnv* env, jclass c, jstring input
 
         decoder.startDecompress();
         size_t bufferSize = (tillX-fromX)*(tillY-fromY)*decoder.getOutputComponents();
-        printf("Buffer size %lu\n", bufferSize);
         jbyte *outputBuffer = new jbyte[bufferSize];
 
         size_t currentLine = 0;
@@ -156,7 +153,6 @@ JNIEXPORT jbyteArray JNICALL nativeLoadJPEG(JNIEnv* env, jclass c, jstring input
             decoder.readLine();
             if ( (currentLine >= fromY) && (currentLine < tillY)) {
                 void *buffer = ((char*)decoder.getLineBuffer() + cropOffset);
-                printf("Buffer size %lu\n", outputPosition);
                 memcpy(outputBuffer + outputPosition, buffer, croppedLineSize);
                 outputPosition += croppedLineSize;
             }
@@ -171,4 +167,28 @@ JNIEXPORT jbyteArray JNICALL nativeLoadJPEG(JNIEnv* env, jclass c, jstring input
 
     }
     return NULL;
+}
+
+JNIEXPORT jint JNICALL nativeSaveJPEG(JNIEnv* env, jclass c, jstring output, jbyteArray data,
+    jint width, jint height, jint quality) {
+    jint result = ERR_OK;
+    try {
+        const char* fileName = env->GetStringUTFChars(output, 0);
+        CJPEGEncoder encoder(fileName, width, height, quality);
+        env->ReleaseStringUTFChars(output, fileName);
+        encoder.startCompress();
+        jbyte *inputBuffer = (jbyte *)env->GetByteArrayElements(data, NULL);
+        size_t currentLine = 0;
+        size_t croppedLineSize = width * 3;
+        while (currentLine < height) {
+            void *buffer = ((char*)inputBuffer + croppedLineSize * currentLine);
+            encoder.writeLine(&buffer, croppedLineSize, 1);
+            currentLine++;
+        }
+        env->ReleaseByteArrayElements(data, inputBuffer, JNI_ABORT);
+        encoder.finishCompress();
+    } catch (JPEGException* error) {
+        result = error->getCode();
+    }
+    return result;
 }

@@ -72,6 +72,18 @@ public class JPEGHelper {
         return nativeLoadJPEG(file.getAbsolutePath(), null);
     }
 
+    /**
+     * Save image represented by the byte array to the JPEg file.
+     * @param file
+     * @param data
+     * @param quality
+     * @throws JPEGHelperException
+     */
+    public void save(File file, byte[] data, int width, int height, int quality) throws JPEGHelperException {
+        int errorCode = nativeSaveJPEG(file.getAbsolutePath(), data, width, height, quality);
+        checkErrorCode(errorCode);
+    }
+
     private void checkErrorCode(int code) throws JPEGHelperException {
         if ( code != 0 ) {
             throw new JPEGHelperException(code);
@@ -83,4 +95,5 @@ public class JPEGHelper {
     private native int nativeRotateJPEG(String inputPath, int ordinal, String outputPath);
     private native int nativeCropJPEG(String input, int[] cropArea, String output, int jpegOutputQuality);
     private native byte[] nativeLoadJPEG(String input, int[] cropArea);
+    private native int nativeSaveJPEG(String output, byte[] data, int width, int height, int quality);
 }
