@@ -15,7 +15,7 @@ AUX_SOURCE_DIRECTORY( . SOURCES )
 include_directories(${JNI_INCLUDE_DIRS})
 
 ADD_LIBRARY( graphics SHARED ${SOURCES} )
-TARGET_LINK_LIBRARIES(graphics jpeg)
+TARGET_LINK_LIBRARIES(graphics jpeg libpng)
 
 INSTALL(TARGETS graphics DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../../../libs/host/)
 

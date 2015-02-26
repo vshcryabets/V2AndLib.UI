@@ -1,19 +1,19 @@
-#ifndef _CJPEG_DECODER_H_
-#define _CJPEG_DECODER_H_
+#ifndef _CPNG_DECODER_H_
+#define _CPNG_DECODER_H_
 
-#include "CJPEGCommon.h"
+#include "CPNGCommon.h"
 #include <stdint.h>
 
-class CJPEGDecoder {
+class CPNGDecoder {
 private:
-    jpeg_decompress *mInfo;
-    cjpeg_error_mgr *mErrHandler;
+    cpng_error_mgr *mErrHandler;
+    png_image *mInfo;
     FILE* mFile;
     uint8_t *mRowBuffer;
     size_t mMaxMemCahceSize;
 public:
-    CJPEGDecoder(const char* sourceFilePath, size_t maxMemCahceSize);
-    virtual ~CJPEGDecoder();
+    CPNGDecoder(const char* sourceFilePath, size_t maxMemCahceSize);
+    virtual ~CPNGDecoder();
     virtual size_t getWidth();
     virtual size_t getHeight();
     virtual void startDecompress();

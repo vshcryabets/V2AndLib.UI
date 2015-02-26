@@ -9,7 +9,7 @@ CJPEGDecoder::CJPEGDecoder(const char* sourceFilePath, size_t maxMemCahceSize) :
     }
 
     mInfo = new jpeg_decompress();
-    mErrHandler = new my_error_mgr();
+    mErrHandler = new cjpeg_error_mgr();
     mInfo->err = jpeg_std_error(&mErrHandler->pub);
     mErrHandler->pub.error_exit = cjpeg_error_handler;
     if (setjmp(mErrHandler->setjmp_buffer)) {

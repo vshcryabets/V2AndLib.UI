@@ -10,7 +10,7 @@
 typedef struct jpeg_decompress_struct jpeg_decompress;
 typedef struct jpeg_compress_struct jpeg_compress;
 
-struct my_error_mgr {
+struct cjpeg_error_mgr {
     struct jpeg_error_mgr pub;
     jmp_buf setjmp_buffer;
 };

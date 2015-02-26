@@ -8,12 +8,6 @@
 #include <string.h>
 #include <stdint.h>
 
-METHODDEF(void) my_error_exit(j_common_ptr cinfo) {
-    my_error_mgr* myerr = (my_error_mgr*) cinfo->err;
-    (*cinfo->err->output_message)(cinfo);
-    longjmp(myerr->setjmp_buffer, 1);
-}
-
 JNIEXPORT jstring JNICALL nativeGetVersion(JNIEnv * env, jclass c) {
     return env->NewStringUTF("9.0");
 }

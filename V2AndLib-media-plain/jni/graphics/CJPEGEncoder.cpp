@@ -2,7 +2,7 @@
 #include "JPEGException.h"
 
 void cjpeg_error_handler(j_common_ptr cinfo) {
-    my_error_mgr* myerr = (my_error_mgr*) cinfo->err;
+    cjpeg_error_mgr* myerr = (cjpeg_error_mgr*) cinfo->err;
     (*cinfo->err->output_message)(cinfo);
     longjmp(myerr->setjmp_buffer, 1);
 }
@@ -14,7 +14,7 @@ CJPEGEncoder::CJPEGEncoder(const char* sourceFilePath, size_t width, size_t heig
     }
 
     mInfo = new jpeg_compress();
-    mErrHandler = new my_error_mgr();
+    mErrHandler = new cjpeg_error_mgr();
     mInfo->err = jpeg_std_error(&mErrHandler->pub);
     mErrHandler->pub.error_exit = cjpeg_error_handler;
     if (setjmp(mErrHandler->setjmp_buffer)) {

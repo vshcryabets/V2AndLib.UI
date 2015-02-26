@@ -65,7 +65,7 @@ public class JPEGHelper {
     }
 
     public byte[] load(File file, Rect cropArea) {
-        return nativeLoadJPEG(file.getAbsolutePath(), cropArea.toArray());
+        return nativeLoadJPEG(file.getAbsolutePath(), (cropArea == null ? null : cropArea.toArray()));
     }
 
     public byte[] load(File file) {
