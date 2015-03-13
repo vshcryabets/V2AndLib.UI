@@ -12,20 +12,6 @@ android {
     lintOptions {
         abortOnError false
     }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            res.srcDirs = ['res']
-//            jni.srcDirs = []
-//            jniLibs.srcDirs = ['ndk-libs']
-        }
-        androidTest {
-            java.srcDirs = ['instrumentTest/java']
-        }
-    }
 }
 
 task nativeLibsToJar(
