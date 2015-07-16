@@ -16,6 +16,7 @@
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
 import android.app.Fragment;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.v2soft.AndLib.media.CustomizableMediaPlayer;
 import com.v2soft.AndLib.media.CustomizableMediaPlayerListener;
@@ -61,10 +63,10 @@ public class AudioStreamClientFragment
         switch (v.getId()) {
             case R.id.btnStartPlay:
                 mPlayer = new CustomizableMediaPlayer(getActivity(), new Handler());
+                mPlayer.setPreparedListener(mPrepareListener);
+//                mPlayer.setPositionListener(mPositionListener);
                 try {
-                    mPlayer.setSourceUri(Uri.parse("http://142.4.200.46:8000/Trance3"), false);
-                    mPlayer.play();
-//                    mPlayer.setPositionListener(mPositionListener);
+                    mPlayer.setSourceUri(Uri.parse("http://86.125.234.138:8000"), true);
                 } catch (Exception e) {
                     showError(e.toString());
                 }
@@ -120,4 +122,16 @@ public class AudioStreamClientFragment
 
         }
     };
+
+    private MediaPlayer.OnPreparedListener mPrepareListener = new MediaPlayer.OnPreparedListener() {
+        @Override
+        public void onPrepared(MediaPlayer mediaPlayer) {
+            try {
+                mPlayer.play();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 }

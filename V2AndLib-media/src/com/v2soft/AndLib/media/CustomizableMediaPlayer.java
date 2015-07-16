@@ -165,12 +165,12 @@ public class CustomizableMediaPlayer
     public synchronized void setSourceUri(URI uri, boolean preareAsync) throws IOException {
         setSourceUri(Uri.parse(uri.toString()), preareAsync);
     }
-    public synchronized void setSourceUri(Uri uri, boolean preareAsync) throws IOException {
+    public synchronized void setSourceUri(Uri uri, boolean prepareAsync) throws IOException {
         freePlayer();
         mMediaPlayer = prepareMediaPlayerObject();
         mMediaPlayer.setDataSource(mContext, uri);
         setState(PlayerState.PL_UNPREPARED);
-        prepare(preareAsync);
+        prepare(prepareAsync);
     }
 
     protected MediaPlayer prepareMediaPlayerObject() {
@@ -183,7 +183,7 @@ public class CustomizableMediaPlayer
         return result;
     }
 
-    public synchronized void play() throws Exception {
+    public synchronized void play() throws IOException {
         switch ( mState ) {
             case PL_UNPREPARED:
             case PL_STOPED:
