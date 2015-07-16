@@ -18,10 +18,12 @@ package com.v2soft.AndLib.ui.dialogs;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.TextView;
@@ -37,7 +39,8 @@ public class TimePickerDialogFragment extends DialogFragment {
     private static final String KEY_DATE = "date";
     private static final String KEY_24 = "24format";
     private static final String KEY_TITLE = "title";
-    
+    public static final String EXTRA_TIME = "time";
+
     public static TimePickerDialogFragment newInstance(Date date, boolean use24hFormat, String title) {
         final TimePickerDialogFragment res = new TimePickerDialogFragment();
         final Bundle params = new Bundle();
@@ -78,7 +81,9 @@ public class TimePickerDialogFragment extends DialogFragment {
             Fragment fragment = getTargetFragment();
             if ( fragment != null && (fragment instanceof BaseFragment) ) {
                 BaseFragment<?,?> target = (BaseFragment<?,?>) fragment;
-                target.onFragmentResult(cl.getTime(), getTargetRequestCode());
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_TIME, cl.getTime().getTime());
+                target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
             }
             dismiss();
         }

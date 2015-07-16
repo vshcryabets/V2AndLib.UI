@@ -1,4 +1,4 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 version='1.2.1'
 
@@ -7,7 +7,7 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1.0"
     compileSdkVersion 19
     lintOptions {
         abortOnError false

@@ -26,7 +26,7 @@ import java.security.NoSuchAlgorithmException;
  * @author Vladimir Shcryabets <vshcryabets@gmail.com>
  */
 public class FileCache {
-	public interface NameFactory {
+    public interface NameFactory {
 		/**
 		 * Return apropriate local name for specified resource.
 		 * @param resource
@@ -96,7 +96,15 @@ public class FileCache {
 		return new File(mCacheFolder, mNameFactory.getLocalName(uri.toString())).getAbsolutePath();
 	}
 
-	public static class Builder {
+    /**
+     * Get cache folder file object.
+     * @return cache folder file object.
+     */
+    public File getCacheFolder() {
+        return mCacheFolder;
+    }
+
+    public static class Builder {
 		protected NameFactory mNameFactory;
 		protected File mCacheFolder;
 

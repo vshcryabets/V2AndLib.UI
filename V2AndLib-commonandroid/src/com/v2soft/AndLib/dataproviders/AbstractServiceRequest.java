@@ -17,6 +17,7 @@ package com.v2soft.AndLib.dataproviders;
 
 import java.io.Serializable;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
@@ -54,7 +55,7 @@ public abstract class AbstractServiceRequest<ResultType extends Serializable, Pa
         Intent intent = new Intent(mContext, getServiceClass());
         intent.setAction(getServiceAction());
         intent.putExtra(EXTRA_TASK, this);
-        mContext.startService(intent);
+        ComponentName name = mContext.startService(intent);
     }
 
     public void setContext(Context context) {

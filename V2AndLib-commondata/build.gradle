@@ -1,7 +1,7 @@
 apply plugin: 'java'
+apply plugin: 'maven'
 
-sourceCompatibility = 1.6
-version = '1.1.2'
+version = '1.1.4'
 jar {
     manifest {
         attributes 'Implementation-Title': 'V2AndLib-commondata', 'Implementation-Version': version
@@ -29,5 +29,13 @@ test {
     testLogging {
         // Show that tests are run in the command-line output
         events 'passed'
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://${projectDir}/../myRepo/")
+        }
     }
 }
