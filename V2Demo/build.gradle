@@ -18,8 +18,8 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "19.1.0"
-    compileSdkVersion 19
+    buildToolsVersion "21.1.2"
+    compileSdkVersion 21
     lintOptions {
         abortOnError false
     }
