@@ -4,20 +4,15 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 
 allprojects {
     group = 'com.v2soft.AndLib'
     version = '1.2.5'
-    sourceCompatibility = 1.6
 
     repositories {
         mavenCentral()
-    }
-
-    tasks.withType(Compile) {
-        options.encoding = "UTF-8"
     }
 }

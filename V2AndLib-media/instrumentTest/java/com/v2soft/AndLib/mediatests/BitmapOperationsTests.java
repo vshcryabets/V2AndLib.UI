@@ -1,4 +1,4 @@
-package com.v2soft.AndLib.ui.demotest;
+package com.v2soft.AndLib.mediatests;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
