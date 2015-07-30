@@ -78,7 +78,7 @@ implements OnClickListener {
      * Start new fragment in specified container view with custom animations
      * @param resId container view resource ID
      * @param fragment new fragment object
-     * @param addToStack
+     * @param addToStack pass true if you want to add this transaction to backstack
      * @param stackTag
      * @param inAnimation animation resources to run for the fragments that are entering
      * @param outAnimation animation resources to run for the fragments that are exiting
@@ -98,6 +98,19 @@ implements OnClickListener {
         }
         ft.commit();
     }
+
+    /**
+     * Start new fragment in specified container view with custom animations
+     * @param resId container view resource ID
+     * @param fragment new fragment object
+     * @param addToStack pass true if you want to add this transaction to backstack
+     * @param stackTag
+     */
+    protected void startFragment(int resId, Fragment fragment,
+                                 boolean addToStack, String stackTag) {
+        this.startFragment(resId, fragment, addToStack, stackTag, 0, 0, 0, 0);
+    }
+
     /**
      * Handle result that was returned from sub-fragment
      * @param data

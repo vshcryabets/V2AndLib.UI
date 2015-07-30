@@ -17,6 +17,7 @@ package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import com.v2soft.AndLib.ui.fragments.BaseFragment;
 import com.v2soft.V2AndLib.demoapp.DemoAppSettings;
 import com.v2soft.V2AndLib.demoapp.DemoApplication;
 import com.v2soft.V2AndLib.demoapp.R;
+import com.v2soft.V2AndLib.demoapp.V2DemoActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.BluetoothList;
 import com.v2soft.V2AndLib.demoapp.ui.activities.CameraActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DialogsActivity;
@@ -68,7 +70,9 @@ public class SamplesList
 			SynchronizationFragment.class,
 			OpenHelpersFragment.class,
             AudioStreamClientFragment.class,
-            BackgroundTasksFragment.class
+            BackgroundTasksFragment.class,
+			MediaRoutingFragment.class,
+//			WallpaperServiceFragment.class
 	};
 	private static final String TAG = SamplesList.class.getSimpleName();
 
@@ -111,17 +115,35 @@ public class SamplesList
 		} else {
 			if ( clazz.equals(SynchronizationFragment.class)) {
 				startFragment(R.id.content, SynchronizationFragment.newInstance(),
-						true, TAG, 0, 0, 0, 0);
+						true, TAG);
 			} else if ( clazz.equals(OpenHelpersFragment.class)) {
 				startFragment(R.id.content, OpenHelpersFragment.newInstance(),
-						true, TAG, 0, 0, 0, 0);
+						true, TAG);
 			} else if ( clazz.equals(AudioStreamClientFragment.class)) {
                 startFragment(R.id.content, AudioStreamClientFragment.newInstance(),
-                        true, TAG, 0, 0, 0, 0);
+                        true, TAG);
             } else if ( clazz.equals(BackgroundTasksFragment.class)) {
                 startFragment(R.id.content, BackgroundTasksFragment.newInstance(),
-                        true, TAG, 0, 0, 0, 0);
-            }
+                        true, TAG);
+			} else if ( clazz.equals(MediaRoutingFragment.class)) {
+				startFragment(R.id.content, MediaRoutingFragment.newInstance(),
+						true, TAG);
+			}
+//			else if ( clazz.equals(WallpaperServiceFragment.class)) {
+//				startFragment(R.id.content, WallpaperServiceFragment.newInstance(),
+//						true, TAG);
+//            }
 		}
 	}
+//
+//	protected void startSupportFragment(int resId, android.support.v4.app.Fragment fragment,
+//								 boolean addToStack, String stackTag) {
+//		final android.support.v4.app.FragmentTransaction ft = ((V2DemoActivity)getActivity())
+//				.getSupportFragmentManager().beginTransaction();
+//		ft.replace(resId, fragment);
+//		if ( addToStack ) {
+//			ft.addToBackStack(stackTag);
+//		}
+//		ft.commit();
+//	}
 }

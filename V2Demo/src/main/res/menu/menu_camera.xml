@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/menu_take_photo"
-        android:title="@string/menu_take_photo"
-        android:showAsAction="always"/>
+        android:showAsAction="always"
+        android:title="@string/menu_take_photo" />
 
-        <item
+    <item
         android:id="@+id/menu_take_video"
-        android:title="@string/menu_take_video"
-        android:showAsAction="always"/>
-    
+        android:showAsAction="always"
+        android:title="@string/menu_take_video" />
+
 </menu>

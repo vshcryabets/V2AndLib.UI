@@ -15,6 +15,10 @@ dependencies {
     compile project(":V2AndLib-depredecated")
     compile project(":V2AndLib-sketches")
     compile files('libs/native-libs.jar')
+
+    compile 'com.android.support:support-v13:22.1.1'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:mediarouter-v7:22.1.1'
 }
 
 android {

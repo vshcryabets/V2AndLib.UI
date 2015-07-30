@@ -44,5 +44,6 @@
     <string name="hint_type_duration_of_task">Type duration of single task (in seconds)</string>
     <string name="button_cancel_all">Cancel All</string>
     <string name="button_start_execution">Start</string>
+    <string name="media_route_menu_title">Media Route</string>
 
 </resources>

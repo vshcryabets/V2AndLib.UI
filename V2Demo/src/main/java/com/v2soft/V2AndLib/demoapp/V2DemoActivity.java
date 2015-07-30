@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2014 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2015 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.v2soft.V2AndLib.demoapp;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.v2soft.V2AndLib.demoapp.ui.fragments.SamplesList;
 
@@ -26,7 +27,7 @@ import com.v2soft.V2AndLib.demoapp.ui.fragments.SamplesList;
  * @author vshcryabets@gmail.com
  *
  */
-public class V2DemoActivity extends Activity {
+public class V2DemoActivity extends FragmentActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
