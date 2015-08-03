@@ -8,7 +8,6 @@ repositories {
 }
 
 dependencies {
-    compile 'ch.acra:acra:4.5.0'
     compile 'com.facebook:facebook-android-sdk:3.5.2@aar'
     compile project(":V2AndLib-networking")
     compile project(":V2AndLib-media")
@@ -16,9 +15,9 @@ dependencies {
     compile project(":V2AndLib-sketches")
     compile files('libs/native-libs.jar')
 
-    compile 'com.android.support:support-v13:22.1.1'
+    compile 'com.android.support:support-v13:22.2.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:mediarouter-v7:22.1.1'
+    compile 'com.android.support:mediarouter-v7:22.2.1'
 }
 
 android {
@@ -26,6 +25,11 @@ android {
     compileSdkVersion 21
     lintOptions {
         abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     sourceSets {

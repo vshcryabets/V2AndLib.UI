@@ -15,9 +15,14 @@
  */
 package com.v2soft.V2AndLib.demoapp.ui.fragments;
 
-import android.app.Fragment;
-import android.app.MediaRouteActionProvider;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.MediaRouteActionProvider;
+import android.support.v7.media.MediaControlIntent;
+import android.support.v7.media.MediaRouteSelector;
+import android.support.v7.media.MediaRouter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,24 +30,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.v2soft.V2AndLib.demoapp.R;
 
 /**
- * Wallpaper service usage sample.
+ * Media Router usage sample.
  * @author vshcryabets@gmail.com
  *
  */
 public class MediaRoutingFragment
 		extends Fragment {
 
-    public static Fragment newInstance() {
+	private static final String TAG = MediaRoutingFragment.class.getSimpleName();
+	private MediaRouter mMediaRouter;
+	private MediaRouteSelector mSelector;
+
+
+	public static Fragment newInstance() {
 		return new MediaRoutingFragment();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout view = new LinearLayout(getActivity());
+		mMediaRouter = MediaRouter.getInstance(getActivity());
+		mSelector =	new MediaRouteSelector.Builder()
+                .addControlCategory(MediaControlIntent.CATEGORY_LIVE_AUDIO)
+                .addControlCategory(MediaControlIntent.CATEGORY_LIVE_VIDEO)
+                .addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK)
+                .build();
 		return view;
 	}
 
@@ -57,17 +74,40 @@ public class MediaRoutingFragment
         inflater.inflate(R.menu.menu_mediarouter, menu);
 
 		MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
-		MediaRouteActionProvider mediaRouteActionProvider =
-				(MediaRouteActionProvider)mediaRouteMenuItem.getActionProvider();
-		mediaRouteActionProvider.setRouteTypes(
-				android.media.MediaRouter.ROUTE_TYPE_LIVE_AUDIO
-						| android.media.MediaRouter.ROUTE_TYPE_LIVE_VIDEO
-						| android.media.MediaRouter.ROUTE_TYPE_USER);
-
+		MediaRouteActionProvider provider =
+				(MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
+		provider.setRouteSelector(mSelector);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    /**
+	@Override
+	public void onResume() {
+		super.onResume();
+		mMediaRouter.addCallback(mSelector, mMediaRouterCallback,
+				MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+        mMediaRouter.removeCallback(mMediaRouterCallback);
+	}
+
+	private MediaRouter.Callback mMediaRouterCallback = new MediaRouter.Callback() {
+		@Override
+		public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route) {
+			super.onRouteSelected(router, route);
+			Log.d(TAG, "Connected to " + route.getName());
+			Toast.makeText(getActivity().getApplicationContext(), "Connected to " + route.getName(), Toast.LENGTH_LONG).show();
+		}
+
+		@Override
+		public void onRouteUnselected(MediaRouter router, MediaRouter.RouteInfo route) {
+			super.onRouteUnselected(router, route);
+		}
+	};
+
+	/**
 	 * Return sample display name
 	 * @return
 	 */

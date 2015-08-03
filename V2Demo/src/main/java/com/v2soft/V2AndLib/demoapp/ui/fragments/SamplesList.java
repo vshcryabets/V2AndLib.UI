@@ -38,6 +38,7 @@ import com.v2soft.V2AndLib.demoapp.ui.activities.CameraActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.DialogsActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.EndlessListActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.GCPDemo;
+import com.v2soft.V2AndLib.demoapp.ui.activities.MediaRouterActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.NavigationDrawerActivity;
 import com.v2soft.V2AndLib.demoapp.ui.activities.OpenSLSample;
 import com.v2soft.V2AndLib.demoapp.ui.activities.TricksActivity;
@@ -71,7 +72,7 @@ public class SamplesList
 			OpenHelpersFragment.class,
             AudioStreamClientFragment.class,
             BackgroundTasksFragment.class,
-			MediaRoutingFragment.class,
+			MediaRouterActivity.class,
 //			WallpaperServiceFragment.class
 	};
 	private static final String TAG = SamplesList.class.getSimpleName();
@@ -125,9 +126,6 @@ public class SamplesList
             } else if ( clazz.equals(BackgroundTasksFragment.class)) {
                 startFragment(R.id.content, BackgroundTasksFragment.newInstance(),
                         true, TAG);
-			} else if ( clazz.equals(MediaRoutingFragment.class)) {
-				startFragment(R.id.content, MediaRoutingFragment.newInstance(),
-						true, TAG);
 			}
 //			else if ( clazz.equals(WallpaperServiceFragment.class)) {
 //				startFragment(R.id.content, WallpaperServiceFragment.newInstance(),
@@ -135,15 +133,4 @@ public class SamplesList
 //            }
 		}
 	}
-//
-//	protected void startSupportFragment(int resId, android.support.v4.app.Fragment fragment,
-//								 boolean addToStack, String stackTag) {
-//		final android.support.v4.app.FragmentTransaction ft = ((V2DemoActivity)getActivity())
-//				.getSupportFragmentManager().beginTransaction();
-//		ft.replace(resId, fragment);
-//		if ( addToStack ) {
-//			ft.addToBackStack(stackTag);
-//		}
-//		ft.commit();
-//	}
 }

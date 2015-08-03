@@ -56,6 +56,8 @@
         <activity android:name=".ui.activities.WiFiList" />
         <activity android:name=".ui.activities.TricksActivity" />
         <activity android:name=".ui.activities.NavigationDrawerActivity" />
+        <activity android:name=".ui.activities.MediaRouterActivity"
+            android:theme="@style/Theme.AppCompat.Light"/>
 
         <service
             android:name=".services.SyncService"
