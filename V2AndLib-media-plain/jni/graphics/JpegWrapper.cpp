@@ -102,7 +102,6 @@ JNIEXPORT jint JNICALL nativeCropJPEG(JNIEnv* env, jclass c, jstring input, jint
 }
 
 JNIEXPORT jbyteArray JNICALL nativeLoadJPEG(JNIEnv* env, jclass c, jstring input, jintArray cropArea) {
-    jint result = ERR_OK;
     try {
         const char* fileName = env->GetStringUTFChars(input, 0);
         CJPEGDecoder decoder(fileName, 1024*64);

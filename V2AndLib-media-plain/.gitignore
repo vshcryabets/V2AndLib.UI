@@ -1,3 +1,8 @@
 obj/
 *.raw
-
+jni/out/
+CMakeFiles
+install_manifest.txt
+cmake_install.cmake
+Makefile
+CMakeCache.txt

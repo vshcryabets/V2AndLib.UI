@@ -8,11 +8,10 @@ const JNINativeMethod method_jpeghelper_table[] = {
   { "nativeCropJPEG", "(Ljava/lang/String;[ILjava/lang/String;I)I", (void*) nativeCropJPEG},
   { "nativeLoadJPEG", "(Ljava/lang/String;[I)[B", (void*) nativeLoadJPEG},
   { "nativeSaveJPEG", "(Ljava/lang/String;[BIII)I", (void*) nativeSaveJPEG},
+  { "nativeLoadPNG", "(Ljava/lang/String;[I)[B", (void*) nativeLoadPNG},
 };
 
 static int method_jpeghelper_table_size = sizeof(method_jpeghelper_table) / sizeof(method_jpeghelper_table[0]);
-
-
 
 __attribute__((constructor)) static void onDlOpen(void) {
 }

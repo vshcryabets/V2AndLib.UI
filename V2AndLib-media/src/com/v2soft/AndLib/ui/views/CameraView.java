@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2013 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2011-2014 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.v2soft.AndLib.ui.views;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -33,16 +34,27 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class CameraView extends SurfaceView implements PictureCallback
-{    
+import com.v2soft.AndLib.media.DefaultCameraInitializer;
+
+/**
+ * Camera view.
+ *
+ * @author V.Shcryabets (vshcryabets@gmail.com)
+ */
+public class CameraView extends SurfaceView {
+    public interface Initialize {
+        boolean enableShutterSound();
+        Camera getCamera();
+        int getCameraId();
+        public CamcorderProfile initCameraProfile(Camera camera, int width, int height);
+        public CamcorderProfile getProfile();
+    }
     private static final String LOG_TAG = CameraView.class.getSimpleName();
-    private String out_file_name = null;
     private Camera mCamera;
     private SurfaceHolder mPreviewHolder;
     private boolean isPreviewRunning = false;
-    private OnClickListener listener = null;
     private MediaRecorder mRecorder;
-    private int mCameraId = Integer.MIN_VALUE;
+    protected Initialize mInitializer;
 
     public CameraView(Context context) {
         this(context,null);
@@ -50,7 +62,6 @@ public class CameraView extends SurfaceView implements PictureCallback
     public CameraView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-    @SuppressWarnings("deprecation")
     public CameraView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mPreviewHolder = getHolder();
@@ -58,6 +69,11 @@ public class CameraView extends SurfaceView implements PictureCallback
             mPreviewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         }
         mPreviewHolder.addCallback(mSurfaceHolderListener);
+        mInitializer = new DefaultCameraInitializer();
+    }
+
+    public void setInitialize(Initialize inititalizer) {
+        mInitializer = inititalizer;
     }
 
     /**
@@ -68,130 +84,131 @@ public class CameraView extends SurfaceView implements PictureCallback
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    public void setOnClickListener(OnClickListener listener) {
-        this.listener = listener;
-    }
-
-    SurfaceHolder.Callback mSurfaceHolderListener;
-
-    {
-        mSurfaceHolderListener = new SurfaceHolder.Callback() {
-            public void surfaceCreated(SurfaceHolder holder) {
-                try {
-                    if (mCameraId < 0) {
-                        // lookup for Back Facing camera
-                        mCameraId = getCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
-                    }
-                    mCamera = Camera.open(mCameraId);
-                    mCamera.setPreviewDisplay(mPreviewHolder);
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, e.toString(), e);
-                }
-            }
-
-            public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                                       int height) {
-                try {
-                    if (isPreviewRunning) {
-                        mCamera.stopPreview();
-                    }
-                    Parameters params = mCamera.getParameters();
-                    params.setPreviewSize(width, height);
-                    params.setPictureFormat(ImageFormat.JPEG);
-
-                    mCamera.setParameters(params);
-                    mCamera.setPreviewDisplay(mPreviewHolder);
-                    mCamera.startPreview();
-                    isPreviewRunning = true;
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, e.toString(), e);
-                }
-            }
-
-            public void surfaceDestroyed(SurfaceHolder arg0) {
-                if (mCamera != null) {
-                    mCamera.stopPreview();
-                    mCamera.release();
-                    mCamera = null;
-                }
-                isPreviewRunning = false;
-            }
-        };
-    }
-
-    private int getCameraId(int cameraType) {
-        int numberOfCameras = mCamera.getNumberOfCameras();
-        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        for (int i = 0; i < numberOfCameras; i++) {
-            mCamera.getCameraInfo(i, cameraInfo);
-            if (cameraInfo.facing == cameraType) {
-                return i;
+    protected SurfaceHolder.Callback mSurfaceHolderListener = new SurfaceHolder.Callback() {
+        public void surfaceCreated(SurfaceHolder holder) {
+            try {
+                mCamera = mInitializer.getCamera();
+                mCamera.setPreviewDisplay(mPreviewHolder);
+            } catch (Exception e) {
+                Log.e(LOG_TAG, e.toString(), e);
             }
         }
-        return Integer.MIN_VALUE;
+
+        public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                                   int height) {
+            try {
+                if (isPreviewRunning) {
+                    mCamera.stopPreview();
+                }
+                mInitializer.initCameraProfile(mCamera, width, height);
+
+//                mCamera.setPreviewTexture(m);
+                mCamera.setPreviewDisplay(mPreviewHolder);
+                mCamera.startPreview();
+                isPreviewRunning = true;
+            } catch (Exception e) {
+                Log.e(LOG_TAG, e.toString(), e);
+                // TODO do something!!!
+            }
+        }
+
+        public void surfaceDestroyed(SurfaceHolder arg0) {
+            if (mCamera != null) {
+                mCamera.stopPreview();
+                mCamera.release();
+                mCamera = null;
+            }
+            isPreviewRunning = false;
+        }
+    };
+
+    /**
+     * Take photo.
+     * @param path path to output photo file.
+     */
+    public void takePhoto(File path) {
+        takePhoto(new DefaultPhotoHandler(getContext(), path, mCamera));
+    }
+    /**
+     * Take photo.
+     * @param callback picture handler.
+     */
+    public void takePhoto(PictureCallback callback) {
+        takePhoto(false, false, callback);
     }
 
-    public void takePicture(String path, boolean portrait, boolean flash_disable ) {
+    /**
+     * Take photo.
+     * @param portrait
+     * @param flash_disable
+     * @param callback
+     */
+    public void takePhoto(boolean portrait, boolean flash_disable, PictureCallback callback) {
         if ( mCamera == null ) {
             return;
         }
-        out_file_name = path;
         Parameters parameters =  mCamera.getParameters();
         parameters.setPictureFormat(ImageFormat.JPEG);
-        if ( portrait )
-        {
+        if ( portrait ) {
             parameters.set("rotation", 90);
         }
         if ( flash_disable )
             parameters.set("flash-mode", "off");
         mCamera.setParameters(parameters);
-        mCamera.takePicture(null,null,this);
+        mCamera.takePicture(null, null, callback);
     }
 
-    public void onPictureTaken(byte[] data, Camera camera) 
-    {
-        if ( data == null) return;
-        if ( out_file_name == null ) return;
-        FileOutputStream out = null;
-        try 
-        {
-            out = new FileOutputStream(out_file_name);
-            out.write(data);
-            // register in MediaStore
-            MediaStore.Images.Media.insertImage(
-                    getContext().getContentResolver(), 
-                    out_file_name, null, null);
+    public Camera getCamera() {
+        return mCamera;
+    }
 
-            if ( listener!=null )
-                listener.onClick(this);
-        } catch (Exception e) 
-        {
-            Log.e(LOG_TAG, e.toString(), e);
+    public static class DefaultPhotoHandler implements PictureCallback {
+        protected File mOutputFilePath;
+        protected Context mContext;
+        protected Camera mCamera;
+
+        public DefaultPhotoHandler(Context context, File outputPath, Camera camera) {
+            mOutputFilePath = outputPath;
+            mContext = context;
+            mCamera = camera;
         }
-        finally
-        {
-            if ( out != null )
-                try {out.close();}catch (IOException e){}
-            if ( isPreviewRunning )
+
+        public void onPictureTaken(byte[] data, Camera camera) {
+            if ( data == null) return;
+            if ( mOutputFilePath == null ) return;
+            FileOutputStream out = null;
+            try
+            {
+                out = new FileOutputStream(mOutputFilePath);
+                out.write(data);
+                // register in MediaStore
+                MediaStore.Images.Media.insertImage(
+                        mContext.getContentResolver(),
+                        mOutputFilePath.getAbsolutePath(),
+                        null, null);
+            } catch (Exception e) {
+                Log.e(LOG_TAG, e.toString(), e);
+            } finally {
+                if ( out != null )
+                    try {out.close();}catch (IOException e){}
+                // restart preview
                 mCamera.stopPreview();
-            mCamera.startPreview();
+                mCamera.startPreview();
+            }
         }
     }
 
-    public String getFileName() 
-    {
-        return out_file_name;
-    }
-    
     /**
      * Start video recording to specified file.
      * @throws IOException 
-     * @throws IllegalStateException 
-     * 
+     *
      */
-    public synchronized void startVideoRecording(String outputFilePath, int quality) throws IllegalStateException, IOException {
+    public synchronized void startVideoRecorder(File outputFile) throws IOException {
         if ( mCamera == null ) {
             throw new IllegalStateException("Camera wasn't initialized");
+        }
+        if ( outputFile == null ) {
+            throw new IllegalStateException("Output file is null");
         }
         mCamera.unlock();
         mRecorder = new MediaRecorder();
@@ -208,8 +225,8 @@ public class CameraView extends SurfaceView implements PictureCallback
          *     Prepare MediaRecorder - Prepare the MediaRecorder with provided configuration settings by calling MediaRecorder.prepare().
          *     Start MediaRecorder - Start recording video by calling MediaRecorder.start().
          */
-        mRecorder.setProfile(CamcorderProfile.get(mCameraId, quality));
-        mRecorder.setOutputFile(outputFilePath);
+        mRecorder.setProfile( mInitializer.getProfile() );
+        mRecorder.setOutputFile(outputFile.getAbsolutePath());
         mRecorder.setPreviewDisplay(mPreviewHolder.getSurface());
         mRecorder.prepare();
         mRecorder.start();
@@ -233,9 +250,5 @@ public class CameraView extends SurfaceView implements PictureCallback
      */
     public synchronized boolean isRecording() {
         return mRecorder != null;
-    }
-
-    public void getSupportedVideoProfiles() {
-//        mCamera.
     }
 }

@@ -15,8 +15,15 @@
   <version>1.2.4</version>
   <packaging>apklib</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.v2soft.AndLib</groupId>
+      <artifactId>commonandroid</artifactId>
+      <version>1.2.4</version>
+    </dependency>
+  </dependencies>
+  
   <build>
-
     <plugins>
       <plugin>
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
