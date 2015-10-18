@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 V.Shcryabets (vshcryabets@gmail.com)
+ * Copyright (C) 2012-2015 V.Shcryabets (vshcryabets@gmail.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,14 @@ public abstract class CustomizableRecorder {
         SIGNED_16BPS, SIGNED_8BPS
     };
 
-    public static final int SUPPORTED_FRAMERATES[] = {44100, 22050, 16000, 11025, 8000};
+    public static final int PCM_FRAME_RATE_44100 = 44100;
+    public static final int PCM_FRAME_RATE_22050 = 22050;
+    public static final int PCM_FRAME_RATE_16000 = 16000;
+    public static final int PCM_FRAME_RATE_11025 = 11025;
+    public static final int PCM_FRAME_RATE_8000 = 8000;
+
+    public static final int SUPPORTED_FRAMERATES[] = {PCM_FRAME_RATE_44100, PCM_FRAME_RATE_22050,
+            PCM_FRAME_RATE_16000, PCM_FRAME_RATE_11025, PCM_FRAME_RATE_8000};
     private static final String LOG_TAG = CustomizableRecorder.class.getSimpleName();
 
     private AudioRecord mRecorder;

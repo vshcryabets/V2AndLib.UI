@@ -1,6 +1,5 @@
 apply plugin: 'java'
 
-sourceCompatibility = 1.6
 version = '1.2.5'
 jar {
     manifest {
@@ -21,18 +20,6 @@ test {
         events 'passed'
     }
 }
-
-//apply plugin: 'cpp'
-//sources {
-//    main {
-//        cpp {
-//            source {
-//                srcDir "jni/audiostreams"
-//                include "**/*.cpp"
-//            }
-//        }
-//    }
-//}
 
 // Task to run cmake
 task ndkBuild(type: Exec) {

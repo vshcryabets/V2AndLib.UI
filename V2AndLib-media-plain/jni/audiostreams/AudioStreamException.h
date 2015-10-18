@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <exception>
 
+#ifdef ANDROID
+    #define _NOEXCEPT throw()
+#endif
+
 namespace AudioHelpers {
 class AudioStreamException : public std::exception {
 private:
