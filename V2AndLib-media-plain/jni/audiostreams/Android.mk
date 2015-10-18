@@ -4,9 +4,9 @@ LOCAL_MODULE := audiostreams
 
 LOCAL_SRC_FILES := FileInputStream.cpp MP3DecoderStream.cpp AudioStreamException.cpp \
     Wrapper.cpp EncoderWrapper.cpp DecoderWrapper.cpp \
-    MP3EncoderStream.cpp
+    MP3EncoderStream.cpp OpenSLRecorder.cpp
 
-LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog
+LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog -lOpenSLES
 LOCAL_STATIC_LIBRARIES := mpg123 lame
 
 include $(BUILD_SHARED_LIBRARY)
