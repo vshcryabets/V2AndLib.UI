@@ -23,7 +23,7 @@ public class JPEGHelperTests extends AndroidTestCase {
 
 	@SmallTest
 	public void testGetOptions() throws IOException, NoSuchAlgorithmException, InterruptedException {
-        URI uri = URI.create(com.v2soft.AndLib.mediatests.BitmapOperationsTests.ASSET_LARGE_FILE_PATH);
+        URI uri = URI.create(com.v2soft.AndLib.ui.demotest.BitmapOperationsTests.ASSET_LARGE_FILE_PATH);
         FileCache cache = new AndroidFileCache.Builder(getContext()).build();
         cache.clear();
         File file = cache.getFileByURI(uri);
