@@ -10,6 +10,9 @@ repositories {
 dependencies {
     compile 'ch.acra:acra:4.5.0'
     compile 'com.facebook:facebook-android-sdk:3.5.2@aar'
+    compile "com.android.support:support-v13:22.2.1"
+    compile "com.google.android.gms:play-services-games:8.1.0"
+    compile project(':BaseGameUtils')
     compile project(":V2AndLib-networking")
     compile project(":V2AndLib-media")
     compile project(":V2AndLib-depredecated")
@@ -18,8 +21,8 @@ dependencies {
 }
 
 android {
-    buildToolsVersion "19.1.0"
-    compileSdkVersion 19
+    buildToolsVersion "21.1.2"
+    compileSdkVersion 21
     lintOptions {
         abortOnError false
     }
@@ -27,7 +30,7 @@ android {
     sourceSets {
         main {
             jni.srcDirs = []
-            jniLibs.srcDirs = ['ndk-libs']
+            jniLibs.srcDirs = ['libs']
         }
     }
 }

@@ -3,6 +3,7 @@
 
     <string name="hello">Hello World, V2DemoActivity!</string>
     <string name="app_name">V2Demo</string>
+    <string name="app_id"></string>
 
     <!-- Task start stop sample -->
     <string name="btnStartTaskA">Start Task A</string>

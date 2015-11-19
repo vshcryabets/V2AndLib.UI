@@ -68,7 +68,8 @@ public class SamplesList
 			SynchronizationFragment.class,
 			OpenHelpersFragment.class,
             AudioStreamClientFragment.class,
-            BackgroundTasksFragment.class
+            BackgroundTasksFragment.class,
+			GameServicesFragment.class
 	};
 	private static final String TAG = SamplesList.class.getSimpleName();
 
@@ -121,6 +122,9 @@ public class SamplesList
             } else if ( clazz.equals(BackgroundTasksFragment.class)) {
                 startFragment(R.id.content, BackgroundTasksFragment.newInstance(),
                         true, TAG, 0, 0, 0, 0);
+			} else if ( clazz.equals(GameServicesFragment.class)) {
+				startFragment(R.id.content, GameServicesFragment.newInstance(),
+						true, TAG, 0, 0, 0, 0);
             }
 		}
 	}

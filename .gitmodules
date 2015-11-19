@@ -1,3 +1,6 @@
 [submodule "V2AndLib-mvnrepo"]
 	path = V2AndLib-mvnrepo
 	url = https://github.com/vshcryabets/V2AndLib-mvnrepo.git
+[submodule "V2Demo/contrib/android-basic-samples"]
+	path = V2Demo/contrib/android-basic-samples
+	url = https://github.com/playgameservices/android-basic-samples.git
