@@ -45,5 +45,6 @@
     <string name="hint_type_duration_of_task">Type duration of single task (in seconds)</string>
     <string name="button_cancel_all">Cancel All</string>
     <string name="button_start_execution">Start</string>
+    <string name="signin_other_error">There was an issue with sign in. Please try again later.</string>
 
 </resources>
