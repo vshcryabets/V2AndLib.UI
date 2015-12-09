@@ -16,7 +16,9 @@
 package com.v2soft.V2AndLib.demoapp;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.v2soft.V2AndLib.demoapp.ui.fragments.SamplesList;
@@ -39,4 +41,9 @@ public class V2DemoActivity extends Activity {
 		}
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.content);
+        fragment.onActivityResult(requestCode, resultCode, data);
+    }
 }
